@@ -1,0 +1,3 @@
+ValeDouro Web Edition v2.0 TESTE
+Base: Mestre Virtual v1.5.2
+Quests: QST-001..QST-010
