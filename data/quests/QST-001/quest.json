@@ -1,0 +1,1259 @@
+{
+  "id": "QST-001",
+  "schema_version": "1.2.0",
+  "content_version": "1.1.0",
+  "identity": {
+    "title": "A Caravana que Não Chegou",
+    "status": "validated",
+    "type": [
+      "investigation",
+      "exploration",
+      "rescue"
+    ],
+    "recommended_level": {
+      "min": 1,
+      "ideal": 2,
+      "max": 3
+    },
+    "recommended_party_size": 4,
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    },
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "expected_combat": "optional",
+    "steam": true,
+    "tags": [
+      "road",
+      "caravan",
+      "mechanical_failure",
+      "tracking",
+      "bandits",
+      "rescue"
+    ]
+  },
+  "canon_refs": [
+    {
+      "ref": "CANON:VALEDOURO",
+      "purpose": "Quest occurs in Valedouro and must remain compatible with established setting canon."
+    }
+  ],
+  "template_truth": {
+    "summary": [
+      "A small trade caravan was travelling toward Valedouro.",
+      "The wagon developed progressive wheel/axle fixation wear, vibration and worsening behavior on irregular ground.",
+      "The driver stopped the wagon for safety and part of the cargo was unloaded.",
+      "Bandits who were already observing the road exploited the stopped caravan; they did not cause the mechanical failure.",
+      "The escort resisted and a short fight occurred.",
+      "The bandits withdrew carrying compact, high-value goods.",
+      "During the attack an approximately 18-year-old apprentice panicked and fled into the woods without being seen.",
+      "The apprentice became lost, fell and seriously injured a leg.",
+      "Survivors incorrectly inferred that the apprentice had been kidnapped."
+    ],
+    "immutable": true
+  },
+  "propositions": [
+    {
+      "id": "PRP-001",
+      "statement": "Os bandidos sequestraram o aprendiz.",
+      "truth": false
+    },
+    {
+      "id": "PRP-002",
+      "statement": "Os bandidos sabotaram a carroça.",
+      "truth": false
+    },
+    {
+      "id": "PRP-003",
+      "statement": "A falha mecânica da carroça começou antes do ataque.",
+      "truth": true
+    },
+    {
+      "id": "PRP-004",
+      "statement": "Os bandidos já observavam a estrada e aproveitaram a vulnerabilidade da caravana parada.",
+      "truth": true
+    },
+    {
+      "id": "PRP-005",
+      "statement": "O aprendiz fugiu sozinho para a mata durante o ataque.",
+      "truth": true
+    },
+    {
+      "id": "PRP-006",
+      "statement": "Ninguém da caravana viu o aprendiz ser levado pelos bandidos.",
+      "truth": true
+    },
+    {
+      "id": "PRP-007",
+      "statement": "O aprendiz está vivo no início da Quest.",
+      "truth": true
+    },
+    {
+      "id": "PRP-008",
+      "statement": "O aprendiz sofreu ferimento grave na perna após se perder e cair.",
+      "truth": true
+    },
+    {
+      "id": "PRP-009",
+      "statement": "Os bandidos levaram mercadorias compactas de alto valor.",
+      "truth": true
+    },
+    {
+      "id": "PRP-010",
+      "statement": "A escolta resistiu ao ataque e houve um confronto curto.",
+      "truth": true
+    },
+    {
+      "id": "PRP-011",
+      "statement": "O mercador acredita sinceramente que o aprendiz foi sequestrado.",
+      "truth": true
+    },
+    {
+      "id": "PRP-012",
+      "statement": "O chefe da escolta viu alguém levando o aprendiz.",
+      "truth": false
+    },
+    {
+      "id": "PRP-013",
+      "statement": "O motorista percebeu vibração e ruído progressivos antes do ataque.",
+      "truth": true
+    }
+  ],
+  "module_slots": [],
+  "actors": [
+    {
+      "id": "ACT-001",
+      "entity_type": "individual",
+      "role": "merchant",
+      "canonical": false,
+      "name": null,
+      "initial_location": "LOC-004",
+      "knowledge": [
+        {
+          "proposition": "PRP-006",
+          "status": "known"
+        }
+      ],
+      "beliefs": [
+        {
+          "proposition": "PRP-001",
+          "stance": "believes_true",
+          "confidence": "high"
+        }
+      ],
+      "goals": [
+        "recover_apprentice",
+        "protect_remaining_people_and_goods"
+      ],
+      "constraints": [
+        "concerned",
+        "irritated",
+        "not_deliberately_lying"
+      ]
+    },
+    {
+      "id": "ACT-002",
+      "entity_type": "individual",
+      "role": "escort_chief",
+      "canonical": false,
+      "name": null,
+      "initial_location": "LOC-004",
+      "condition": "injured_but_functional",
+      "knowledge": [
+        {
+          "proposition": "PRP-006",
+          "status": "known"
+        },
+        {
+          "proposition": "PRP-010",
+          "status": "known"
+        }
+      ],
+      "beliefs": [
+        {
+          "proposition": "PRP-001",
+          "stance": "uncertain",
+          "confidence": "moderate"
+        }
+      ],
+      "goals": [
+        "protect_survivors",
+        "account_for_missing_apprentice"
+      ]
+    },
+    {
+      "id": "ACT-003",
+      "entity_type": "individual",
+      "role": "driver",
+      "canonical": false,
+      "name": null,
+      "initial_location": "LOC-004",
+      "knowledge": [
+        {
+          "proposition": "PRP-003",
+          "status": "known"
+        },
+        {
+          "proposition": "PRP-013",
+          "status": "known"
+        }
+      ],
+      "beliefs": [],
+      "goals": [
+        "explain_wagon_behavior",
+        "prevent_further_wagon_damage"
+      ]
+    },
+    {
+      "id": "ACT-004",
+      "entity_type": "individual",
+      "role": "apprentice",
+      "canonical": false,
+      "name": null,
+      "approximate_age": 18,
+      "initial_location": "LOC-007",
+      "condition": "seriously_injured_leg",
+      "knowledge": [
+        {
+          "proposition": "PRP-005",
+          "status": "known"
+        },
+        {
+          "proposition": "PRP-008",
+          "status": "known"
+        }
+      ],
+      "goals": [
+        "be_found",
+        "survive"
+      ],
+      "constraints": [
+        "lost",
+        "mobility_severely_reduced"
+      ]
+    },
+    {
+      "id": "ACT-005",
+      "entity_type": "group",
+      "role": "bandits",
+      "canonical": false,
+      "member_count": 4,
+      "initial_location": "LOC-005",
+      "knowledge": [
+        {
+          "proposition": "PRP-001",
+          "status": "known_false"
+        },
+        {
+          "proposition": "PRP-002",
+          "status": "known_false"
+        },
+        {
+          "proposition": "PRP-004",
+          "status": "known"
+        },
+        {
+          "proposition": "PRP-009",
+          "status": "known"
+        }
+      ],
+      "goals": [
+        "escape_with_compact_high_value_goods",
+        "avoid_unnecessary_losses"
+      ],
+      "constraints": [
+        "opportunistic",
+        "not_suicidal",
+        "did_not_sabotage_wagon",
+        "did_not_kidnap_apprentice"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "id": "LOC-001",
+      "name": "Valedouro / ponto de partida da investigação",
+      "type": "settlement_or_start",
+      "connections": [
+        {
+          "target": "LOC-002",
+          "access": "road"
+        }
+      ]
+    },
+    {
+      "id": "LOC-002",
+      "name": "Último ponto de passagem confirmado",
+      "type": "road_point",
+      "connections": [
+        {
+          "target": "LOC-003",
+          "access": "road"
+        }
+      ]
+    },
+    {
+      "id": "LOC-003",
+      "name": "Trecho provável da falha",
+      "type": "road_region",
+      "connections": [
+        {
+          "target": "LOC-004",
+          "access": "road"
+        }
+      ]
+    },
+    {
+      "id": "LOC-004",
+      "name": "Local da caravana",
+      "type": "road_site",
+      "connections": [
+        {
+          "target": "LOC-005",
+          "access": "trackable"
+        },
+        {
+          "target": "LOC-006",
+          "access": "trackable"
+        }
+      ]
+    },
+    {
+      "id": "LOC-005",
+      "name": "Rota de retirada dos bandidos",
+      "type": "trail",
+      "connections": []
+    },
+    {
+      "id": "LOC-006",
+      "name": "Mata / rota individual do aprendiz",
+      "type": "woodland",
+      "connections": [
+        {
+          "target": "LOC-007",
+          "access": "trackable"
+        }
+      ]
+    },
+    {
+      "id": "LOC-007",
+      "name": "Local da queda do aprendiz",
+      "type": "rescue_site",
+      "connections": []
+    }
+  ],
+  "problems": [
+    {
+      "id": "PRB-001",
+      "name": "Caravana não chegou",
+      "role": "presenting_problem",
+      "initial_state": "active",
+      "domains": [
+        "informational",
+        "logistical"
+      ]
+    },
+    {
+      "id": "PRB-002",
+      "name": "Falha mecânica da carroça",
+      "role": "cause",
+      "initial_state": "active",
+      "domains": [
+        "mechanical",
+        "logistical"
+      ]
+    },
+    {
+      "id": "PRB-003",
+      "name": "Aprendiz desaparecido",
+      "role": "impact",
+      "initial_state": "active",
+      "domains": [
+        "informational",
+        "rescue"
+      ]
+    },
+    {
+      "id": "PRB-004",
+      "name": "Aprendiz gravemente ferido",
+      "role": "risk",
+      "initial_state": "active",
+      "domains": [
+        "medical",
+        "rescue"
+      ]
+    },
+    {
+      "id": "PRB-005",
+      "name": "Bandidos em retirada",
+      "role": "parallel_problem",
+      "initial_state": "active",
+      "domains": [
+        "security",
+        "social"
+      ]
+    },
+    {
+      "id": "PRB-006",
+      "name": "Carga roubada",
+      "role": "impact",
+      "initial_state": "active",
+      "domains": [
+        "economic",
+        "logistical"
+      ]
+    }
+  ],
+  "needs": [
+    {
+      "id": "NED-001",
+      "description": "Descobrir o que aconteceu com a caravana.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-001"
+      ]
+    },
+    {
+      "id": "NED-002",
+      "description": "Localizar o aprendiz.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-003"
+      ]
+    },
+    {
+      "id": "NED-003",
+      "description": "Prestar auxílio ao aprendiz ferido.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-004"
+      ]
+    },
+    {
+      "id": "NED-004",
+      "description": "Compreender ou estabilizar a falha da carroça, caso os personagens decidam fazê-lo.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-002"
+      ]
+    },
+    {
+      "id": "NED-005",
+      "description": "Decidir como lidar com os bandidos e a carga roubada.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-005",
+        "PRB-006"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "id": "FUN-001",
+      "description": "Reduzir a área provável de busca da caravana.",
+      "satisfies": [
+        "NED-001"
+      ]
+    },
+    {
+      "id": "FUN-002",
+      "description": "Distinguir as rotas deixadas após o ataque.",
+      "satisfies": [
+        "NED-001",
+        "NED-002"
+      ]
+    },
+    {
+      "id": "FUN-003",
+      "description": "Determinar a localização do aprendiz.",
+      "satisfies": [
+        "NED-002"
+      ]
+    },
+    {
+      "id": "FUN-004",
+      "description": "Estabilizar e extrair o aprendiz do local da queda.",
+      "satisfies": [
+        "NED-003"
+      ]
+    },
+    {
+      "id": "FUN-005",
+      "description": "Identificar a natureza progressiva da falha mecânica.",
+      "satisfies": [
+        "NED-004"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "RES-001",
+      "type": "information",
+      "description": "Horário e local da última passagem confirmada.",
+      "capabilities": [
+        "estimate_search_region"
+      ]
+    },
+    {
+      "id": "RES-002",
+      "type": "physical_evidence",
+      "source": "EVD-002",
+      "capabilities": [
+        "diagnose_progressive_wear"
+      ]
+    },
+    {
+      "id": "RES-003",
+      "type": "physical_evidence",
+      "source": "EVD-004",
+      "capabilities": [
+        "track_apprentice"
+      ]
+    },
+    {
+      "id": "RES-004",
+      "type": "actor_knowledge",
+      "source": "ACT-003",
+      "capabilities": [
+        "describe_progressive_wagon_symptoms"
+      ]
+    }
+  ],
+  "causal_relations": [
+    {
+      "id": "CAU-001",
+      "from": "EVT-002",
+      "to": "EVT-003",
+      "type": "physical",
+      "description": "O desgaste e a vibração progressivos tornam inseguro continuar e levam o motorista a parar."
+    },
+    {
+      "id": "CAU-002",
+      "from": "EVT-003",
+      "to": "EVT-004",
+      "type": "behavioral",
+      "description": "Com a carroça parada, parte da carga é descarregada para lidar com a situação."
+    },
+    {
+      "id": "CAU-003",
+      "from": "EVT-003",
+      "to": "EVT-005",
+      "type": "behavioral",
+      "description": "A parada torna a caravana um alvo de oportunidade para os bandidos que já observavam a estrada."
+    },
+    {
+      "id": "CAU-004",
+      "from": "EVT-005",
+      "to": "EVT-006",
+      "type": "behavioral",
+      "description": "O ataque provoca a reação da escolta e um confronto curto."
+    },
+    {
+      "id": "CAU-005",
+      "from": "EVT-006",
+      "to": "EVT-007",
+      "type": "behavioral",
+      "description": "O confronto e o pânico levam o aprendiz a fugir sozinho."
+    },
+    {
+      "id": "CAU-006",
+      "from": "EVT-007",
+      "to": "EVT-009",
+      "type": "physical",
+      "description": "Ao fugir sem orientação, o aprendiz se perde, cai e sofre ferimento grave na perna."
+    },
+    {
+      "id": "CAU-007",
+      "from": "EVT-005",
+      "to": "EVT-008",
+      "type": "behavioral",
+      "description": "Após o confronto, os bandidos recuam levando mercadorias compactas de alto valor."
+    },
+    {
+      "id": "CAU-008",
+      "from": "EVT-005",
+      "to": "EVT-010",
+      "type": "informational",
+      "description": "O ataque cria o contexto para interpretar o desaparecimento como possível sequestro."
+    },
+    {
+      "id": "CAU-009",
+      "from": "PRP-006",
+      "to": "EVT-010",
+      "type": "informational",
+      "description": "Como ninguém viu a fuga nem alguém levando o aprendiz, os sobreviventes preenchem a lacuna com a hipótese de sequestro."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EVD-001",
+      "type": "documentary_or_testimonial",
+      "location": "LOC-002",
+      "availability": "available",
+      "observations": [
+        "Última passagem confirmada às 13h30.",
+        "Velocidade aproximada de viagem: 4 km/h.",
+        "Chegada esperada a Valedouro: 19h30.",
+        "Distância restante no último ponto confirmado: 24 km."
+      ],
+      "interpretation_layers": [
+        {
+          "dc": 10,
+          "skill": "intelligence",
+          "result": "O grupo pode relacionar tempo, distância e velocidade para estimar onde procurar."
+        },
+        {
+          "dc": null,
+          "skill": null,
+          "result": "Cálculo direto: uma falha aproximadamente quatro horas depois da última passagem colocaria a caravana cerca de 16 km adiante."
+        }
+      ],
+      "provenance": {
+        "source_type": "route_information",
+        "directness": "mixed",
+        "chain": []
+      }
+    },
+    {
+      "id": "EVD-002",
+      "type": "physical",
+      "location": "LOC-004",
+      "availability": "discoverable",
+      "observations": [
+        "Há desgaste visível no conjunto roda/eixo ou em sua fixação.",
+        "O estado não é compatível com dano instantâneo causado apenas pelo ataque."
+      ],
+      "interpretation_layers": [
+        {
+          "dc": 10,
+          "skill": "investigation",
+          "result": "O desgaste é evidente."
+        },
+        {
+          "dc": 12,
+          "skill": "investigation",
+          "result": "O desgaste não é recente."
+        },
+        {
+          "dc": 14,
+          "skill": "investigation",
+          "result": "Há sinais de folga/desgaste prolongado compatíveis com vibração progressiva."
+        }
+      ],
+      "provenance": {
+        "source_type": "physical_site",
+        "directness": "direct",
+        "chain": []
+      }
+    },
+    {
+      "id": "EVD-003",
+      "type": "physical",
+      "location": "LOC-004",
+      "availability": "discoverable",
+      "observations": [
+        "Muitas pegadas indicam confronto e retirada do grupo principal."
+      ],
+      "interpretation_layers": [
+        {
+          "dc": 10,
+          "skill": "perception",
+          "result": "Há numerosas pegadas e sinais de movimentação."
+        },
+        {
+          "dc": 12,
+          "skill": "survival",
+          "result": "É possível distinguir a direção principal de retirada dos bandidos."
+        }
+      ],
+      "provenance": {
+        "source_type": "physical_site",
+        "directness": "direct",
+        "chain": []
+      }
+    },
+    {
+      "id": "EVD-004",
+      "type": "physical",
+      "location": "LOC-004",
+      "availability": "discoverable",
+      "observations": [
+        "Um conjunto separado de pegadas segue para a mata."
+      ],
+      "interpretation_layers": [
+        {
+          "dc": 12,
+          "skill": "survival",
+          "result": "As marcas parecem pertencer a uma única pessoa."
+        },
+        {
+          "dc": 14,
+          "skill": "survival",
+          "result": "As passadas começam largas e depois tornam-se irregulares, compatíveis com corrida desorganizada e dificuldade posterior."
+        }
+      ],
+      "provenance": {
+        "source_type": "physical_site",
+        "directness": "direct",
+        "chain": []
+      }
+    },
+    {
+      "id": "EVD-005",
+      "type": "negative",
+      "location": "LOC-004",
+      "availability": "discoverable",
+      "expected_feature": "Sinais de arrasto, escolta física ou deslocamento de um prisioneiro junto à rota dos bandidos.",
+      "observed": false,
+      "interpretation_layers": [
+        {
+          "dc": 14,
+          "skill": "survival",
+          "result": "Não há sinais claros de alguém sendo arrastado ou conduzido à força pela rota principal dos bandidos."
+        }
+      ],
+      "provenance": {
+        "source_type": "physical_site",
+        "directness": "direct",
+        "chain": []
+      }
+    }
+  ],
+  "information": [
+    {
+      "id": "INF-001",
+      "content": "Os bandidos levaram o aprendiz.",
+      "type": "belief",
+      "source": "ACT-001",
+      "sincerity": "sincere",
+      "proposition": "PRP-001",
+      "provenance": {
+        "source_type": "testimony",
+        "directness": "inference",
+        "chain": [
+          "ACT-001"
+        ]
+      },
+      "delivery_examples": [
+        "Eles levaram o aprendiz.",
+        "O rapaz sumiu durante o ataque. Só podem ter levado ele."
+      ]
+    },
+    {
+      "id": "INF-002",
+      "content": "Não vi ninguém levando o garoto.",
+      "type": "direct_testimony",
+      "source": "ACT-002",
+      "sincerity": "sincere",
+      "proposition": "PRP-006",
+      "provenance": {
+        "source_type": "testimony",
+        "directness": "direct",
+        "chain": [
+          "ACT-002"
+        ]
+      },
+      "delivery_examples": [
+        "Não vi ninguém levando o garoto."
+      ]
+    },
+    {
+      "id": "INF-003",
+      "content": "A vibração e o ruído foram aumentando e pioravam em terreno irregular; parei antes do ataque porque a carroça não estava segura.",
+      "type": "direct_testimony",
+      "source": "ACT-003",
+      "sincerity": "sincere",
+      "proposition": "PRP-013",
+      "provenance": {
+        "source_type": "testimony",
+        "directness": "direct",
+        "chain": [
+          "ACT-003"
+        ]
+      },
+      "delivery_examples": [
+        "A vibração foi aumentando. No terreno irregular ficava pior, então parei antes que a carroça cedesse de vez."
+      ]
+    },
+    {
+      "id": "INF-004",
+      "content": "Que rapaz?",
+      "type": "direct_testimony",
+      "source": "ACT-005",
+      "sincerity": "sincere",
+      "proposition": "PRP-001",
+      "provenance": {
+        "source_type": "testimony",
+        "directness": "direct",
+        "chain": [
+          "ACT-005"
+        ]
+      },
+      "notes": "If questioned about kidnapping, the bandits genuinely do not know what apprentice the characters mean.",
+      "delivery_examples": [
+        "Que rapaz?"
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "id": "RSK-001",
+      "name": "Deterioração da condição do aprendiz",
+      "severity": "high",
+      "probability": "conditional",
+      "triggers": [
+        "extended_delay"
+      ],
+      "mitigations": [
+        "locate_apprentice",
+        "medical_aid",
+        "rapid_rescue"
+      ]
+    },
+    {
+      "id": "RSK-002",
+      "name": "Confronto com os bandidos",
+      "severity": "moderate",
+      "probability": "conditional",
+      "triggers": [
+        "pursuit_or_hostile_contact"
+      ],
+      "mitigations": [
+        "negotiation",
+        "avoidance",
+        "tactical_advantage"
+      ]
+    },
+    {
+      "id": "RSK-003",
+      "name": "Dano adicional à carroça",
+      "severity": "moderate",
+      "probability": "conditional",
+      "triggers": [
+        "forcing_wagon_without_stabilization"
+      ],
+      "mitigations": [
+        "repair",
+        "stabilization",
+        "leave_wagon_stationary"
+      ]
+    }
+  ],
+  "processes": [
+    {
+      "id": "PRC-001",
+      "name": "Condição do aprendiz ferido",
+      "state": "seriously_injured_but_alive",
+      "trend": "conditional",
+      "rate": "contextual",
+      "update_mode": "world_time",
+      "conditions": [
+        "Long delays without rescue or aid can worsen his condition naturally."
+      ],
+      "guardrail": "Do not use deterioration as hidden punitive timer; communicate observable consequences when appropriate."
+    }
+  ],
+  "triggers": [],
+  "known_solutions": [
+    {
+      "id": "SOL-001",
+      "target_need": "NED-001",
+      "method": "Use last confirmed passage, expected speed and travel time to reduce the search area."
+    },
+    {
+      "id": "SOL-002",
+      "target_need": "NED-002",
+      "method": "Identify and follow the individual set of tracks into the woods."
+    },
+    {
+      "id": "SOL-003",
+      "target_need": "NED-002",
+      "method": "Use an auditory search such as calling, horn signals or other plausible sound methods."
+    },
+    {
+      "id": "SOL-004",
+      "target_need": "NED-002",
+      "method": "Use suitable magic according to its normal rules."
+    },
+    {
+      "id": "SOL-005",
+      "target_need": "NED-005",
+      "method": "Pursue, negotiate with, capture or deliberately ignore the bandits depending on player priorities."
+    },
+    {
+      "id": "SOL-006",
+      "target_need": "NED-004",
+      "method": "Diagnose and stabilize or repair the wheel/axle fixation."
+    }
+  ],
+  "known_solutions_exhaustive": false,
+  "steam_concepts": [
+    {
+      "id": "STM-001",
+      "domain": "mathematics",
+      "concept": "average_speed",
+      "required": false,
+      "application": "Estimate probable region of wagon failure using time, distance and approximate speed.",
+      "data": {
+        "last_confirmed_time": "13:30",
+        "expected_arrival": "19:30",
+        "remaining_distance_km": 24,
+        "approx_speed_kmh": 4,
+        "example_failure_after_hours": 4,
+        "example_distance_after_last_point_km": 16
+      },
+      "advantages": [
+        "reduce_search_area"
+      ]
+    },
+    {
+      "id": "STM-002",
+      "domain": "mechanics",
+      "concept": "progressive_mechanical_wear",
+      "required": false,
+      "application": "Relate looseness/wear to vibration, irregular terrain and progressive failure.",
+      "advantages": [
+        "distinguish_mechanical_failure_from_sabotage"
+      ]
+    },
+    {
+      "id": "STM-003",
+      "domain": "mechanics",
+      "concept": "mechanical_advantage",
+      "required": false,
+      "application": "May assist rescue/extraction if players devise a rope, lever or lifting solution.",
+      "advantages": [
+        "reduce_required_force_or_improve_control"
+      ]
+    }
+  ],
+  "player_freedoms": [
+    {
+      "type": "investigation_order_free",
+      "scope": "global"
+    },
+    {
+      "type": "bandit_pursuit_optional",
+      "target": "PRB-005"
+    },
+    {
+      "type": "wagon_repair_optional",
+      "target": "PRB-002"
+    },
+    {
+      "type": "creative_solution_allowed",
+      "scope": "global"
+    },
+    {
+      "type": "magic_not_artificially_blocked",
+      "scope": "global"
+    },
+    {
+      "type": "quest_may_end_early_if_core_needs_are_satisfied",
+      "scope": "global"
+    },
+    {
+      "type": "no_compensatory_obstacle",
+      "scope": "global",
+      "description": "If player creativity genuinely eliminates a challenge, do not manufacture a replacement challenge."
+    }
+  ],
+  "narrative_guardrails": [
+    {
+      "type": "instruction",
+      "text": "Os bandidos não sabotaram a carroça."
+    },
+    {
+      "type": "instruction",
+      "text": "Os bandidos não sequestraram o aprendiz."
+    },
+    {
+      "type": "instruction",
+      "text": "O mercador está sinceramente enganado; não está mentindo."
+    },
+    {
+      "type": "instruction",
+      "text": "O chefe da escolta deve poder afirmar honestamente: 'Não vi ninguém levando o garoto.'"
+    },
+    {
+      "type": "instruction",
+      "text": "A falha mecânica é anterior ao ataque e deve permanecer coerente com desgaste progressivo."
+    },
+    {
+      "type": "instruction",
+      "text": "Não transformar automaticamente ausência de sinais de arrasto/escolta em prova absoluta de que não houve sequestro."
+    },
+    {
+      "type": "instruction",
+      "text": "Não mudar a verdade da Quest para acompanhar hipóteses dos jogadores."
+    },
+    {
+      "type": "instruction",
+      "text": "Não criar monstro, novo vilão ou obstáculo compensatório apenas porque os jogadores resolveram uma etapa rapidamente."
+    },
+    {
+      "type": "instruction",
+      "text": "Não bloquear magia apenas para preservar a investigação planejada."
+    },
+    {
+      "type": "instruction",
+      "text": "Se os jogadores priorizarem os bandidos, a condição do aprendiz pode evoluir naturalmente devido a ferimento, isolamento e passagem do tempo; isso não é punição."
+    },
+    {
+      "type": "instruction",
+      "text": "Se os jogadores localizarem rapidamente o aprendiz por uma solução plausível, permitir que a Quest avance ou termine sem fabricar dificuldade adicional."
+    }
+  ],
+  "resolution_model": {
+    "quest_completion_is_binary": false,
+    "problem_resolution_states": [
+      "active",
+      "stabilized",
+      "delegated",
+      "under_resolution",
+      "resolved",
+      "transformed",
+      "abandoned"
+    ],
+    "possible_end_states": [
+      "Aprendiz resgatado, bandidos escaparam.",
+      "Aprendiz resgatado e carga recuperada.",
+      "Aprendiz localizado mas ainda exigindo extração/atendimento.",
+      "Bandidos enfrentados antes do resgate, com consequências naturais do atraso.",
+      "Carroça permanece avariada enquanto os problemas humanos principais são resolvidos."
+    ],
+    "milestone_progression": true,
+    "persistent_consequences": [
+      "Fate/condition of apprentice.",
+      "Disposition of merchant and escort toward party.",
+      "Whether stolen goods were recovered.",
+      "Whether bandits escaped, were captured, negotiated with or defeated.",
+      "Condition/disposition of wagon and remaining cargo."
+    ]
+  },
+  "events": [
+    {
+      "id": "EVT-001",
+      "name": "Última passagem confirmada",
+      "event_type": "historical",
+      "sequence": 1,
+      "time": "13:30",
+      "location": "LOC-002",
+      "effects": [],
+      "supports_propositions": []
+    },
+    {
+      "id": "EVT-002",
+      "name": "Desgaste e vibração tornam-se progressivamente perceptíveis",
+      "event_type": "historical",
+      "sequence": 2,
+      "relative_time": "after EVT-001 and before EVT-003",
+      "location": "LOC-003",
+      "effects": [
+        {
+          "target": "PRB-002",
+          "effect": "worsens"
+        }
+      ],
+      "supports_propositions": [
+        "PRP-003",
+        "PRP-013"
+      ]
+    },
+    {
+      "id": "EVT-003",
+      "name": "Motorista para a carroça por segurança",
+      "event_type": "historical",
+      "sequence": 3,
+      "relative_time": "approximately 4 hours after EVT-001",
+      "location": "LOC-004",
+      "effects": [
+        {
+          "target": "PRB-001",
+          "effect": "caravan_stops_progress"
+        }
+      ],
+      "supports_propositions": [
+        "PRP-003",
+        "PRP-013"
+      ]
+    },
+    {
+      "id": "EVT-004",
+      "name": "Parte da carga é descarregada",
+      "event_type": "historical",
+      "sequence": 4,
+      "relative_time": "after EVT-003 and before EVT-005",
+      "location": "LOC-004",
+      "effects": [
+        {
+          "target": "PRB-006",
+          "effect": "cargo_exposed"
+        }
+      ],
+      "supports_propositions": []
+    },
+    {
+      "id": "EVT-005",
+      "name": "Bandidos atacam a caravana parada",
+      "event_type": "historical",
+      "sequence": 5,
+      "relative_time": "after EVT-004",
+      "location": "LOC-004",
+      "actors": [
+        "ACT-005"
+      ],
+      "effects": [
+        {
+          "target": "PRB-005",
+          "effect": "becomes_active"
+        }
+      ],
+      "supports_propositions": [
+        "PRP-004",
+        "PRP-010"
+      ]
+    },
+    {
+      "id": "EVT-006",
+      "name": "Escolta resiste e ocorre confronto curto",
+      "event_type": "historical",
+      "sequence": 6,
+      "relative_time": "during EVT-005",
+      "location": "LOC-004",
+      "actors": [
+        "ACT-002",
+        "ACT-005"
+      ],
+      "effects": [
+        {
+          "target": "ACT-002",
+          "effect": "injured_but_functional"
+        }
+      ],
+      "supports_propositions": [
+        "PRP-010"
+      ]
+    },
+    {
+      "id": "EVT-007",
+      "name": "Aprendiz entra em pânico e foge sozinho para a mata",
+      "event_type": "historical",
+      "sequence": 7,
+      "relative_time": "during EVT-006",
+      "location": "LOC-004",
+      "actors": [
+        "ACT-004"
+      ],
+      "effects": [
+        {
+          "target": "ACT-004",
+          "effect": "moves_toward_LOC-006"
+        }
+      ],
+      "supports_propositions": [
+        "PRP-005",
+        "PRP-006"
+      ]
+    },
+    {
+      "id": "EVT-008",
+      "name": "Bandidos recuam com mercadorias compactas de alto valor",
+      "event_type": "historical",
+      "sequence": 8,
+      "relative_time": "after EVT-006",
+      "location": "LOC-004",
+      "actors": [
+        "ACT-005"
+      ],
+      "effects": [
+        {
+          "target": "ACT-005",
+          "effect": "moves_toward_LOC-005"
+        },
+        {
+          "target": "PRB-006",
+          "effect": "stolen_goods_in_bandit_possession"
+        }
+      ],
+      "supports_propositions": [
+        "PRP-009"
+      ]
+    },
+    {
+      "id": "EVT-009",
+      "name": "Aprendiz se perde, cai e fere gravemente a perna",
+      "event_type": "historical",
+      "sequence": 9,
+      "relative_time": "after EVT-007",
+      "location": "LOC-007",
+      "actors": [
+        "ACT-004"
+      ],
+      "effects": [
+        {
+          "target": "ACT-004",
+          "effect": "seriously_injured_leg"
+        },
+        {
+          "target": "PRB-004",
+          "effect": "becomes_active"
+        }
+      ],
+      "supports_propositions": [
+        "PRP-007",
+        "PRP-008"
+      ]
+    },
+    {
+      "id": "EVT-010",
+      "name": "Sobreviventes inferem que o aprendiz foi sequestrado",
+      "event_type": "historical",
+      "sequence": 10,
+      "relative_time": "after EVT-005 and discovery that ACT-004 is missing",
+      "location": "LOC-004",
+      "effects": [
+        {
+          "target": "PRP-011",
+          "effect": "merchant_belief_established"
+        }
+      ],
+      "supports_propositions": [
+        "PRP-011"
+      ]
+    }
+  ],
+  "technical_notes": {
+    "round_trip_validation": "PASS_WITH_REFINEMENTS_APPLIED",
+    "v1_1_changes": [
+      "Added template-level historical events.",
+      "Added structured temporal properties to historical events.",
+      "Added optional delivery_examples to information items.",
+      "Reworked causal relations to point to identifiable historical events where appropriate."
+    ],
+    "principle": "Structured fields carry essential state/causality; free text remains descriptive rather than the sole carrier of required game logic.",
+    "schema_1_2_sync": {
+      "previous_schema_version": "1.0.0",
+      "change_type": "technical_contract_synchronization",
+      "epistemic_fields_explicit": [
+        "claims",
+        "reports",
+        "provenance_chains",
+        "information_transformations",
+        "source_relations",
+        "evidence_graph"
+      ],
+      "narrative_content_changed": false
+    }
+  },
+  "claims": [],
+  "reports": [],
+  "provenance_chains": [],
+  "information_transformations": [],
+  "source_relations": [],
+  "evidence_graph": []
+}

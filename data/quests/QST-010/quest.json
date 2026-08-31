@@ -1,0 +1,427 @@
+{
+  "id": "QST-010",
+  "schema_version": "1.2.0",
+  "content_version": "1.0.0",
+  "identity": {
+    "title": "O Sino que Não Tocou",
+    "status": "validated",
+    "type": [
+      "disaster_response",
+      "engineering",
+      "rescue"
+    ],
+    "recommended_level": {
+      "min": 3,
+      "ideal": 4,
+      "max": 5
+    },
+    "recommended_party_size": 4,
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    },
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "tags": [
+      "storm",
+      "landslide",
+      "bell",
+      "need_function_resource",
+      "concurrent_problems"
+    ]
+  },
+  "canon_refs": [
+    {
+      "ref": "CANON:VALEDOURO",
+      "purpose": "Maintain compatibility with established ValeDouro canon."
+    }
+  ],
+  "template_truth": {
+    "summary": [
+      "Uma tempestade/deslizamento danificou a comunidade, mas não a destruiu.",
+      "A torre sofreu deslocamento; o mecanismo do sino ficou desalinhado, embora o sino permaneça intacto.",
+      "A comunidade é competente e já reage aos danos.",
+      "Há problemas concorrentes: desaparecidos/feridos, uma casa afetada, estrutura inclinada, estrada e chuva.",
+      "Uma viga bloqueia acesso e simultaneamente sustenta parte do telhado.",
+      "A necessidade central associada ao sino é comunicação/alarme, não necessariamente reparar seu mecanismo.",
+      "O sino intacto pode ser percutido diretamente em padrão de emergência, ou a função pode ser transferida para mensageiros/outro recurso.",
+      "Uma rota longa alternativa pode simplesmente funcionar."
+    ],
+    "immutable": true
+  },
+  "propositions": [
+    {
+      "id": "PRP-001",
+      "statement": "O sino está quebrado.",
+      "truth": false
+    },
+    {
+      "id": "PRP-002",
+      "statement": "O mecanismo está desalinhado devido ao deslocamento da torre.",
+      "truth": true
+    },
+    {
+      "id": "PRP-003",
+      "statement": "A necessidade é comunicar/alertar, não necessariamente reparar o mecanismo.",
+      "truth": true
+    },
+    {
+      "id": "PRP-004",
+      "statement": "A viga que bloqueia acesso também exerce função estrutural de suporte.",
+      "truth": true
+    },
+    {
+      "id": "PRP-005",
+      "statement": "Remover a viga sem transferir sua função pode piorar o colapso.",
+      "truth": true
+    }
+  ],
+  "module_slots": [],
+  "actors": [
+    {
+      "id": "ACT-001",
+      "entity_type": "group",
+      "role": "community",
+      "canonical": false,
+      "initial_location": "LOC-001",
+      "goals": [
+        "rescue_people",
+        "communicate_emergency",
+        "stabilize_damage"
+      ],
+      "constraints": [
+        "competent_not_passive"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "id": "LOC-001",
+      "name": "Comunidade atingida",
+      "type": "settlement",
+      "connections": [
+        {
+          "target": "LOC-002",
+          "access": "damaged"
+        },
+        {
+          "target": "LOC-004",
+          "access": "long_route"
+        }
+      ]
+    },
+    {
+      "id": "LOC-002",
+      "name": "Torre do sino",
+      "type": "tower",
+      "connections": [
+        {
+          "target": "LOC-003",
+          "access": "blocked_by_supporting_beam"
+        }
+      ]
+    },
+    {
+      "id": "LOC-003",
+      "name": "Área do sino/mecanismo",
+      "type": "communication_resource",
+      "connections": []
+    },
+    {
+      "id": "LOC-004",
+      "name": "Rota longa alternativa",
+      "type": "alternate_route",
+      "connections": []
+    }
+  ],
+  "problems": [
+    {
+      "id": "PRB-001",
+      "name": "Função de alarme/comunicação comprometida",
+      "role": "impact",
+      "initial_state": "active",
+      "domains": [
+        "organizational",
+        "technical"
+      ]
+    },
+    {
+      "id": "PRB-002",
+      "name": "Mecanismo do sino desalinhado",
+      "role": "intermediate",
+      "initial_state": "active",
+      "domains": [
+        "technical"
+      ]
+    },
+    {
+      "id": "PRB-003",
+      "name": "Viga bloqueia acesso e sustenta telhado",
+      "role": "concurrent_problem",
+      "initial_state": "active",
+      "domains": [
+        "physical",
+        "technical"
+      ]
+    },
+    {
+      "id": "PRB-004",
+      "name": "Múltiplas emergências concorrentes",
+      "role": "impact",
+      "initial_state": "active",
+      "domains": [
+        "medical",
+        "organizational",
+        "environmental"
+      ]
+    }
+  ],
+  "needs": [
+    {
+      "id": "NED-001",
+      "description": "Comunicar/alertar a comunidade e equipes relevantes.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-001"
+      ]
+    },
+    {
+      "id": "NED-002",
+      "description": "Manter suporte estrutural enquanto acesso é criado, se essa rota for usada.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-003"
+      ]
+    },
+    {
+      "id": "NED-003",
+      "description": "Atender/resolver problemas humanos e estruturais prioritários.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-004"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "id": "FUN-001",
+      "description": "Produzir sinal de emergência reconhecível.",
+      "satisfies": [
+        "NED-001"
+      ]
+    },
+    {
+      "id": "FUN-002",
+      "description": "Sustentar cargas do telhado/estrutura.",
+      "satisfies": [
+        "NED-002"
+      ]
+    },
+    {
+      "id": "FUN-003",
+      "description": "Transportar mensagem até destinatários.",
+      "satisfies": [
+        "NED-001"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "RES-001",
+      "name": "Sino intacto",
+      "type": "physical_resource",
+      "source": "LOC-003"
+    },
+    {
+      "id": "RES-002",
+      "name": "Mensageiros/comunidade",
+      "type": "human_resource",
+      "source": "ACT-001"
+    },
+    {
+      "id": "RES-003",
+      "name": "Viga de suporte",
+      "type": "structural_resource",
+      "source": "LOC-002"
+    }
+  ],
+  "causal_relations": [
+    {
+      "id": "CAU-001",
+      "from": "EVT-001",
+      "to": "EVT-002",
+      "type": "physical",
+      "description": "Movimento estrutural desalinha mecanismo."
+    },
+    {
+      "id": "CAU-002",
+      "from": "EVT-001",
+      "to": "EVT-003",
+      "type": "physical",
+      "description": "Dano altera posição da viga, que passa a acumular funções de bloqueio e suporte."
+    }
+  ],
+  "evidence": [],
+  "information": [],
+  "claims": [],
+  "reports": [],
+  "provenance_chains": [],
+  "information_transformations": [],
+  "source_relations": [],
+  "evidence_graph": [],
+  "risks": [
+    {
+      "id": "RSK-001",
+      "name": "Remover suporte sem substituição",
+      "severity": "high",
+      "probability": "conditional",
+      "triggers": [
+        "remove_RES-003_without_function_transfer"
+      ],
+      "mitigations": [
+        "shore_first",
+        "alternate_access",
+        "leave_beam"
+      ]
+    }
+  ],
+  "processes": [],
+  "triggers": [],
+  "events": [
+    {
+      "id": "EVT-001",
+      "name": "Tempestade/deslizamento atinge comunidade",
+      "event_type": "historical",
+      "sequence": 1,
+      "location": "LOC-001"
+    },
+    {
+      "id": "EVT-002",
+      "name": "Torre se desloca e mecanismo fica desalinhado",
+      "event_type": "historical",
+      "sequence": 2,
+      "relative_time": "during/after EVT-001",
+      "location": "LOC-002",
+      "supports_propositions": [
+        "PRP-002"
+      ]
+    },
+    {
+      "id": "EVT-003",
+      "name": "Viga passa a bloquear acesso enquanto sustenta parte do telhado",
+      "event_type": "historical",
+      "sequence": 3,
+      "relative_time": "during/after EVT-001",
+      "location": "LOC-002",
+      "supports_propositions": [
+        "PRP-004"
+      ]
+    }
+  ],
+  "known_solutions": [
+    {
+      "id": "SOL-001",
+      "target_need": "NED-001",
+      "method": "Percutir diretamente o sino intacto em padrão de emergência, se acessível."
+    },
+    {
+      "id": "SOL-002",
+      "target_need": "NED-001",
+      "method": "Transferir função de comunicação para mensageiros ou outro recurso adequado."
+    },
+    {
+      "id": "SOL-003",
+      "target_need": "NED-002",
+      "method": "Escorar/transferir carga antes de remover ou mover a viga."
+    },
+    {
+      "id": "SOL-004",
+      "target_need": "NED-003",
+      "method": "Usar rota longa alternativa; ela pode simplesmente funcionar."
+    }
+  ],
+  "steam_concepts": [
+    {
+      "id": "STM-001",
+      "domain": "engineering",
+      "concept": "need_function_resource_method",
+      "required": false,
+      "application": "Separar necessidade de comunicação do objeto sino e escolher recurso/método apropriado.",
+      "advantages": [
+        "avoid_unnecessary_repair"
+      ]
+    },
+    {
+      "id": "STM-002",
+      "domain": "engineering",
+      "concept": "function_transfer",
+      "required": false,
+      "application": "Transferir função estrutural da viga para escoramento antes de removê-la.",
+      "advantages": [
+        "reduce_collapse_risk"
+      ]
+    }
+  ],
+  "player_freedoms": [
+    {
+      "type": "investigation_order_free",
+      "scope": "global"
+    },
+    {
+      "type": "creative_solution_allowed",
+      "scope": "global"
+    },
+    {
+      "type": "magic_not_artificially_blocked",
+      "scope": "global"
+    },
+    {
+      "type": "no_compensatory_obstacle",
+      "scope": "global"
+    }
+  ],
+  "narrative_guardrails": [
+    {
+      "type": "instruction",
+      "text": "Identifique a necessidade antes de decidir o que precisa ser consertado."
+    },
+    {
+      "type": "instruction",
+      "text": "O sino está intacto; o mecanismo está desalinhado."
+    },
+    {
+      "type": "instruction",
+      "text": "A comunidade é competente e não espera passivamente pelos personagens."
+    },
+    {
+      "type": "instruction",
+      "text": "A viga bloqueadora também sustenta a estrutura; remover sem substituir função tem consequência física."
+    },
+    {
+      "type": "instruction",
+      "text": "A rota longa pode simplesmente funcionar; não criar obstáculo compensatório."
+    },
+    {
+      "type": "instruction",
+      "text": "Problemas concorrentes não devem ser reduzidos a uma única sequência obrigatória."
+    }
+  ],
+  "resolution_model": {
+    "quest_completion_is_binary": false,
+    "problem_resolution_states": [
+      "active",
+      "latent",
+      "stabilized",
+      "delegated",
+      "under_resolution",
+      "resolved",
+      "transformed",
+      "recurring",
+      "abandoned"
+    ],
+    "milestone_progression": true
+  }
+}

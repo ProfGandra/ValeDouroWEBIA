@@ -1,0 +1,487 @@
+{
+  "id": "QST-007",
+  "schema_version": "1.2.0",
+  "content_version": "1.0.0",
+  "identity": {
+    "title": "A Mina Silenciosa",
+    "status": "validated",
+    "type": [
+      "rescue",
+      "engineering",
+      "exploration"
+    ],
+    "recommended_level": {
+      "min": 3,
+      "ideal": 4,
+      "max": 5
+    },
+    "recommended_party_size": 4,
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    },
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "tags": [
+      "mine",
+      "collapse",
+      "ventilation",
+      "pulley",
+      "concurrent_problems"
+    ]
+  },
+  "canon_refs": [
+    {
+      "ref": "CANON:VALEDOURO",
+      "purpose": "Maintain compatibility with established ValeDouro canon."
+    }
+  ],
+  "template_truth": {
+    "summary": [
+      "Dezoito pessoas entraram na mina; onze saíram após o colapso.",
+      "Sete permaneceram desaparecidas no interior.",
+      "Um mensageiro entrou depois, elevando para oito o número de pessoas ainda no interior a serem consideradas.",
+      "O colapso decorre de deformação, redistribuição de cargas, sobrecarga de suportes e falha progressiva.",
+      "As pessoas no interior estão distribuídas em grupos A, B e C.",
+      "Resgate envolve problemas concorrentes de estrutura, ventilação, acesso e movimentação de carga.",
+      "Não há vilão ou cronômetro oculto arbitrário."
+    ],
+    "immutable": true
+  },
+  "propositions": [
+    {
+      "id": "PRP-001",
+      "statement": "18 pessoas entraram originalmente.",
+      "truth": true
+    },
+    {
+      "id": "PRP-002",
+      "statement": "11 saíram após o colapso.",
+      "truth": true
+    },
+    {
+      "id": "PRP-003",
+      "statement": "7 ficaram desaparecidas do grupo original.",
+      "truth": true
+    },
+    {
+      "id": "PRP-004",
+      "statement": "Um mensageiro entrou depois e também permanece no interior.",
+      "truth": true
+    },
+    {
+      "id": "PRP-005",
+      "statement": "Devem ser contabilizadas 8 pessoas no interior após a entrada do mensageiro.",
+      "truth": true
+    },
+    {
+      "id": "PRP-006",
+      "statement": "O colapso foi sabotagem.",
+      "truth": false
+    }
+  ],
+  "module_slots": [],
+  "actors": [
+    {
+      "id": "ACT-001",
+      "entity_type": "group",
+      "role": "original_mine_workers",
+      "canonical": false,
+      "member_count": 18,
+      "initial_location": "LOC-001",
+      "goals": [
+        "survive",
+        "rescue_colleagues"
+      ]
+    },
+    {
+      "id": "ACT-002",
+      "entity_type": "group",
+      "role": "survivors_outside",
+      "canonical": false,
+      "member_count": 11,
+      "initial_location": "LOC-001",
+      "goals": [
+        "rescue_missing"
+      ]
+    },
+    {
+      "id": "ACT-003",
+      "entity_type": "group",
+      "role": "missing_original_workers",
+      "canonical": false,
+      "member_count": 7,
+      "initial_location": "LOC-003",
+      "goals": [
+        "survive"
+      ]
+    },
+    {
+      "id": "ACT-004",
+      "entity_type": "individual",
+      "role": "messenger_inside",
+      "canonical": false,
+      "initial_location": "LOC-002",
+      "goals": [
+        "deliver_information",
+        "survive"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "id": "LOC-001",
+      "name": "Entrada da mina",
+      "type": "mine_entrance",
+      "connections": [
+        {
+          "target": "LOC-002",
+          "access": "damaged"
+        }
+      ]
+    },
+    {
+      "id": "LOC-002",
+      "name": "Galerias afetadas",
+      "type": "mine_tunnels",
+      "connections": [
+        {
+          "target": "LOC-003",
+          "access": "unstable"
+        },
+        {
+          "target": "LOC-004",
+          "access": "restricted"
+        },
+        {
+          "target": "LOC-005",
+          "access": "restricted"
+        }
+      ]
+    },
+    {
+      "id": "LOC-003",
+      "name": "Grupo A",
+      "type": "trapped_area",
+      "connections": []
+    },
+    {
+      "id": "LOC-004",
+      "name": "Grupo B",
+      "type": "trapped_area",
+      "connections": []
+    },
+    {
+      "id": "LOC-005",
+      "name": "Grupo C",
+      "type": "trapped_area",
+      "connections": []
+    }
+  ],
+  "problems": [
+    {
+      "id": "PRB-001",
+      "name": "Falha estrutural progressiva",
+      "role": "root_cause",
+      "initial_state": "active",
+      "domains": [
+        "technical",
+        "physical"
+      ]
+    },
+    {
+      "id": "PRB-002",
+      "name": "Ventilação comprometida",
+      "role": "concurrent_problem",
+      "initial_state": "active",
+      "domains": [
+        "environmental",
+        "medical"
+      ]
+    },
+    {
+      "id": "PRB-003",
+      "name": "Acesso bloqueado/instável",
+      "role": "concurrent_problem",
+      "initial_state": "active",
+      "domains": [
+        "physical",
+        "technical"
+      ]
+    },
+    {
+      "id": "PRB-004",
+      "name": "Oito pessoas no interior",
+      "role": "impact",
+      "initial_state": "active",
+      "domains": [
+        "medical",
+        "organizational"
+      ]
+    }
+  ],
+  "needs": [
+    {
+      "id": "NED-001",
+      "description": "Estabilizar rotas de acesso suficientemente para resgate.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-001",
+        "PRB-003"
+      ]
+    },
+    {
+      "id": "NED-002",
+      "description": "Manter condições respiratórias compatíveis com sobrevivência/resgate.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-002"
+      ]
+    },
+    {
+      "id": "NED-003",
+      "description": "Localizar, acessar e retirar as oito pessoas consideradas no interior.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-004"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "id": "FUN-001",
+      "description": "Transferir cargas para suportes estáveis/escoramentos.",
+      "satisfies": [
+        "NED-001"
+      ]
+    },
+    {
+      "id": "FUN-002",
+      "description": "Mover ar entre exterior e galerias.",
+      "satisfies": [
+        "NED-002"
+      ]
+    },
+    {
+      "id": "FUN-003",
+      "description": "Fornecer vantagem mecânica para movimentar cargas/obstruções/pessoas.",
+      "satisfies": [
+        "NED-003"
+      ]
+    }
+  ],
+  "resources": [],
+  "causal_relations": [
+    {
+      "id": "CAU-001",
+      "from": "EVT-001",
+      "to": "EVT-002",
+      "type": "physical",
+      "description": "Redistribuição de cargas sobrecarrega suportes e produz falha progressiva."
+    }
+  ],
+  "evidence": [],
+  "information": [],
+  "claims": [],
+  "reports": [],
+  "provenance_chains": [],
+  "information_transformations": [],
+  "source_relations": [],
+  "evidence_graph": [],
+  "risks": [
+    {
+      "id": "RSK-001",
+      "name": "Nova movimentação estrutural",
+      "severity": "high",
+      "probability": "conditional",
+      "triggers": [
+        "disturb_unstable_load_path"
+      ],
+      "mitigations": [
+        "shore",
+        "redistribute_load",
+        "choose_alternate_access"
+      ]
+    },
+    {
+      "id": "RSK-002",
+      "name": "Piora da ventilação",
+      "severity": "high",
+      "probability": "conditional",
+      "triggers": [
+        "blocked_airflow",
+        "dust_or_activity"
+      ],
+      "mitigations": [
+        "restore_airflow",
+        "limit_exposure",
+        "alternate_ventilation"
+      ]
+    }
+  ],
+  "processes": [
+    {
+      "id": "PRC-001",
+      "name": "Estabilidade estrutural",
+      "state": "damaged",
+      "trend": "conditional",
+      "rate": "contextual",
+      "update_mode": "world_conditions"
+    },
+    {
+      "id": "PRC-002",
+      "name": "Qualidade do ar",
+      "state": "compromised",
+      "trend": "conditional",
+      "rate": "contextual",
+      "update_mode": "world_conditions"
+    }
+  ],
+  "triggers": [],
+  "events": [
+    {
+      "id": "EVT-001",
+      "name": "Deformação redistribui cargas",
+      "event_type": "historical",
+      "sequence": 1,
+      "location": "LOC-002"
+    },
+    {
+      "id": "EVT-002",
+      "name": "Suportes são sobrecarregados e ocorre falha progressiva",
+      "event_type": "historical",
+      "sequence": 2,
+      "relative_time": "after EVT-001",
+      "location": "LOC-002"
+    },
+    {
+      "id": "EVT-003",
+      "name": "Onze trabalhadores conseguem sair",
+      "event_type": "historical",
+      "sequence": 3,
+      "relative_time": "after EVT-002",
+      "location": "LOC-001",
+      "actors": [
+        "ACT-002"
+      ]
+    },
+    {
+      "id": "EVT-004",
+      "name": "Mensageiro entra após o colapso",
+      "event_type": "historical",
+      "sequence": 4,
+      "relative_time": "after EVT-003",
+      "location": "LOC-002",
+      "actors": [
+        "ACT-004"
+      ],
+      "supports_propositions": [
+        "PRP-004",
+        "PRP-005"
+      ]
+    }
+  ],
+  "known_solutions": [
+    {
+      "id": "SOL-001",
+      "target_need": "NED-001",
+      "method": "Escorar e redistribuir cargas antes de avançar por trechos críticos."
+    },
+    {
+      "id": "SOL-002",
+      "target_need": "NED-002",
+      "method": "Restabelecer/forçar circulação de ar ou abrir rota alternativa plausível."
+    },
+    {
+      "id": "SOL-003",
+      "target_need": "NED-003",
+      "method": "Usar polias, cordas, alavancas, equipes ou magia para movimentação e retirada."
+    }
+  ],
+  "steam_concepts": [
+    {
+      "id": "STM-001",
+      "domain": "engineering",
+      "concept": "load_redistribution",
+      "required": false,
+      "application": "Entender deformação, suporte, sobrecarga e falha progressiva.",
+      "advantages": [
+        "safer_rescue"
+      ]
+    },
+    {
+      "id": "STM-002",
+      "domain": "physics",
+      "concept": "mechanical_advantage",
+      "required": false,
+      "application": "Usar polias/alavancas para reduzir esforço de movimentação.",
+      "advantages": [
+        "move_heavy_loads"
+      ]
+    },
+    {
+      "id": "STM-003",
+      "domain": "environmental",
+      "concept": "ventilation",
+      "required": false,
+      "application": "Entender caminhos de circulação de ar e efeitos de bloqueios.",
+      "advantages": [
+        "improve_survival_conditions"
+      ]
+    }
+  ],
+  "player_freedoms": [
+    {
+      "type": "investigation_order_free",
+      "scope": "global"
+    },
+    {
+      "type": "creative_solution_allowed",
+      "scope": "global"
+    },
+    {
+      "type": "magic_not_artificially_blocked",
+      "scope": "global"
+    },
+    {
+      "type": "no_compensatory_obstacle",
+      "scope": "global"
+    }
+  ],
+  "narrative_guardrails": [
+    {
+      "type": "instruction",
+      "text": "Preservar contabilidade: 18 entraram, 11 saíram, 7 ficaram; depois entra 1 mensageiro, totalizando 8 no interior."
+    },
+    {
+      "type": "instruction",
+      "text": "Problemas estruturais, ventilação e resgate podem ocorrer concorrentemente."
+    },
+    {
+      "type": "instruction",
+      "text": "Não introduzir vilão, sabotagem ou cronômetro oculto arbitrário."
+    },
+    {
+      "type": "instruction",
+      "text": "Processos pioram ou melhoram por condições do mundo e ações, não para punir jogadores."
+    }
+  ],
+  "resolution_model": {
+    "quest_completion_is_binary": false,
+    "problem_resolution_states": [
+      "active",
+      "latent",
+      "stabilized",
+      "delegated",
+      "under_resolution",
+      "resolved",
+      "transformed",
+      "recurring",
+      "abandoned"
+    ],
+    "milestone_progression": true
+  }
+}

@@ -1,0 +1,166 @@
+[
+  {
+    "id": "longsword",
+    "name": "Espada Longa",
+    "cat": "Arma marcial",
+    "weight": "1,4 kg",
+    "req": "Proficiência com armas marciais",
+    "stats": "1d8 cortante • Versátil (1d10)",
+    "icon": "⚔️",
+    "classes": [
+      "Guerreiro",
+      "Paladino",
+      "Patrulheiro"
+    ]
+  },
+  {
+    "id": "battleaxe",
+    "name": "Machado de Batalha",
+    "cat": "Arma marcial",
+    "weight": "1,8 kg",
+    "req": "Proficiência com armas marciais",
+    "stats": "1d8 cortante • Versátil (1d10)",
+    "icon": "🪓",
+    "classes": [
+      "Guerreiro",
+      "Bárbaro",
+      "Paladino"
+    ]
+  },
+  {
+    "id": "longbow",
+    "name": "Arco Longo",
+    "cat": "Arma marcial à distância",
+    "weight": "0,9 kg",
+    "req": "Proficiência com armas marciais à distância",
+    "stats": "1d8 perfurante • Duas mãos • Munição",
+    "icon": "🏹",
+    "classes": [
+      "Guerreiro",
+      "Patrulheiro"
+    ]
+  },
+  {
+    "id": "shield",
+    "name": "Escudo",
+    "cat": "Proteção",
+    "weight": "2,7 kg",
+    "req": "Proficiência com escudos",
+    "stats": "+2 CA enquanto empunhado",
+    "icon": "🛡️",
+    "classes": [
+      "Guerreiro",
+      "Clérigo",
+      "Paladino"
+    ]
+  },
+  {
+    "id": "chain",
+    "name": "Cota de Malha",
+    "cat": "Armadura pesada",
+    "weight": "25 kg",
+    "req": "Proficiência com armadura pesada • Força recomendada",
+    "stats": "CA 16 • Desvantagem em Furtividade",
+    "icon": "🥋",
+    "classes": [
+      "Guerreiro",
+      "Paladino"
+    ]
+  },
+  {
+    "id": "leather",
+    "name": "Armadura de Couro",
+    "cat": "Armadura leve",
+    "weight": "4,5 kg",
+    "req": "Proficiência com armadura leve",
+    "stats": "CA 11 + modificador de Destreza",
+    "icon": "🧥",
+    "classes": [
+      "Guerreiro",
+      "Patrulheiro",
+      "Ladino",
+      "Bardo"
+    ]
+  },
+  {
+    "id": "dagger",
+    "name": "Adaga",
+    "cat": "Arma simples",
+    "weight": "0,45 kg",
+    "req": "Proficiência com armas simples",
+    "stats": "1d4 perfurante • Acuidade • Leve • Arremesso",
+    "icon": "🗡️",
+    "classes": [
+      "Ladino",
+      "Mago",
+      "Bardo",
+      "Clérigo"
+    ]
+  },
+  {
+    "id": "staff",
+    "name": "Bordão",
+    "cat": "Arma simples",
+    "weight": "1,8 kg",
+    "req": "Proficiência com armas simples",
+    "stats": "1d6 contundente • Versátil (1d8)",
+    "icon": "🪄",
+    "classes": [
+      "Mago",
+      "Clérigo",
+      "Druida"
+    ]
+  },
+  {
+    "id": "spellbook",
+    "name": "Grimório",
+    "cat": "Foco de estudo",
+    "weight": "1,4 kg",
+    "req": "Classe com preparação arcana compatível",
+    "stats": "Registro e preparação de magias",
+    "icon": "📕",
+    "classes": [
+      "Mago"
+    ]
+  },
+  {
+    "id": "holy",
+    "name": "Símbolo Sagrado",
+    "cat": "Foco divino",
+    "weight": "0,45 kg",
+    "req": "Conjuração divina compatível",
+    "stats": "Foco para magias divinas",
+    "icon": "☀️",
+    "classes": [
+      "Clérigo",
+      "Paladino"
+    ]
+  },
+  {
+    "id": "thieves",
+    "name": "Ferramentas de Ladrão",
+    "cat": "Ferramentas",
+    "weight": "0,45 kg",
+    "req": "Proficiência recomendada",
+    "stats": "Gazuas e ferramentas finas",
+    "icon": "🧰",
+    "classes": [
+      "Ladino"
+    ]
+  },
+  {
+    "id": "explorer",
+    "name": "Pacote de Explorador",
+    "cat": "Kit de aventura",
+    "weight": "~27 kg",
+    "req": "Nenhum requisito especial",
+    "stats": "Mochila, corda, tochas e suprimentos",
+    "icon": "🎒",
+    "classes": [
+      "Guerreiro",
+      "Bárbaro",
+      "Patrulheiro",
+      "Paladino"
+    ]
+  }
+]

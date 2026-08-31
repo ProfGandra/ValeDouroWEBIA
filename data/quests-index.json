@@ -1,0 +1,234 @@
+[
+  {
+    "id": "QST-001",
+    "title": "A Caravana que Não Chegou",
+    "level": {
+      "min": 1,
+      "ideal": 2,
+      "max": 3
+    },
+    "type": [
+      "investigation",
+      "exploration",
+      "rescue"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    }
+  },
+  {
+    "id": "QST-002",
+    "title": "A Ponte Velha",
+    "level": {
+      "min": 1,
+      "ideal": 2,
+      "max": 3
+    },
+    "type": [
+      "investigation",
+      "engineering",
+      "travel"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 1
+    }
+  },
+  {
+    "id": "QST-003",
+    "title": "O Rebanho da Colina",
+    "level": {
+      "min": 1,
+      "ideal": 2,
+      "max": 3
+    },
+    "type": [
+      "investigation",
+      "exploration",
+      "creature_encounter"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 1
+    }
+  },
+  {
+    "id": "QST-004",
+    "title": "Quatro Sentinelas, Três Relatórios",
+    "level": {
+      "min": 1,
+      "ideal": 2,
+      "max": 3
+    },
+    "type": [
+      "investigation",
+      "rescue",
+      "frontier"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 1
+    }
+  },
+  {
+    "id": "QST-005",
+    "title": "O Aprendiz Desaparecido",
+    "level": {
+      "min": 1,
+      "ideal": 2,
+      "max": 3
+    },
+    "type": [
+      "investigation",
+      "engineering",
+      "rescue"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 1
+    }
+  },
+  {
+    "id": "QST-006",
+    "title": "Luzes nas Terras Devastadas",
+    "level": {
+      "min": 2,
+      "ideal": 3,
+      "max": 4
+    },
+    "type": [
+      "exploration",
+      "mystery",
+      "investigation",
+      "reactive_encounter"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_conditional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    }
+  },
+  {
+    "id": "QST-007",
+    "title": "A Mina Silenciosa",
+    "level": {
+      "min": 3,
+      "ideal": 4,
+      "max": 5
+    },
+    "type": [
+      "rescue",
+      "engineering",
+      "exploration"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    }
+  },
+  {
+    "id": "QST-008",
+    "title": "Água para São Jerônimo",
+    "level": {
+      "min": 2,
+      "ideal": 3,
+      "max": 4
+    },
+    "type": [
+      "investigation",
+      "engineering",
+      "social"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    }
+  },
+  {
+    "id": "QST-009",
+    "title": "O Monstro da Estrada Norte",
+    "level": {
+      "min": 2,
+      "ideal": 3,
+      "max": 4
+    },
+    "type": [
+      "investigation",
+      "exploration",
+      "creature_encounter",
+      "information_analysis"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_conditional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    }
+  },
+  {
+    "id": "QST-010",
+    "title": "O Sino que Não Tocou",
+    "level": {
+      "min": 3,
+      "ideal": 4,
+      "max": 5
+    },
+    "type": [
+      "disaster_response",
+      "engineering",
+      "rescue"
+    ],
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_optional"
+    ],
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    }
+  }
+]
