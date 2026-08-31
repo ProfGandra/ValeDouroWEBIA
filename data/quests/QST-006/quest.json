@@ -1,0 +1,988 @@
+{
+  "id": "QST-006",
+  "schema_version": "1.2.0",
+  "content_version": "1.0.0",
+  "identity": {
+    "title": "Luzes nas Terras Devastadas",
+    "status": "validated",
+    "type": [
+      "exploration",
+      "mystery",
+      "investigation",
+      "reactive_encounter"
+    ],
+    "recommended_level": {
+      "min": 2,
+      "ideal": 3,
+      "max": 4
+    },
+    "recommended_party_size": 4,
+    "duration": {
+      "minimum_sessions": 1,
+      "maximum_sessions": 2
+    },
+    "pillars": [
+      "exploration",
+      "interaction",
+      "combat_conditional"
+    ],
+    "expected_combat": "conditional_on_world_state_and_player_actions",
+    "steam": true,
+    "tags": [
+      "terras_devastadas",
+      "triangulation",
+      "scavengers",
+      "desgarrados",
+      "reactive_states",
+      "battlefield"
+    ]
+  },
+  "canon_refs": [
+    {
+      "ref": "CANON:TERRAS_DEVASTADAS",
+      "purpose": "Former active combat zone of the Kratovian War; finding isolated residual reanimated soldiers is a significant possibility, not proof of renewed invasion."
+    },
+    {
+      "ref": "CANON:DESGARRADOS",
+      "purpose": "Use validated residual Dravnik behavior, weapon-threat recognition, charge cry, formation behavior and neutralization rules."
+    },
+    {
+      "ref": "CANON:KRATOVIAN_WAR",
+      "purpose": "Historical context only; quest is not evidence of renewed Kratovian military action."
+    }
+  ],
+  "template_truth": {
+    "summary": [
+      "Luzes vistas nas Terras Devastadas são produzidas por um pequeno grupo de saqueadores/reviradores de campo de batalha.",
+      "Eles procuram objetos de valor e passaram a perturbar sepultamentos antigos.",
+      "Ao remexer uma área, libertaram parcialmente um Dravnik Reanimado que permanecera preso desde o período de guerra.",
+      "O reanimado não atacou imediatamente.",
+      "Um saqueador apresentou/sacou uma arma; o estímulo ativou reconhecimento irreversível de ameaça.",
+      "O grupo fugiu, mas continuou operando em outra área.",
+      "Não há necromantes atuais, nova força kratoviana ou retomada da guerra por trás das luzes."
+    ],
+    "immutable": true
+  },
+  "propositions": [
+    {
+      "id": "PRP-001",
+      "statement": "As luzes são produzidas por um pequeno grupo de saqueadores.",
+      "truth": true
+    },
+    {
+      "id": "PRP-002",
+      "statement": "Os saqueadores são necromantes.",
+      "truth": false
+    },
+    {
+      "id": "PRP-003",
+      "statement": "As luzes indicam uma nova operação militar de Kratóvia.",
+      "truth": false
+    },
+    {
+      "id": "PRP-004",
+      "statement": "Os saqueadores perturbaram sepultamentos antigos em busca de objetos de valor.",
+      "truth": true
+    },
+    {
+      "id": "PRP-005",
+      "statement": "Um Dravnik Reanimado antigo foi parcialmente libertado durante a escavação.",
+      "truth": true
+    },
+    {
+      "id": "PRP-006",
+      "statement": "O Desgarrado não atacou imediatamente ao ser exposto.",
+      "truth": true
+    },
+    {
+      "id": "PRP-007",
+      "statement": "A apresentação de uma arma fez o Desgarrado reconhecer uma ameaça.",
+      "truth": true
+    },
+    {
+      "id": "PRP-008",
+      "statement": "Guardar a arma após o reconhecimento não desfaz automaticamente a classificação de ameaça.",
+      "truth": true
+    },
+    {
+      "id": "PRP-009",
+      "statement": "Um Grito da Carga pode estimular outros Desgarrados próximos a entrar em resposta de combate.",
+      "truth": true
+    },
+    {
+      "id": "PRP-010",
+      "statement": "Desgarrados reunidos podem espontaneamente recompor comportamento de unidade e formação sem recuperar inteligência ou comando.",
+      "truth": true
+    },
+    {
+      "id": "PRP-011",
+      "statement": "Os Desgarrados possuem Essência, personalidade ou memória consciente recuperada.",
+      "truth": false
+    },
+    {
+      "id": "PRP-012",
+      "statement": "Decapitação neutraliza permanentemente um Desgarrado.",
+      "truth": true
+    },
+    {
+      "id": "PRP-013",
+      "statement": "Nas Terras Devastadas, encontrar um ou mais Desgarrados é uma possibilidade significativa devido ao combate histórico intenso.",
+      "truth": true
+    }
+  ],
+  "module_slots": [],
+  "actors": [
+    {
+      "id": "ACT-001",
+      "entity_type": "group",
+      "role": "scavengers",
+      "canonical": false,
+      "member_count": "3-4",
+      "initial_location": "LOC-004",
+      "goals": [
+        "recover_battlefield_valuables",
+        "avoid_capture_or_serious_harm"
+      ],
+      "knowledge": [
+        {
+          "proposition": "PRP-001",
+          "status": "known"
+        },
+        {
+          "proposition": "PRP-004",
+          "status": "known"
+        },
+        {
+          "proposition": "PRP-005",
+          "status": "known"
+        },
+        {
+          "proposition": "PRP-006",
+          "status": "known"
+        },
+        {
+          "proposition": "PRP-007",
+          "status": "known"
+        }
+      ],
+      "beliefs": [],
+      "constraints": [
+        "not_necessarily_murderers",
+        "not_current_kratovian_agents",
+        "not_necromancers"
+      ]
+    },
+    {
+      "id": "ACT-002",
+      "entity_type": "individual",
+      "role": "initial_desgarrado",
+      "canonical": false,
+      "canon_model": "CANON:DESGARRADOS",
+      "initial_location": "LOC-005",
+      "initial_state": "partially_freed_passive",
+      "goals": [
+        "execute_residual_military_response_when_triggered"
+      ],
+      "constraints": [
+        "no_essence",
+        "no_personality",
+        "no_conscious_memory",
+        "no_new_strategy",
+        "no_commander"
+      ]
+    },
+    {
+      "id": "ACT-003",
+      "entity_type": "group",
+      "role": "possible_nearby_desgarrados",
+      "canonical": false,
+      "canon_model": "CANON:DESGARRADOS",
+      "member_count": {
+        "typical_min": 0,
+        "typical_max": 2
+      },
+      "initial_location": "LOC-006",
+      "initial_state": "unknown_or_dormant",
+      "goals": [
+        "respond_to_recognized_combat_stimuli_if_present_and_able"
+      ],
+      "constraints": [
+        "existence_not_guaranteed",
+        "must_be_able_to_hear_or_perceive_relevant_stimulus",
+        "must_be_mobile_and_able_to_reach",
+        "no_exponential_horde_generation"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "id": "LOC-001",
+      "name": "Ponto de partida / área habitada próxima",
+      "type": "settlement_or_route",
+      "connections": [
+        {
+          "target": "LOC-002",
+          "access": "open"
+        }
+      ]
+    },
+    {
+      "id": "LOC-002",
+      "name": "Pontos de observação das luzes",
+      "type": "observation_area",
+      "connections": [
+        {
+          "target": "LOC-003",
+          "access": "open"
+        }
+      ]
+    },
+    {
+      "id": "LOC-003",
+      "name": "Área provável obtida por triangulação",
+      "type": "search_region",
+      "connections": [
+        {
+          "target": "LOC-004",
+          "access": "searchable"
+        },
+        {
+          "target": "LOC-005",
+          "access": "searchable"
+        }
+      ]
+    },
+    {
+      "id": "LOC-004",
+      "name": "Acampamento/área atual dos saqueadores",
+      "type": "temporary_camp",
+      "connections": [
+        {
+          "target": "LOC-005",
+          "access": "battlefield_terrain"
+        }
+      ]
+    },
+    {
+      "id": "LOC-005",
+      "name": "Sepultamento perturbado / local do primeiro Desgarrado",
+      "type": "old_battlefield_burial",
+      "connections": [
+        {
+          "target": "LOC-006",
+          "access": "battlefield_terrain"
+        }
+      ]
+    },
+    {
+      "id": "LOC-006",
+      "name": "Campo de batalha antigo circundante",
+      "type": "devastated_battlefield",
+      "connections": []
+    }
+  ],
+  "problems": [
+    {
+      "id": "PRB-001",
+      "name": "Origem desconhecida das luzes",
+      "role": "presenting_problem",
+      "initial_state": "active",
+      "domains": [
+        "informational",
+        "exploration"
+      ]
+    },
+    {
+      "id": "PRB-002",
+      "name": "Saque e perturbação de sepultamentos",
+      "role": "social_problem",
+      "initial_state": "active",
+      "domains": [
+        "social",
+        "legal",
+        "historical"
+      ]
+    },
+    {
+      "id": "PRB-003",
+      "name": "Desgarrado parcialmente libertado",
+      "role": "reactive_risk",
+      "initial_state": "latent",
+      "domains": [
+        "security",
+        "historical"
+      ]
+    },
+    {
+      "id": "PRB-004",
+      "name": "Possível resposta de outros Desgarrados",
+      "role": "conditional_risk",
+      "initial_state": "latent",
+      "domains": [
+        "security"
+      ]
+    },
+    {
+      "id": "PRB-005",
+      "name": "Interpretação equivocada de nova atividade kratoviana",
+      "role": "informational_noise",
+      "initial_state": "possible",
+      "domains": [
+        "informational",
+        "social"
+      ]
+    }
+  ],
+  "needs": [
+    {
+      "id": "NED-001",
+      "description": "Determinar a origem das luzes.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-001"
+      ]
+    },
+    {
+      "id": "NED-002",
+      "description": "Decidir como lidar com os saqueadores e a perturbação dos sepultamentos.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-002"
+      ]
+    },
+    {
+      "id": "NED-003",
+      "description": "Evitar, conter ou sobreviver a uma resposta de Desgarrados caso ela seja ativada.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-003",
+        "PRB-004"
+      ]
+    },
+    {
+      "id": "NED-004",
+      "description": "Distinguir consequências antigas da guerra de uma ameaça kratoviana atual.",
+      "initial_state": "unmet",
+      "generated_by": [
+        "PRB-005"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "id": "FUN-001",
+      "description": "Relacionar observações de direção/posição para reduzir a região de busca.",
+      "satisfies": [
+        "NED-001"
+      ]
+    },
+    {
+      "id": "FUN-002",
+      "description": "Identificar sinais de escavação, saque e perturbação de sepultamentos.",
+      "satisfies": [
+        "NED-001",
+        "NED-002"
+      ]
+    },
+    {
+      "id": "FUN-003",
+      "description": "Reconhecer e administrar estímulos que alteram o estado reativo de um Desgarrado.",
+      "satisfies": [
+        "NED-003"
+      ]
+    },
+    {
+      "id": "FUN-004",
+      "description": "Neutralizar fisicamente um Desgarrado quando necessário.",
+      "satisfies": [
+        "NED-003"
+      ]
+    },
+    {
+      "id": "FUN-005",
+      "description": "Avaliar evidências que distinguem atividade de saqueadores de operação militar atual.",
+      "satisfies": [
+        "NED-004"
+      ]
+    }
+  ],
+  "resources": [],
+  "events": [
+    {
+      "id": "EVT-001",
+      "name": "Saqueadores começam a procurar objetos em antigas áreas de combate",
+      "event_type": "historical",
+      "sequence": 1,
+      "location": "LOC-006",
+      "actors": [
+        "ACT-001"
+      ],
+      "supports_propositions": [
+        "PRP-001",
+        "PRP-004"
+      ]
+    },
+    {
+      "id": "EVT-002",
+      "name": "Saqueadores perturbam antigo sepultamento",
+      "event_type": "historical",
+      "sequence": 2,
+      "relative_time": "after EVT-001",
+      "location": "LOC-005",
+      "actors": [
+        "ACT-001"
+      ],
+      "supports_propositions": [
+        "PRP-004"
+      ]
+    },
+    {
+      "id": "EVT-003",
+      "name": "Um antigo Dravnik Reanimado é parcialmente libertado",
+      "event_type": "historical",
+      "sequence": 3,
+      "relative_time": "during EVT-002",
+      "location": "LOC-005",
+      "actors": [
+        "ACT-001",
+        "ACT-002"
+      ],
+      "supports_propositions": [
+        "PRP-005",
+        "PRP-006"
+      ]
+    },
+    {
+      "id": "EVT-004",
+      "name": "Saqueador apresenta uma arma diante do Desgarrado",
+      "event_type": "historical",
+      "sequence": 4,
+      "relative_time": "after EVT-003",
+      "location": "LOC-005",
+      "actors": [
+        "ACT-001",
+        "ACT-002"
+      ],
+      "supports_propositions": [
+        "PRP-007"
+      ]
+    },
+    {
+      "id": "EVT-005",
+      "name": "Desgarrado entra em resposta de ameaça",
+      "event_type": "historical",
+      "sequence": 5,
+      "relative_time": "immediately after EVT-004",
+      "location": "LOC-005",
+      "actors": [
+        "ACT-002"
+      ],
+      "supports_propositions": [
+        "PRP-007",
+        "PRP-008"
+      ]
+    },
+    {
+      "id": "EVT-006",
+      "name": "Saqueadores fogem e continuam operando em outra área",
+      "event_type": "historical",
+      "sequence": 6,
+      "relative_time": "after EVT-005",
+      "location": "LOC-004",
+      "actors": [
+        "ACT-001"
+      ],
+      "supports_propositions": [
+        "PRP-001"
+      ]
+    }
+  ],
+  "causal_relations": [
+    {
+      "id": "CAU-001",
+      "from": "EVT-001",
+      "to": "EVT-002",
+      "type": "behavioral",
+      "description": "Busca por objetos de valor leva à perturbação de sepultamentos."
+    },
+    {
+      "id": "CAU-002",
+      "from": "EVT-002",
+      "to": "EVT-003",
+      "type": "physical",
+      "description": "A escavação remove parte do confinamento físico do antigo reanimado."
+    },
+    {
+      "id": "CAU-003",
+      "from": "EVT-004",
+      "to": "EVT-005",
+      "type": "behavioral",
+      "description": "A arma apresentada funciona como estímulo militar reconhecível e ativa a classificação de ameaça."
+    },
+    {
+      "id": "CAU-004",
+      "from": "EVT-005",
+      "to": "EVT-006",
+      "type": "behavioral",
+      "description": "A reação do Desgarrado leva os saqueadores a fugir."
+    },
+    {
+      "id": "CAU-005",
+      "from": "PRP-009",
+      "to": "PRB-004",
+      "type": "behavioral",
+      "description": "O Grito da Carga pode ativar resposta de combate em outros Desgarrados próximos que existam e possam percebê-lo."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EVD-001",
+      "type": "testimonial_or_observational",
+      "location": "LOC-002",
+      "availability": "available",
+      "observations": [
+        "Testemunhas viram luzes em noites recentes a partir de posições diferentes.",
+        "As direções relatadas podem ser cruzadas para reduzir a área provável."
+      ],
+      "interpretation_layers": [
+        {
+          "dc": 10,
+          "skill": "investigation",
+          "result": "As observações não apontam para toda a região; há uma área comum plausível."
+        },
+        {
+          "dc": 12,
+          "skill": "intelligence",
+          "result": "Duas ou mais linhas aproximadas de observação reduzem significativamente a região de busca."
+        },
+        {
+          "dc": 14,
+          "skill": "intelligence",
+          "result": "Diferenças de posição, relevo e incerteza dos relatos podem ser consideradas para priorizar uma área menor sem produzir localização matematicamente perfeita."
+        }
+      ],
+      "provenance": {
+        "source_type": "witness_observations",
+        "directness": "mixed",
+        "chain": []
+      }
+    },
+    {
+      "id": "EVD-002",
+      "type": "physical",
+      "location": "LOC-004",
+      "availability": "discoverable",
+      "observations": [
+        "Há sinais de acampamento temporário e atividade humana recente.",
+        "Ferramentas, marcas ou resíduos são compatíveis com busca/escavação."
+      ],
+      "interpretation_layers": [
+        {
+          "dc": 10,
+          "skill": "investigation",
+          "result": "As luzes provavelmente têm origem humana comum."
+        },
+        {
+          "dc": 12,
+          "skill": "investigation",
+          "result": "A atividade é compatível com saque/reviramento, não com acampamento militar organizado."
+        }
+      ],
+      "provenance": {
+        "source_type": "physical_site",
+        "directness": "direct",
+        "chain": []
+      }
+    },
+    {
+      "id": "EVD-003",
+      "type": "physical",
+      "location": "LOC-005",
+      "availability": "discoverable",
+      "observations": [
+        "Sepultamento antigo foi perturbado.",
+        "Terra e materiais foram removidos recentemente.",
+        "Há sinais de que algo preso ou coberto ficou parcialmente exposto."
+      ],
+      "interpretation_layers": [
+        {
+          "dc": 10,
+          "skill": "investigation",
+          "result": "A área foi deliberadamente remexida."
+        },
+        {
+          "dc": 12,
+          "skill": "investigation",
+          "result": "A escavação buscava objetos ou restos associados ao antigo campo de batalha."
+        }
+      ],
+      "provenance": {
+        "source_type": "physical_site",
+        "directness": "direct",
+        "chain": []
+      }
+    }
+  ],
+  "information": [
+    {
+      "id": "INF-001",
+      "content": "As luzes aparecem nas Terras Devastadas durante a noite.",
+      "type": "direct_observation",
+      "source": "ACT-001",
+      "sincerity": "not_applicable",
+      "provenance": {
+        "source_type": "phenomenon",
+        "directness": "indirect_to_players",
+        "chain": []
+      }
+    },
+    {
+      "id": "INF-002",
+      "content": "Os saqueadores encontraram um morto antigo e um deles sacou uma arma; então ele reagiu.",
+      "type": "direct_testimony",
+      "source": "ACT-001",
+      "sincerity": "contextual",
+      "provenance": {
+        "source_type": "testimony",
+        "directness": "direct",
+        "chain": [
+          "ACT-001"
+        ]
+      },
+      "delivery_examples": [
+        "Ele estava lá, preso. Não fez nada no começo. Aí um de nós puxou a espada... e aquilo mudou."
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "id": "RSK-001",
+      "name": "Ativação do primeiro Desgarrado",
+      "severity": "high",
+      "probability": "conditional",
+      "triggers": [
+        "TRG-001"
+      ],
+      "mitigations": [
+        "avoid_presenting_weapon_before_decision",
+        "withdraw_before_trigger_if_possible",
+        "neutralize_if_triggered"
+      ]
+    },
+    {
+      "id": "RSK-002",
+      "name": "Grito da Carga atrair resposta próxima",
+      "severity": "high",
+      "probability": "conditional",
+      "triggers": [
+        "TRG-002"
+      ],
+      "mitigations": [
+        "rapid_neutralization_may_prevent_cry_if_world_state_allows",
+        "observe_horizon_and_surroundings",
+        "prepare_for_delayed_arrival"
+      ]
+    },
+    {
+      "id": "RSK-003",
+      "name": "Formação de múltiplos Desgarrados",
+      "severity": "high",
+      "probability": "conditional",
+      "triggers": [
+        "TRG-003"
+      ],
+      "mitigations": [
+        "avoid_being_fixed_by_shield_line",
+        "use_terrain_and_creative_tactics",
+        "separate_or_disable_bodies"
+      ]
+    },
+    {
+      "id": "RSK-004",
+      "name": "Confundir consequência histórica com nova invasão",
+      "severity": "moderate",
+      "probability": "conditional",
+      "triggers": [
+        "insufficient_evidence"
+      ],
+      "mitigations": [
+        "investigate_scavenger_activity",
+        "evaluate_absence_of_current_military_signs"
+      ]
+    }
+  ],
+  "processes": [
+    {
+      "id": "PRC-001",
+      "name": "Resposta militar residual do Desgarrado",
+      "state": "passive_or_untriggered",
+      "trend": "conditional",
+      "rate": "contextual",
+      "update_mode": "event_driven",
+      "conditions": [
+        "Weapon/threat recognition can irreversibly move the individual into combat response."
+      ]
+    },
+    {
+      "id": "PRC-002",
+      "name": "Propagação local do Grito da Carga",
+      "state": "inactive",
+      "trend": "conditional",
+      "rate": "contextual",
+      "update_mode": "event_driven",
+      "conditions": [
+        "Only nearby Desgarrados that exist, perceive the cry, remain mobile and can reach may respond.",
+        "Typical natural response is zero, one or two; no automatic horde."
+      ]
+    }
+  ],
+  "triggers": [
+    {
+      "id": "TRG-001",
+      "name": "Reconhecimento de arma/ameaça",
+      "condition": {
+        "type": "weapon_presented_or_drawn_in_recognizable_context",
+        "target_actor": "ACT-002"
+      },
+      "irreversible": true,
+      "effects": [
+        {
+          "target": "ACT-002",
+          "field": "threat_state",
+          "value": "hostile_identification"
+        },
+        {
+          "target": "PRC-001",
+          "field": "state",
+          "value": "combat_response"
+        }
+      ],
+      "reversal_guardrail": "Sheathing the weapon or relaxing posture does not automatically revert hostile identification."
+    },
+    {
+      "id": "TRG-002",
+      "name": "Grito da Carga",
+      "condition": {
+        "type": "desgarrado_charge_sequence_reaches_battle_cry",
+        "source_actor": "ACT-002"
+      },
+      "irreversible": false,
+      "effects": [
+        {
+          "target": "PRC-002",
+          "field": "state",
+          "value": "signal_propagated"
+        },
+        {
+          "target": "ACT-003",
+          "field": "response_state",
+          "value": "evaluate_response_conditions"
+        }
+      ],
+      "guardrails": [
+        "The cry is not a conscious request for help.",
+        "Do not spawn responders merely because the trigger fired.",
+        "Responders require pre-existing plausible presence and physical ability to perceive/reach."
+      ]
+    },
+    {
+      "id": "TRG-003",
+      "name": "Reformação de unidade",
+      "condition": {
+        "type": "two_or_more_desgarrados_join_same_combat_response"
+      },
+      "irreversible": false,
+      "effects": [
+        {
+          "target": "ACT-003",
+          "field": "formation_state",
+          "value": "cohesive_military_unit"
+        }
+      ],
+      "guardrails": [
+        "Formation behavior does not restore intelligence, personality, conversation or command.",
+        "Unit may form shield wall, protect flanks, maintain spacing, advance together, fill gaps and coordinate rudimentarily.",
+        "No commander is elected or required."
+      ]
+    }
+  ],
+  "known_solutions": [
+    {
+      "id": "SOL-001",
+      "target_need": "NED-001",
+      "method": "Triangular testemunhos/posições para reduzir a região de busca."
+    },
+    {
+      "id": "SOL-002",
+      "target_need": "NED-002",
+      "method": "Conversar, deter, expulsar, negociar com ou acompanhar os saqueadores até compradores/contatos, conforme decisões dos jogadores."
+    },
+    {
+      "id": "SOL-003",
+      "target_need": "NED-003",
+      "method": "Evitar apresentar arma antes de decidir como lidar com um Desgarrado ainda passivo."
+    },
+    {
+      "id": "SOL-004",
+      "target_need": "NED-003",
+      "method": "Se houver combate, neutralizar por decapitação ou tornar o corpo fisicamente incapaz de sustentar combate; decapitação é permanente."
+    },
+    {
+      "id": "SOL-005",
+      "target_need": "NED-003",
+      "method": "Usar terreno, separação, fogo/ácido/água fervente/óleo quente ou outras soluções coerentes já estabelecidas para degradar a capacidade física, sem inventar novas vulnerabilidades."
+    },
+    {
+      "id": "SOL-006",
+      "target_need": "NED-004",
+      "method": "Comparar sinais de saqueadores e resíduos históricos com o que seria esperado de uma operação militar atual."
+    }
+  ],
+  "known_solutions_exhaustive": false,
+  "steam_concepts": [
+    {
+      "id": "STM-001",
+      "domain": "mathematics",
+      "concept": "triangulation_and_spatial_estimation",
+      "required": false,
+      "application": "Cruzar direções aproximadas de testemunhas em posições distintas para reduzir a área de busca.",
+      "advantages": [
+        "reduce_search_area"
+      ]
+    },
+    {
+      "id": "STM-002",
+      "domain": "logic",
+      "concept": "conditional_state_transition",
+      "required": false,
+      "application": "Perceber que certas ações alteram irreversivelmente o estado reativo de um Desgarrado.",
+      "advantages": [
+        "avoid_unnecessary_combat",
+        "anticipate_consequences"
+      ]
+    }
+  ],
+  "player_freedoms": [
+    {
+      "type": "investigation_order_free",
+      "scope": "global"
+    },
+    {
+      "type": "scavenger_resolution_open",
+      "target": "PRB-002"
+    },
+    {
+      "type": "combat_not_mandatory",
+      "target": "PRB-003"
+    },
+    {
+      "type": "creative_solution_allowed",
+      "scope": "global"
+    },
+    {
+      "type": "magic_not_artificially_blocked",
+      "scope": "global"
+    },
+    {
+      "type": "no_compensatory_horde",
+      "scope": "global",
+      "description": "Do not generate extra Desgarrados simply to replace an avoided or quickly solved challenge."
+    }
+  ],
+  "narrative_guardrails": [
+    {
+      "type": "instruction",
+      "text": "As luzes pertencem aos saqueadores; não são produzidas por necromantes atuais."
+    },
+    {
+      "type": "instruction",
+      "text": "A Quest não é evidência de nova invasão ou operação atual de Kratóvia."
+    },
+    {
+      "type": "instruction",
+      "text": "Desgarrados não possuem Essência, personalidade, memória consciente recuperada ou novo pensamento estratégico."
+    },
+    {
+      "type": "instruction",
+      "text": "O reconhecimento de ameaça após arma apresentada é irreversível por simples guarda da arma."
+    },
+    {
+      "type": "instruction",
+      "text": "O Grito da Carga é resposta militar residual, não pedido consciente de ajuda."
+    },
+    {
+      "type": "instruction",
+      "text": "Não criar horda exponencial: resposta típica possível é nenhuma, uma ou duas presenças próximas quando as condições físicas existirem."
+    },
+    {
+      "type": "instruction",
+      "text": "Se múltiplos Desgarrados se reunirem, podem agir como unidade coesa sem comandante e sem inteligência recuperada."
+    },
+    {
+      "type": "instruction",
+      "text": "Decapitação neutraliza permanentemente; não inventar vulnerabilidades não validadas."
+    },
+    {
+      "type": "instruction",
+      "text": "Os saqueadores não precisam ser assassinos ou membros de organização secreta."
+    },
+    {
+      "type": "instruction",
+      "text": "Não transformar a perturbação dos sepultamentos em reanimação espontânea de mortos valedourenses."
+    },
+    {
+      "type": "instruction",
+      "text": "Terras Devastadas têm possibilidade significativa de Desgarrados por terem sido área de combate ativo, mas não são uma infestação de mortos-vivos."
+    }
+  ],
+  "resolution_model": {
+    "quest_completion_is_binary": false,
+    "problem_resolution_states": [
+      "active",
+      "latent",
+      "stabilized",
+      "delegated",
+      "under_resolution",
+      "resolved",
+      "transformed",
+      "abandoned"
+    ],
+    "possible_end_states": [
+      "Origem das luzes esclarecida e saqueadores tratados sem ativar novo combate.",
+      "Saqueadores detidos/expulsos/negociados e Desgarrado permanece evitado ou contido.",
+      "Desgarrado ativado e neutralizado sem resposta adicional.",
+      "Grito da Carga ocorre e um ou mais Desgarrados plausivelmente próximos entram em resposta.",
+      "Saqueadores escapam, mas a verdade sobre as luzes é descoberta.",
+      "Quest termina com riscos locais ainda não totalmente resolvidos."
+    ],
+    "persistent_consequences": [
+      "Disposition/fate of scavengers.",
+      "Condition of disturbed burial area.",
+      "Whether one or more Desgarrados were activated or neutralized.",
+      "Knowledge gained by characters about residual battlefield behavior.",
+      "Possible delayed movement of a plausible nearby Desgarrado if a charge cry reached it."
+    ],
+    "milestone_progression": true
+  },
+  "claims": [],
+  "reports": [],
+  "provenance_chains": [],
+  "information_transformations": [],
+  "source_relations": [],
+  "evidence_graph": [],
+  "technical_notes": {
+    "schema_1_2_sync": {
+      "previous_schema_version": "1.1.0",
+      "change_type": "technical_contract_synchronization",
+      "epistemic_fields_explicit": [
+        "claims",
+        "reports",
+        "provenance_chains",
+        "information_transformations",
+        "source_relations",
+        "evidence_graph"
+      ],
+      "narrative_content_changed": false
+    }
+  }
+}
