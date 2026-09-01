@@ -1,68 +1,111 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ValeDouro — Mestre Virtual</title>
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-<style>
-:root{--g:#d8b66f;--g2:#f0d9a4;--ink:#f4ead8;--mut:#b9aa92;--p:rgba(8,11,10,.92);--ln:#7e6538;--ok:#77bf78;--bad:#d8846f}*{box-sizing:border-box}body{margin:0;background:#060807;color:var(--ink);font-family:Georgia,serif}button,input,select,textarea{font:inherit}.hidden{display:none!important}.bg{min-height:100vh;background:linear-gradient(#0004,#0008),url('assets/valedouro-game-bg.png') center/cover fixed}.splash{min-height:100vh;display:grid;place-items:center;background:linear-gradient(#0003,#0009),url('assets/valedouro-intro.png') center/cover}.card,.panel{background:var(--p);border:1px solid var(--ln);border-radius:14px;box-shadow:0 18px 48px #0009;backdrop-filter:blur(8px)}.splash .card{text-align:center;padding:34px}.splash h1{font-size:60px;color:var(--g2);margin:0}.btn{padding:11px 16px;border:1px solid var(--ln);border-radius:9px;background:linear-gradient(#5a4324,#2b2116);color:var(--ink);cursor:pointer}.btn:hover:not(:disabled){border-color:var(--g2)}.btn:disabled{opacity:.45;cursor:not-allowed}.app{max-width:1240px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center}.top h1{color:var(--g2);letter-spacing:.08em}.top-actions{display:flex;gap:8px;align-items:center}.status{padding:6px 10px;border:1px solid var(--ln);border-radius:999px;color:var(--mut)}.step{display:none}.step.active{display:block}.panel{padding:20px;margin-top:16px}.choices,.grid,.party-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.choice{padding:26px;text-align:center}.choice h2,.panel h2,.player-card h3{color:var(--g2)}label{display:block;color:var(--mut);margin-top:10px}input,select,textarea{width:100%;padding:10px;background:#080a09;color:var(--ink);border:1px solid var(--ln);border-radius:8px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.attr{padding:12px;border:1px solid #ffffff1c;border-radius:10px;text-align:center}.attr strong{display:block;color:var(--g2);font-size:24px}.equipment-card{padding:12px}.equipment-card img{width:100%;height:150px;object-fit:cover;border-radius:9px;border:1px solid #ffffff18}.equipment-card h3{color:var(--g2);margin:9px 0}.compat{color:var(--ok)}.incompat{color:var(--bad)}.selected{outline:2px solid var(--ok)}.story{height:55vh;overflow:auto;padding:16px;background:#040605c9;border:1px solid #ffffff16;border-radius:12px;line-height:1.6}.entry{padding:10px 0;border-bottom:1px solid #ffffff10}.master{color:#ead1a0}.actions{display:flex;gap:10px;margin-top:10px}.actions textarea{min-height:80px;flex:1}.sheet{display:grid;grid-template-columns:300px 1fr;gap:14px}.summary{position:sticky;top:20px;max-height:85vh;overflow:auto}.dice{font-size:18px;color:var(--g2)}.dice-box{margin:14px 0;padding:18px;text-align:center;border:1px solid var(--g);border-radius:12px;background:#20180fcc}.d20{font-size:54px;margin:8px}.progress,.muted{color:var(--mut)}.player-card{padding:16px}.player-card.active-player{outline:2px solid var(--g)}.nav-btn{background:#15120d}.menu-note{padding:12px;border-left:3px solid var(--g);color:var(--mut)}.toolbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin:12px 0 18px}.toolbar>div{flex:1;min-width:240px}.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}.comp-card{overflow:hidden}.comp-card img{width:100%;height:250px;object-fit:cover;display:block;border-bottom:1px solid var(--ln);background:#090b0a}.comp-card .body{padding:12px}.comp-card h3{margin:0;color:var(--g2);font-size:18px}.saved-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.section-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}@media(max-width:760px){.row,.attrs,.sheet{grid-template-columns:1fr}.actions{display:block}.actions .btn{width:100%;margin-top:8px}.top{align-items:flex-start}.top-actions{flex-wrap:wrap;justify-content:flex-end}}
-</style></head><body>
-<section id="splash" class="splash"><div class="card"><h1>VALEDOURO</h1><p>Mestre Virtual</p><button class="btn" onclick="enter()">ENTRAR</button></div></section>
-<section id="app" class="bg hidden"><div class="app"><div class="top"><h1>VALEDOURO</h1><div class="top-actions"><button class="btn nav-btn" onclick="showMenu()">MENU</button><span id="aiStatus" class="status">IA: verificando…</span></div></div>
-<section id="menu" class="step active panel"><h2>Menu Principal</h2><div class="choices"><article class="card choice"><h2>Nova Aventura</h2><p>Configure uma sessão para um ou vários aventureiros.</p><button class="btn" onclick="openSessionSetup()">NOVA AVENTURA</button></article><article class="card choice"><h2>Personagens</h2><p>Consulte os personagens salvos neste navegador.</p><button class="btn" onclick="showCharacters()">PERSONAGENS</button></article><article class="card choice"><h2>Compêndio</h2><p>Consulte o acervo visual conhecido pelos jogadores.</p><button class="btn" onclick="showCompendium()">COMPÊNDIO</button></article></div></section>
-<section id="session" class="step panel"><h2>Configurar Sessão</h2><p>Quantos jogadores participarão desta aventura?</p><div class="row"><div><label>Quantidade de jogadores</label><select id="playerCount"><option value="1">1 jogador</option><option value="2">2 jogadores</option><option value="3">3 jogadores</option><option value="4">4 jogadores</option><option value="5">5 jogadores</option><option value="6">6 jogadores</option></select></div><div><label>Nome da sessão (opcional)</label><input id="sessionName" placeholder="Ex.: A Companhia do Vale"></div></div><div class="section-actions"><button class="btn" onclick="createSession()">CONFIGURAR GRUPO</button><button class="btn nav-btn" onclick="showMenu()">VOLTAR AO MENU</button></div></section>
-<section id="party" class="step panel"><h2>Grupo de Aventureiros</h2><p class="muted">Cada posição precisa de uma ficha antes de iniciar a aventura.</p><div id="partyGrid" class="party-grid"></div><div class="section-actions"><button id="startPartyBtn" class="btn" onclick="startParty()">INICIAR AVENTURA</button><button class="btn nav-btn" onclick="openSessionSetup()">ALTERAR SESSÃO</button><button class="btn nav-btn" onclick="showMenu()">VOLTAR AO MENU</button></div></section>
-<section id="characters" class="step panel"><h2>Personagens Salvos</h2><p class="muted">Personagens criados ou importados neste navegador ficam disponíveis aqui.</p><div id="savedCharacters" class="party-grid"></div><div class="section-actions"><button class="btn nav-btn" onclick="showMenu()">VOLTAR AO MENU</button></div></section>
-<section id="compendium" class="step panel"><h2>Compêndio de ValeDouro</h2><p class="menu-note">Este acervo mostra apenas referências visuais disponíveis aos jogadores. Informações reservadas ao Mestre não são exibidas aqui.</p><div class="toolbar"><div><label>Pesquisar no compêndio</label><input id="compSearch" type="search" placeholder="Ex.: Aurus, Guarda, Conselho..." oninput="renderCompendium()"></div></div><div id="compGrid" class="comp-grid"></div><div class="section-actions"><button class="btn nav-btn" onclick="showMenu()">VOLTAR AO MENU</button></div></section>
-<section id="s0" class="step panel"><h2 id="slotTitle">Personagem</h2><div class="choices"><article class="card choice"><h2>Criar personagem</h2><p>Crie uma ficha, role atributos e escolha equipamentos.</p><button class="btn" onclick="go(1)">CRIAR</button></article><article class="card choice"><h2>Carregar ficha PDF</h2><p>Importe uma ficha nativa ValeDouro preenchida.</p><input type="file" id="pdfFile" accept="application/pdf"><button class="btn" onclick="importPdf()">CARREGAR PDF</button></article></div><div class="section-actions"><button class="btn nav-btn" onclick="renderParty();show('party')">VOLTAR AO GRUPO</button></div></section>
-<section id="s1" class="step panel"><h2>1. Conceito</h2><label>Nome do personagem</label><input id="name" placeholder="Nome"><div class="row"><div><label>Classe principal</label><select id="c1"></select></div><div><label>Segunda classe (opcional)</label><select id="c2"><option value="">Nenhuma</option></select></div></div><p><button class="btn" onclick="go(2)">PRÓXIMO: ATRIBUTOS</button></p></section>
-<section id="s2" class="step panel"><h2>2. Atributos</h2><p class="progress">Método: 4d6, descartando o menor dado.</p><div id="attrs" class="attrs"></div><p><button class="btn" onclick="rollAll()">ROLAR TODOS</button> <button class="btn" onclick="go(3)">PRÓXIMO: EQUIPAMENTOS</button></p></section>
-<section id="s3" class="step panel"><h2>3. Equipamentos</h2><p>Itens são filtrados por classe e requisitos de Força/Destreza.</p><div id="equipGrid" class="grid"></div><p><button class="btn" onclick="go(4)">REVISAR FICHA</button></p></section>
-<section id="s4" class="step panel"><h2>4. Revisão</h2><div id="review"></div><p><button class="btn" onclick="saveCharacterToSlot()">VALIDAR FICHA</button></p></section>
-<section id="game" class="step"><div class="sheet"><aside class="panel summary"><h2 id="sessionTitleView">Grupo</h2><div id="partySummary"></div><hr><label>Personagem que está agindo</label><select id="activePlayer" onchange="renderPartySummary()"></select><hr><div id="freeDice"><b>Dados</b><p><button class="btn" onclick="freeRoll(20)">🎲 Rolar D20</button></p><div id="freeDiceResult" class="dice"></div></div></aside><main class="panel"><h2>Mestre Virtual</h2><div id="story" class="story"></div><div id="rollRequest" class="dice-box hidden"></div><div class="actions"><textarea id="action" placeholder="O que seu personagem faz?"></textarea><button class="btn" id="actBtn" onclick="act()">AGIR</button></div></main></div></section>
-</div></section>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Valedouro — Mestre Virtual WebIA</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<section id="opening" class="screen active intro">
+  <div class="intro-stage">
+    <img class="intro-art" src="assets/valedouro-intro.png" alt="Valedouro — Mestre Virtual">
+    <button class="hot h-history" aria-label="História" title="História" onclick="show('history')"></button>
+    <button class="hot h-universe" aria-label="Universo" title="Universo" onclick="show('universe')"></button>
+    <button class="hot h-chars" aria-label="Personagens" title="Personagens" onclick="showLibrary()"></button>
+    <button class="hot h-new" aria-label="Novo jogo" title="Novo jogo" onclick="show('newgame')"></button>
+  </div>
+</section>
+
+<section id="history" class="screen center">
+  <div class="panel wide">
+    <div class="row" style="justify-content:space-between"><h2>História de Valedouro</h2><span id="aiStatus" class="ai-status">IA: verificando…</span></div>
+    <p>Valedouro nasceu da permanência. Povos humanos, élficos e anões construíram comunidades no território ao longo de séculos, transformando uma região distante em um reino próprio.</p>
+    <p>Quando Kratóvia finalmente voltou seus olhos para o sul, encontrou uma sociedade com identidade, cidades e alianças. A guerra não foi travada para conquistar Kratóvia, mas para que Kratóvia deixasse Valedouro em paz.</p>
+    <p class="muted">Somente informações públicas aparecem nesta área.</p>
+    <button class="btn" onclick="show('opening')">Voltar</button>
+  </div>
+</section>
+
+<section id="universe" class="screen iframe-wrap">
+  <div class="topbar"><strong>UNIVERSO — COMPÊNDIO</strong><div class="row"><span id="aiStatusUniverse" class="ai-status">Conteúdo público</span><button class="btn" onclick="show('opening')">Voltar</button></div></div>
+  <iframe src="https://profgandra.github.io/ValeDouro/compendio/index.html" title="Compêndio de Valedouro"></iframe>
+  <div class="compendium-fallback">Se o compêndio não carregar nesta janela, o restante do jogo continua funcionando normalmente. O conteúdo público permanece preservado no projeto ValeDouro.</div>
+</section>
+
+<section id="characters" class="screen center">
+  <div class="panel wide">
+    <div class="row" style="justify-content:space-between"><h2>Personagens deste navegador</h2><button class="btn" onclick="show('opening')">Voltar</button></div>
+    <div id="library" class="library"></div>
+  </div>
+</section>
+
+<section id="newgame" class="screen center">
+  <div class="panel wide">
+    <div class="row" style="justify-content:space-between"><div><h2>Novo jogo</h2><div id="aiStatusGame" class="ai-status">IA: verificando…</div></div><button class="btn" onclick="show('opening')">Voltar</button></div>
+    <p class="muted">Configure de 1 a 4 jogadores. Para cada vaga, crie uma nova ficha ou carregue uma ficha já salva neste navegador. Os atributos são definidos por 4d6, descartando o menor dado.</p>
+    <div class="field" style="max-width:220px"><label>Quantidade de jogadores</label><select id="playerCount" onchange="playerCount()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+    <div id="charForms"></div>
+    <div class="row"><button class="btn primary" onclick="collectChars()">Validar personagens</button><button class="btn" onclick="resumeGame()">Continuar com personagem salvo</button></div>
+  </div>
+</section>
+
+<section id="review" class="screen center">
+  <div class="panel wide">
+    <h2>Fichas validadas</h2>
+    <p class="muted">Revise o grupo antes de iniciar. O Mestre Virtual receberá o contexto de todos os personagens, mas cada ação será associada ao personagem ativo.</p>
+    <div id="reviewCards"></div>
+    <div class="row"><button class="btn" onclick="show('newgame')">Editar</button><button class="btn primary" onclick="startAdventure()">Iniciar aventura com Mestre IA</button></div>
+  </div>
+</section>
+
+<section id="game" class="screen game">
+  <div class="topbar">
+    <div><strong>VALEDOURO — MESTRE VIRTUAL WEBIA</strong><div class="row" style="margin-top:6px"><span id="aiStatusPlay" class="ai-status">IA: verificando…</span><span class="muted">Ativo: <strong id="activeName">—</strong></span></div></div>
+    <div class="row"><button class="btn small" onclick="openSheet(state.active)">Ficha</button><button class="btn small" onclick="show('opening')">Menu</button></div>
+  </div>
+  <div class="gamegrid">
+    <aside>
+      <h3>Grupo</h3>
+      <div id="party" class="party"></div>
+      <hr style="border-color:#4c3d2d">
+      <h4>Dados livres</h4>
+      <div class="dice-row"><select id="dieType"><option value="4">d4</option><option value="6">d6</option><option value="8">d8</option><option value="10">d10</option><option value="12">d12</option><option value="20" selected>d20</option><option value="100">d100</option></select><button class="btn small" onclick="quickDie()">Rolar</button></div>
+      <div id="quickResult" class="system" style="margin-top:8px"></div>
+    </aside>
+    <main>
+      <div class="panel story" id="story"></div>
+      <div id="rollbox" class="rollbox">
+        <div id="rollText"></div>
+        <div id="die" class="die">d20</div>
+        <div id="rollResult" style="text-align:center"></div>
+        <button id="rollBtn" class="btn primary" onclick="rollCheck()">Rolar d20</button>
+      </div>
+      <div class="actionbar"><textarea id="action" placeholder="O que o personagem ativo faz?"></textarea><button class="btn primary" id="actBtn" onclick="act()">AGIR</button></div>
+    </main>
+  </div>
+</section>
+
+<div id="sheetModal" class="modal">
+  <div class="panel sheet">
+    <div class="row" style="justify-content:space-between"><h2>Ficha de Personagem</h2><button class="btn" onclick="closeSheet()">Fechar</button></div>
+    <div id="sheetContent"></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
 <script>
-const AI_ENDPOINT='https://valedouro-mestre.tech-gandra.workers.dev';
-const CLASSES=['Guerreiro','Bárbaro','Patrulheiro','Ladino','Mago','Clérigo','Paladino','Bardo','Druida'];
-const A=['FOR','DES','CON','INT','SAB','CAR'];
-const COMPENDIUM_ARTS=['a-decima-cadeira.webp','a-guarda-fantasma.webp','aelorinne.webp','aguias-gigantes-dos-picos-gelados.webp','almirante-eirik-stainmar.webp','brokk-pedra-funda.webp','brynja-pedraviva.webp','cadete-01.webp','caelir-folha-de-prata.webp','camarada-boris.webp','capita-astrid-varens.webp','capita-beatriz-de-alvar.webp','capitao-cael-arvenor.webp','capitao-maior-tomas-de-avis.webp','cassandra-arven.webp','comandante-00.webp','comandante-sampaio.webp','companhia-das-laminas-elficas.webp','companhia-dos-arqueiros-elficos.webp','conselho-de-mestres-do-liceu-de-artes-e-oficios.webp','dante-d-arms.webp','dorin-barba-de-ferro.webp','dornelius.webp','doutora-mor-helena-valeria.webp','edrik.webp','eryndra-lamina-verde.webp','esquadra-do-portao.webp','faelar.webp'];
-let ITEMS=[],QUESTS=[],hiddenQuest=null,sessionState={name:'',players:[],history:[]},editingSlot=0,pc=newPC(),pendingRoll=null;
-function newPC(){return {name:'',classes:[],attrs:{},equipment:[]}}
-function el(id){return document.getElementById(id)}
-function show(id){document.querySelectorAll('.step').forEach(x=>x.classList.remove('active'));el(id).classList.add('active')}
-function enter(){el('splash').classList.add('hidden');el('app').classList.remove('hidden');showMenu();checkAI()}
-function showMenu(){show('menu')}
-function openSessionSetup(){show('session')}
-function titleFromSlug(file){return file.replace(/\.webp$/,'').split('-').map(w=>w==='d'?'D’':w.charAt(0).toUpperCase()+w.slice(1)).join(' ')}
-function showCompendium(){show('compendium');renderCompendium()}
-function renderCompendium(){let q=(el('compSearch')?.value||'').trim().toLowerCase();let list=COMPENDIUM_ARTS.filter(f=>titleFromSlug(f).toLowerCase().includes(q));el('compGrid').innerHTML=list.length?list.map(f=>`<article class="card comp-card"><img src="compendio/assets/artes/${f}" alt="${esc(titleFromSlug(f))}" loading="lazy"><div class="body"><h3>${esc(titleFromSlug(f))}</h3></div></article>`).join(''):'<p>Nenhum registro encontrado.</p>'}
-function showCharacters(){let saved=JSON.parse(localStorage.getItem('vd-characters')||'[]');el('savedCharacters').innerHTML=saved.length?saved.map((p,i)=>`<article class="card player-card"><h3>${esc(p.name)}</h3><p>${esc((p.classes||[]).join(' / '))}</p><p>${A.map(a=>`${a} ${p.attrs?.[a]??'—'}`).join(' • ')}</p><div class="saved-actions"><button class="btn" onclick="startSessionWithSaved(${i})">JOGAR COM ESTE PERSONAGEM</button><button class="btn nav-btn" onclick="deleteSavedCharacter(${i})">EXCLUIR</button></div></article>`).join(''):'<p>Nenhum personagem salvo neste navegador.</p>';show('characters')}
-function startSessionWithSaved(i){let saved=JSON.parse(localStorage.getItem('vd-characters')||'[]');if(!saved[i])return;sessionState={name:`Aventura de ${saved[i].name}`,players:[JSON.parse(JSON.stringify(saved[i]))],history:[]};renderParty();show('party')}
-function deleteSavedCharacter(i){let saved=JSON.parse(localStorage.getItem('vd-characters')||'[]');if(!saved[i])return;if(!confirm(`Excluir ${saved[i].name}?`))return;saved.splice(i,1);localStorage.setItem('vd-characters',JSON.stringify(saved));showCharacters()}
-function createSession(){let n=Number(el('playerCount').value);if(!Number.isInteger(n)||n<1||n>6)return alert('Escolha entre 1 e 6 jogadores.');sessionState={name:el('sessionName').value.trim()||'Aventura em ValeDouro',players:Array(n).fill(null),history:[]};renderParty();show('party')}
-function renderParty(){el('partyGrid').innerHTML=sessionState.players.map((p,i)=>`<article class="card player-card"><h3>Jogador ${i+1}</h3>${p?`<p><b>${esc(p.name)}</b><br>${esc(p.classes.join(' / '))}</p><p>${A.map(a=>`${a} ${p.attrs[a]}`).join(' • ')}</p><button class="btn" onclick="editSlot(${i})">EDITAR FICHA</button>`:`<p class="muted">Ficha ainda não configurada.</p><button class="btn" onclick="editSlot(${i})">CRIAR / CARREGAR FICHA</button>`}</article>`).join('');el('startPartyBtn').disabled=sessionState.players.length===0||sessionState.players.some(p=>!p)}
-function editSlot(i){editingSlot=i;pc=sessionState.players[i]?JSON.parse(JSON.stringify(sessionState.players[i])):newPC();el('slotTitle').textContent=`Jogador ${i+1} — Ficha`;loadPCIntoForm();show('s0')}
-function loadPCIntoForm(){el('name').value=pc.name||'';el('c1').value=pc.classes?.[0]||'Guerreiro';el('c2').value=pc.classes?.[1]||'';A.forEach(a=>el('v'+a).textContent=pc.attrs?.[a]||'—')}
-function go(n){show('s'+n);if(n===3)renderEquip();if(n===4)renderReview()}
-async function boot(){ITEMS=await fetch('data/equipment.json').then(r=>r.json());QUESTS=await fetch('data/quests-index.json').then(r=>r.json());el('c1').innerHTML=CLASSES.map(x=>`<option>${x}</option>`).join('');el('c2').innerHTML='<option value="">Nenhuma</option>'+CLASSES.map(x=>`<option>${x}</option>`).join('');renderAttrs()}
-function renderAttrs(){el('attrs').innerHTML=A.map(a=>`<div class="attr"><span>${a}</span><strong id="v${a}">—</strong><button class="btn" onclick="rollOne('${a}')">Rolar</button></div>`).join('')}
-function roll4d6(){let d=Array.from({length:4},()=>1+Math.floor(Math.random()*6)).sort((a,b)=>a-b);return {dice:d,total:d[1]+d[2]+d[3]}}
-function rollOne(a){let r=roll4d6();pc.attrs[a]=r.total;el('v'+a).textContent=r.total+' ('+r.dice.join(',')+')'}function rollAll(){A.forEach(rollOne)}
-function currentClasses(){return [el('c1').value,el('c2').value].filter(Boolean)}
-function compat(i){let clsOk=i.classes.some(c=>currentClasses().includes(c)),str=pc.attrs.FOR||0,dex=pc.attrs.DES||0,statOk=(!i.minStr||str>=i.minStr)&&(!i.minDex||dex>=i.minDex);return {ok:clsOk&&statOk,why:!clsOk?'Classe sem proficiência inicial':!statOk?`Requer ${i.minStr?'FOR '+i.minStr:''}${i.minStr&&i.minDex?' / ':''}${i.minDex?'DES '+i.minDex:''}`:'Compatível'}}
-function renderEquip(){el('equipGrid').innerHTML=ITEMS.map(i=>{let c=compat(i),sel=pc.equipment.includes(i.id);return `<article class="card equipment-card ${sel?'selected':''}"><img src="${i.image}" alt="${esc(i.name)}"><h3>${esc(i.name)}</h3><div>${esc(i.cat)}</div><p><b>Peso:</b> ${esc(i.weight)}<br><b>${esc(i.stats)}</b></p><p class="${c.ok?'compat':'incompat'}">${c.ok?'✓':'⚠'} ${esc(c.why)}</p><button class="btn" ${c.ok?'':'disabled'} onclick="toggle('${i.id}')">${sel?'REMOVER':'EQUIPAR'}</button></article>`}).join('')}
-function toggle(id){let i=ITEMS.find(x=>x.id===id);if(!compat(i).ok)return;pc.equipment.includes(id)?pc.equipment=pc.equipment.filter(x=>x!==id):pc.equipment.push(id);renderEquip()}
-function renderReview(){pc.name=el('name').value.trim();pc.classes=currentClasses();el('review').innerHTML=`<h3>${esc(pc.name||'Sem nome')}</h3><p>Classes: ${esc(pc.classes.join(' / ')||'—')}</p><p>Atributos: ${A.map(a=>a+' '+(pc.attrs[a]??'—')).join(' • ')}</p><p>Equipamentos: ${pc.equipment.map(id=>ITEMS.find(i=>i.id===id)?.name).filter(Boolean).map(esc).join(', ')||'Nenhum'}</p>`}
-function saveCharacterToSlot(){pc.name=el('name').value.trim();pc.classes=currentClasses();if(!pc.name)return alert('Informe o nome.');if(!pc.classes.length)return alert('Escolha ao menos uma classe.');if(A.some(a=>!pc.attrs[a]))return alert('Role todos os atributos.');sessionState.players[editingSlot]=JSON.parse(JSON.stringify(pc));let saved=JSON.parse(localStorage.getItem('vd-characters')||'[]'),idx=saved.findIndex(x=>x.name===pc.name);if(idx>=0)saved[idx]=pc;else saved.push(pc);localStorage.setItem('vd-characters',JSON.stringify(saved));renderParty();show('party')}
-async function importPdf(){let f=el('pdfFile').files[0];if(!f)return alert('Escolha um PDF.');try{if(!window.PDFLib)throw new Error('Biblioteca de PDF não carregou.');let bytes=await f.arrayBuffer(),doc=await PDFLib.PDFDocument.load(bytes),form=doc.getForm(),val=n=>{try{return form.getTextField(n).getText()||''}catch{return ''}};pc.name=val('VD_NAME');pc.classes=[val('VD_CLASS1'),val('VD_CLASS2')].filter(Boolean);pc.attrs={FOR:+val('VD_STR'),DES:+val('VD_DEX'),CON:+val('VD_CON'),INT:+val('VD_INT'),SAB:+val('VD_WIS'),CAR:+val('VD_CHA')};pc.equipment=[];for(let x=1;x<=8;x++){let nm=val(`VD_ITEM_${x}_NAME`).toLowerCase(),found=ITEMS.find(i=>nm&&i.name.toLowerCase()===nm);if(found)pc.equipment.push(found.id)}loadPCIntoForm();go(4)}catch(e){alert('Não foi possível ler a ficha: '+e.message)}}
-function startParty(){if(sessionState.players.length===0||sessionState.players.some(p=>!p))return alert('Configure todas as fichas.');hiddenQuest=QUESTS.find(q=>(q.level?.min??1)<=1&&(q.level?.max??99)>=1)||QUESTS[0];sessionState.history=[];el('activePlayer').innerHTML=sessionState.players.map((p,i)=>`<option value="${i}">${esc(p.name)}</option>`).join('');el('sessionTitleView').textContent=sessionState.name;renderPartySummary();show('game');startAI()}
-function renderPartySummary(){let active=+el('activePlayer').value||0;el('partySummary').innerHTML=sessionState.players.map((p,i)=>`<div class="player-card ${i===active?'active-player':''}"><b>${esc(p.name)}</b><br><span class="muted">${esc(p.classes.join(' / '))}</span><br>${A.map(a=>`${a}: <b>${p.attrs[a]}</b>`).join(' · ')}<br><small>${p.equipment.map(id=>ITEMS.find(x=>x.id===id)?.name).filter(Boolean).map(esc).join(', ')||'Sem equipamento'}</small></div>`).join('')}
-function activePC(){return sessionState.players[+el('activePlayer').value||0]}
-async function checkAI(){try{let r=await fetch(AI_ENDPOINT),d=await r.json(),ok=r.ok&&d.ok===true;el('aiStatus').textContent=ok?'IA: conectada':'IA: requer configuração';el('aiStatus').style.color=ok?'#77bf78':'#d8b66f'}catch{el('aiStatus').textContent='IA: indisponível'}}
-async function startAI(){el('story').innerHTML='<div class="entry master"><b>Mestre:</b> Preparando a aventura…</div>';await askAI('Inicie a sessão para este grupo de aventureiros. Apresente a cena inicial naturalmente, reconheça o grupo quando apropriado e convide os jogadores a agir. Não revele estruturas internas.')}
-async function act(){if(pendingRoll)return alert('Há uma rolagem solicitada pelo Mestre. Resolva-a antes de agir.');let t=el('action').value.trim(),p=activePC();if(!t)return;let tagged=`${p.name} declara: ${t}`;el('story').insertAdjacentHTML('beforeend',`<div class="entry"><b>${esc(p.name)}:</b> ${esc(t)}</div>`);sessionState.history.push({role:'user',content:tagged});el('action').value='';await askAI(tagged)}
-function partyForAI(){return sessionState.players.map(p=>({name:p.name,classes:p.classes,attributes:p.attrs,equipment:p.equipment.map(id=>ITEMS.find(i=>i.id===id)?.name).filter(Boolean)}))}
-async function askAI(t){el('actBtn').disabled=true;let wait=document.createElement('div');wait.className='entry master';wait.textContent='Mestre: pensando…';el('story').appendChild(wait);el('story').scrollTop=el('story').scrollHeight;try{let q=await fetch(`data/quests/${hiddenQuest.id}/quest.json`).then(r=>r.json()),active=activePC(),playerContext={active_character:active.name,party:partyForAI()};let r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:t,player:playerContext,quest:q,world:{rule:'quests_hidden_from_player',session:sessionState.name,multiplayer:sessionState.players.length>1},history:sessionState.history})}),d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'Falha na IA');wait.remove();let text=d.reply||'';sessionState.history.push({role:'assistant',content:text});let clean=text.replace(/\[\[ROLL:[^\]]+\]\]/g,'').trim();el('story').insertAdjacentHTML('beforeend',`<div class="entry master"><b>Mestre:</b> ${esc(clean).replace(/\n/g,'<br>')}</div>`);let m=text.match(/\[\[ROLL:(FOR|DES|CON|INT|SAB|CAR):(\d+):([^\]]+)\]\]/);if(m)requestRoll(m[1],+m[2],m[3]);el('story').scrollTop=el('story').scrollHeight}catch(e){wait.innerHTML=`<b>Mestre:</b> <span class="incompat">IA indisponível: ${esc(e.message)}.</span>`}finally{el('actBtn').disabled=!!pendingRoll}}
-function requestRoll(attr,cd,motivo){let p=activePC();pendingRoll={attr,cd,motivo,playerIndex:+el('activePlayer').value||0};el('rollRequest').classList.remove('hidden');el('rollRequest').innerHTML=`<div>🎲 TESTE SOLICITADO PELO MESTRE</div><div class="d20">D20</div><b>${esc(p.name)} — ${attr} — CD ${cd}</b><p>${esc(motivo)}</p><button class="btn" onclick="performRequestedRoll()">ROLAR D20</button>`}
-async function performRequestedRoll(){if(!pendingRoll)return;let r=pendingRoll,p=sessionState.players[r.playerIndex],d20=1+Math.floor(Math.random()*20),mod=Math.floor(((p.attrs[r.attr]||10)-10)/2),total=d20+mod,success=total>=r.cd;el('rollRequest').innerHTML=`<div class="d20">🎲 ${d20}</div><b>${esc(p.name)}: ${r.attr} ${mod>=0?'+':''}${mod} = ${total}</b><p>CD ${r.cd} — ${success?'SUCESSO':'FALHA'}</p>`;el('story').insertAdjacentHTML('beforeend',`<div class="entry dice"><b>Rolagem de ${esc(p.name)}:</b> d20 ${d20} ${mod>=0?'+':''}${mod} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'} (${esc(r.motivo)})</div>`);let msg=`Resultado do teste solicitado para ${p.name}: ${r.attr}, d20=${d20}, modificador=${mod}, total=${total}, CD=${r.cd}, resultado=${success?'sucesso':'falha'}, motivo=${r.motivo}. Narre a consequência e continue a cena.`;sessionState.history.push({role:'user',content:msg});pendingRoll=null;setTimeout(()=>el('rollRequest').classList.add('hidden'),1200);await askAI(msg)}
-function freeRoll(sides){let n=1+Math.floor(Math.random()*sides);el('freeDiceResult').textContent=`D${sides}: ${n}`}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-boot().catch(console.error)
-</script></body></html>
+(function(){
+  const originalCheckAI=window.checkAI;
+  if(typeof originalCheckAI==='function'){
+    window.checkAI=async function(){
+      await originalCheckAI();
+      const src=document.getElementById('aiStatus');
+      ['aiStatusGame','aiStatusPlay'].forEach(id=>{const e=document.getElementById(id);if(e&&src){e.textContent=src.textContent;e.className=src.className;}});
+    };
+    setTimeout(()=>window.checkAI(),100);
+  }
+})();
+</script>
+</body>
+</html>
