@@ -1,3 +1,5 @@
-ValeDouro Web Edition v2.1.0 AI TESTE
-AI Gateway: Cloudflare Pages Functions + Groq
+ValeDouro Web Edition v2.1.2 FIX
+Mestre Virtual: Cloudflare Worker externo + Groq
+Endpoint: https://valedouro-mestre.tech-gandra.workers.dev
+Correção: revisão e validação da ficha de personagem
 Quests: ocultas ao jogador; QST-001..QST-010 preservadas
