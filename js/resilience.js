@@ -1,53 +1,92 @@
 // ValeDouro WEBIA — resiliência de IA, compactação de contexto e continuidade narrativa
 (function(){
-  function compactValue(value, depth=0){
-    if(value==null) return value;
-    if(typeof value==='string') return value.length>600?value.slice(0,600)+'…':value;
-    if(typeof value==='number'||typeof value==='boolean') return value;
-    if(depth>=2) return Array.isArray(value)?`[${value.length} itens]`:'[resumido]';
-    if(Array.isArray(value)) return value.slice(0,4).map(v=>compactValue(v,depth+1));
-    if(typeof value==='object'){
-      const out={};
-      for(const [k,v] of Object.entries(value).slice(0,12)) out[k]=compactValue(v,depth+1);
-      return out;
-    }
-    return String(value);
+  function compactText(value,max=420){
+    const s=String(value??'');
+    return s.length>max?s.slice(0,max)+'…':s;
   }
 
   function compactHistory(){
     if(!Array.isArray(state.history)) return [];
-    return state.history.slice(-4).map(x=>({
+    return state.history.slice(-2).map(x=>({
       role:x?.role||'user',
-      content:String(x?.content||'').slice(0,900)
+      content:compactText(x?.content||'',500)
     }));
   }
 
   function compactQuest(){
-    return compactValue(state.hiddenQuest||{},0);
+    const q=state.hiddenQuest;
+    if(!q||typeof q!=='object') return {};
+
+    const preferredKeys=[
+      'title','name','summary','description','objective','objectives',
+      'current','stage','state','status','hook','hooks','npcs','locations',
+      'clues','events','outcomes','secrets'
+    ];
+
+    const out={};
+    for(const key of preferredKeys){
+      if(!(key in q)) continue;
+      const v=q[key];
+      if(typeof v==='string') out[key]=compactText(v,320);
+      else if(Array.isArray(v)) out[key]=v.slice(0,2).map(item=>{
+        if(typeof item==='string') return compactText(item,220);
+        if(item&&typeof item==='object'){
+          const mini={};
+          for(const [k,val] of Object.entries(item).slice(0,4)){
+            mini[k]=typeof val==='string'?compactText(val,180):val;
+          }
+          return mini;
+        }
+        return item;
+      });
+      else if(v&&typeof v==='object'){
+        const mini={};
+        for(const [k,val] of Object.entries(v).slice(0,5)){
+          mini[k]=typeof val==='string'?compactText(val,220):val;
+        }
+        out[key]=mini;
+      }else out[key]=v;
+    }
+
+    // Caso a quest use outros nomes de campos, preserva um pequeno recorte útil.
+    if(!Object.keys(out).length){
+      for(const [k,v] of Object.entries(q).slice(0,6)){
+        if(typeof v==='string') out[k]=compactText(v,260);
+        else if(Array.isArray(v)) out[k]=v.slice(0,2);
+        else if(v&&typeof v==='object') out[k]=Object.fromEntries(Object.entries(v).slice(0,3));
+        else out[k]=v;
+      }
+    }
+    return out;
+  }
+
+  function compactParty(){
+    return state.characters.map(c=>({
+      name:c.name,
+      race:c.race,
+      classes:(c.classes||[]).map(x=>({name:x.name,level:x.level})),
+      attributes:c.attrs,
+      ca:c.ca,
+      hp:c.hp,
+      hpMax:c.hpMax,
+      equipment:(c.equipment||[]).map(id=>{
+        if(typeof VD_EQUIPMENT!=='undefined') return VD_EQUIPMENT.find(x=>x.id===id)?.name||id;
+        return id;
+      }).slice(0,8)
+    }));
   }
 
   function continuityDirective(){
-    return [
-      'Mantenha coerência absoluta com os fatos já estabelecidos na cena.',
-      'Não faça um NPC aparecer, desaparecer, fugir, morrer, ser capturado ou se ferir de forma incompatível com o histórico recente.',
-      'Não confunda dois NPCs diferentes.',
-      'Se houver dúvida sobre um detalhe, não invente algo que contradiga a cena.',
-      'Use a quest interna apenas como referência de bastidores; não misture estados de momentos diferentes da quest.'
-    ].join(' ');
+    return 'Mantenha continuidade estrita: não contradiga fatos recentes, não confunda NPCs e não altere o estado de alguém sem causa narrada. Use a quest apenas como bastidor.';
   }
 
   function buildPayload(action){
     const active=state.characters[state.active];
-    const party=(typeof partyForAI==='function'?partyForAI():state.characters).map(p=>compactValue(p,0));
     return {
-      action:`${action}\n\nDIRETRIZ DE CONTINUIDADE: ${continuityDirective()}`,
-      player:{active_character:active?.name,party},
+      action:`${compactText(action,900)}\n\n${continuityDirective()}`,
+      player:{active_character:active?.name,party:compactParty()},
       quest:compactQuest(),
-      world:{
-        rule:'quests_hidden_from_player',
-        multiplayer:state.characters.length>1,
-        continuity:true
-      },
+      world:{quests_hidden:true,multiplayer:state.characters.length>1},
       history:compactHistory()
     };
   }
@@ -91,15 +130,20 @@
         err.providerStatus=status;
         throw err;
       }
+
       wait.remove();
       clearRetryCard();
       state.lastRetryAction=null;
+
       const text=d.reply||'';
       state.history.push({role:'assistant',content:text});
+      // Mantemos a resposta integral recebida. Não fazemos corte de texto no front-end.
       const clean=text.replace(/\[\[ROLL:[^\]]+\]\]/g,'').trim();
       addStory(`<b>Mestre:</b> ${esc(clean).replace(/\n/g,'<br>')}`,'master');
+
       const m=text.match(/\[\[ROLL:(FOR|DES|CON|INT|SAB|CAR):(\d+):([^\]]+)\]\]/);
       if(m) requestRoll(m[1],+m[2],m[3]);
+
       if(state.lastRollAwaitingNarration){
         state.lastRollAwaitingNarration=false;
         setTimeout(()=>$('rollbox').classList.remove('active'),700);
@@ -125,11 +169,13 @@
     const bonus=mod(p.attrs[r.attr]);
     const total=d20+bonus;
     const success=total>=r.cd;
+
     $('die').textContent=d20;
     $('rollResult').innerHTML=`${esc(p.name)}: ${r.attr} ${fmt(bonus)} = <strong>${total}</strong> vs CD ${r.cd} — <span class="${success?'pass':'fail'}">${success?'SUCESSO':'FALHA'}</span>`;
     $('rollBtn').disabled=true;
     addStory(`<b>Rolagem de ${esc(p.name)}:</b> d20 ${d20} ${fmt(bonus)} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'}`,'system');
-    const msg=`Resultado do teste solicitado para ${p.name}: ${r.attr}, d20=${d20}, modificador=${bonus}, total=${total}, CD=${r.cd}, resultado=${success?'sucesso':'falha'}, motivo=${r.motivo}. Narre a consequência e continue a cena.`;
+
+    const msg=`Resultado do teste de ${p.name}: ${r.attr}; d20 ${d20}; mod ${bonus}; total ${total}; CD ${r.cd}; ${success?'sucesso':'falha'}; motivo: ${compactText(r.motivo,220)}. Narre a consequência e continue.`;
     state.history.push({role:'user',content:msg});
     state.pendingCheck=null;
     state.lastRollAwaitingNarration=true;
