@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Valedouro — Mestre Virtual WebIA</title>
 <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/equipment.css">
 </head>
 <body>
 <section id="opening" class="screen active intro">
@@ -43,7 +44,7 @@
 <section id="newgame" class="screen center">
   <div class="panel wide">
     <div class="row" style="justify-content:space-between"><div><h2>Novo jogo</h2><div id="aiStatusGame" class="ai-status">IA: verificando…</div></div><button class="btn" onclick="show('opening')">Voltar</button></div>
-    <p class="muted">Configure de 1 a 4 jogadores. Para cada vaga, crie uma nova ficha ou carregue uma ficha já salva neste navegador. Os atributos são definidos por 4d6, descartando o menor dado.</p>
+    <p class="muted">Configure de 1 a 4 jogadores. Para cada vaga, crie uma nova ficha ou carregue uma ficha já salva neste navegador. Os atributos são definidos por 4d6, descartando o menor dado. Depois dos atributos, selecione os equipamentos compatíveis com classe e requisitos do personagem.</p>
     <div class="field" style="max-width:220px"><label>Quantidade de jogadores</label><select id="playerCount" onchange="playerCount()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
     <div id="charForms"></div>
     <div class="row"><button class="btn primary" onclick="collectChars()">Validar personagens</button><button class="btn" onclick="resumeGame()">Continuar com personagem salvo</button></div>
@@ -53,7 +54,7 @@
 <section id="review" class="screen center">
   <div class="panel wide">
     <h2>Fichas validadas</h2>
-    <p class="muted">Revise o grupo antes de iniciar. O Mestre Virtual receberá o contexto de todos os personagens, mas cada ação será associada ao personagem ativo.</p>
+    <p class="muted">Revise o grupo antes de iniciar. O Mestre Virtual receberá o contexto de todos os personagens, incluindo os equipamentos selecionados, mas cada ação será associada ao personagem ativo.</p>
     <div id="reviewCards"></div>
     <div class="row"><button class="btn" onclick="show('newgame')">Editar</button><button class="btn primary" onclick="startAdventure()">Iniciar aventura com Mestre IA</button></div>
   </div>
@@ -94,6 +95,7 @@
 </div>
 
 <script src="js/app.js"></script>
+<script src="js/equipment.js"></script>
 <script>
 (function(){
   const originalCheckAI=window.checkAI;
