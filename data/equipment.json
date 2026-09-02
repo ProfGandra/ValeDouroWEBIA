@@ -7,12 +7,8 @@
     "req": "Proficiência com armas marciais",
     "stats": "1d8 cortante • Versátil (1d10)",
     "icon": "⚔️",
-    "classes": [
-      "Guerreiro",
-      "Paladino",
-      "Patrulheiro"
-    ],
-    "image": "assets/equipment/longsword.svg",
+    "classes": ["Guerreiro", "Paladino", "Patrulheiro"],
+    "image": "assets/equipment/longsword.jpg",
     "minStr": 10
   },
   {
@@ -23,12 +19,8 @@
     "req": "Proficiência com armas marciais",
     "stats": "1d8 cortante • Versátil (1d10)",
     "icon": "🪓",
-    "classes": [
-      "Guerreiro",
-      "Bárbaro",
-      "Paladino"
-    ],
-    "image": "assets/equipment/battleaxe.svg",
+    "classes": ["Guerreiro", "Bárbaro", "Paladino"],
+    "image": "assets/equipment/battleaxe.jpg",
     "minStr": 10
   },
   {
@@ -39,10 +31,7 @@
     "req": "Proficiência com armas marciais à distância",
     "stats": "1d8 perfurante • Duas mãos • Munição",
     "icon": "🏹",
-    "classes": [
-      "Guerreiro",
-      "Patrulheiro"
-    ],
+    "classes": ["Guerreiro", "Patrulheiro"],
     "image": "assets/equipment/longbow.svg",
     "minDex": 13
   },
@@ -54,11 +43,7 @@
     "req": "Proficiência com escudos",
     "stats": "+2 CA enquanto empunhado",
     "icon": "🛡️",
-    "classes": [
-      "Guerreiro",
-      "Clérigo",
-      "Paladino"
-    ],
+    "classes": ["Guerreiro", "Clérigo", "Paladino"],
     "image": "assets/equipment/shield.svg",
     "minStr": 8
   },
@@ -70,10 +55,7 @@
     "req": "Proficiência com armadura pesada • Força recomendada",
     "stats": "CA 16 • Desvantagem em Furtividade",
     "icon": "🥋",
-    "classes": [
-      "Guerreiro",
-      "Paladino"
-    ],
+    "classes": ["Guerreiro", "Paladino"],
     "image": "assets/equipment/chain.svg",
     "minStr": 13
   },
@@ -85,12 +67,7 @@
     "req": "Proficiência com armadura leve",
     "stats": "CA 11 + modificador de Destreza",
     "icon": "🧥",
-    "classes": [
-      "Guerreiro",
-      "Patrulheiro",
-      "Ladino",
-      "Bardo"
-    ],
+    "classes": ["Guerreiro", "Patrulheiro", "Ladino", "Bardo"],
     "image": "assets/equipment/leather.svg",
     "minDex": 0
   },
@@ -102,12 +79,7 @@
     "req": "Proficiência com armas simples",
     "stats": "1d4 perfurante • Acuidade • Leve • Arremesso",
     "icon": "🗡️",
-    "classes": [
-      "Ladino",
-      "Mago",
-      "Bardo",
-      "Clérigo"
-    ],
+    "classes": ["Ladino", "Mago", "Bardo", "Clérigo"],
     "image": "assets/equipment/dagger.svg",
     "minDex": 8
   },
@@ -119,11 +91,7 @@
     "req": "Proficiência com armas simples",
     "stats": "1d6 contundente • Versátil (1d8)",
     "icon": "🪄",
-    "classes": [
-      "Mago",
-      "Clérigo",
-      "Druida"
-    ],
+    "classes": ["Mago", "Clérigo", "Druida"],
     "image": "assets/equipment/staff.svg"
   },
   {
@@ -134,9 +102,7 @@
     "req": "Classe com preparação arcana compatível",
     "stats": "Registro e preparação de magias",
     "icon": "📕",
-    "classes": [
-      "Mago"
-    ],
+    "classes": ["Mago"],
     "image": "assets/equipment/spellbook.svg"
   },
   {
@@ -147,10 +113,7 @@
     "req": "Conjuração divina compatível",
     "stats": "Foco para magias divinas",
     "icon": "☀️",
-    "classes": [
-      "Clérigo",
-      "Paladino"
-    ],
+    "classes": ["Clérigo", "Paladino"],
     "image": "assets/equipment/holy.svg"
   },
   {
@@ -161,9 +124,7 @@
     "req": "Proficiência recomendada",
     "stats": "Gazuas e ferramentas finas",
     "icon": "🧰",
-    "classes": [
-      "Ladino"
-    ],
+    "classes": ["Ladino"],
     "image": "assets/equipment/thieves.svg"
   },
   {
@@ -174,12 +135,7 @@
     "req": "Nenhum requisito especial",
     "stats": "Mochila, corda, tochas e suprimentos",
     "icon": "🎒",
-    "classes": [
-      "Guerreiro",
-      "Bárbaro",
-      "Patrulheiro",
-      "Paladino"
-    ],
+    "classes": ["Guerreiro", "Bárbaro", "Patrulheiro", "Paladino"],
     "image": "assets/equipment/explorer.svg"
   }
 ]
