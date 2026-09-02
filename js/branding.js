@@ -73,12 +73,10 @@
 
   const style = document.createElement('style');
   style.textContent = `
-    .dg-signature{position:fixed;left:12px;right:auto;bottom:10px;z-index:12;width:92px;display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;user-select:none;opacity:.92;text-align:center;color:#e8d4ad;text-shadow:0 1px 3px #000;font-family:Georgia,'Times New Roman',serif}
-    .dg-signature.home{left:auto;right:12px;width:106px}
-    .dg-signature img{display:block;width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55))}
-    .dg-signature.home img{width:86px;height:86px}
-    .dg-signature span{font-size:9px;line-height:1.15;white-space:nowrap}
-    @media(max-width:800px){.dg-signature{width:72px;bottom:6px;left:6px}.dg-signature.home{right:6px;width:78px}.dg-signature img{width:54px;height:54px}.dg-signature.home img{width:60px;height:60px}.dg-signature span{font-size:7px}}
+    .dg-signature{position:fixed;left:12px;right:auto;bottom:10px;z-index:12;width:120px;display:block;pointer-events:none;user-select:none;opacity:.96}
+    .dg-signature.home{left:auto;right:12px;width:138px}
+    .dg-signature img{display:block;width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55))}
+    @media(max-width:800px){.dg-signature{width:88px;bottom:6px;left:6px}.dg-signature.home{right:6px;width:98px}}
     @media print{.dg-signature{display:none!important}}
   `;
   document.head.appendChild(style);
@@ -86,7 +84,7 @@
   const signature = document.createElement('div');
   signature.id = 'dgandraSignature';
   signature.className = 'dg-signature';
-  signature.innerHTML = `<img src="${SIGNATURE_IMAGE}" alt=""><span>Desenvolvido por DGandra - 2026</span>`;
+  signature.innerHTML = `<img src="${SIGNATURE_IMAGE}" alt="Desenvolvido por DGandra - 2026">`;
   document.body.appendChild(signature);
 
   function syncSignature(){
