@@ -9,10 +9,33 @@
     if(!Object.keys(out).length){for(const[k,v]of Object.entries(q).slice(0,6)){if(typeof v==='string')out[k]=compactText(v,260);else if(Array.isArray(v))out[k]=v.slice(0,2);else if(v&&typeof v==='object')out[k]=Object.fromEntries(Object.entries(v).slice(0,3));else out[k]=v;}}
     return out;
   }
-  function compactParty(){return state.characters.map(c=>({name:c.name,race:c.race,classes:(c.classes||[]).map(x=>({name:x.name,level:x.level})),attributes:c.attrs,ca:c.ca,hp:c.hp,hpMax:c.hpMax,xp:c.xp||0,bonusPoints:c.bonusPoints||0,equipment:(c.equipment||[]).map(id=>{if(typeof VD_EQUIPMENT!=='undefined')return VD_EQUIPMENT.find(x=>x.id===id)?.name||id;return id;}).slice(0,8),inventory:(c.inventory||[]).slice(-4).map(x=>x.name||x.item||String(x))}));}
+  function characterEquipment(c){
+    const equipped=(c?.equipment||[]).map(id=>{if(typeof VD_EQUIPMENT!=='undefined')return VD_EQUIPMENT.find(x=>x.id===id)?.name||id;return id;});
+    const inventory=(c?.inventory||[]).map(x=>x?.name||x?.item||String(x));
+    return [...equipped,...inventory].filter(Boolean);
+  }
+  function compactParty(){return state.characters.map(c=>({name:c.name,race:c.race,classes:(c.classes||[]).map(x=>({name:x.name,level:x.level})),attributes:c.attrs,ca:c.ca,hp:c.hp,hpMax:c.hpMax,xp:c.xp||0,bonusPoints:c.bonusPoints||0,equipment:characterEquipment(c).slice(0,12)}));}
   function continuityDirective(){return'Mantenha continuidade estrita: não contradiga fatos recentes, não confunda NPCs e não altere o estado de alguém sem causa narrada. Use a quest apenas como bastidor.';}
+  function inventoryDirective(active){
+    const items=characterEquipment(active);
+    return `REGRA ABSOLUTA DE INVENTÁRIO: a ficha é a única fonte de verdade sobre objetos possuídos. O personagem ativo possui SOMENTE estes itens: ${items.length?items.join(', '):'nenhum item registrado'}. Se o jogador tentar usar, sacar, vestir, beber, disparar, entregar ou empregar qualquer objeto que NÃO esteja nessa lista, NÃO execute a ação, NÃO invente que ele possui o objeto e NÃO peça rolagem. Responda naturalmente que o personagem não possui esse item e convide-o a escolher outra ação. Itens do cenário só podem ser usados depois de serem narrativamente obtidos e registrados na ficha.`;
+  }
   function rewardDirective(){return'Se conceder recompensa permanente, acrescente no fim, sem explicar o código: [[VDREWARD:TIPO:VALOR:NOME]]. TIPO=item,xp,bonus,gold,silver,copper. Para item, VALOR é quantidade e NOME é o item. Para números, VALOR é o total concedido e NOME é uma descrição curta. Só emita quando a recompensa estiver realmente concedida ao personagem ativo.';}
-  function buildPayload(action){const active=state.characters[state.active];return{action:`${compactText(action,900)}\n\n${continuityDirective()}\n${rewardDirective()}`,player:{active_character:active?.name,party:compactParty()},quest:compactQuest(),world:{quests_hidden:true,multiplayer:state.characters.length>1},history:compactHistory()};}
+  function buildPayload(action){
+    const active=state.characters[state.active];
+    return{
+      action:`${compactText(action,900)}\n\n${continuityDirective()}\n${inventoryDirective(active)}\n${rewardDirective()}`,
+      player:{
+        active_character:active?.name,
+        inventory_is_authoritative:true,
+        active_equipment:characterEquipment(active),
+        party:compactParty()
+      },
+      quest:compactQuest(),
+      world:{quests_hidden:true,multiplayer:state.characters.length>1},
+      history:compactHistory()
+    };
+  }
   function clearRetryCard(){const old=document.getElementById('aiRetryCard');if(old)old.remove();}
   function showRetryCard(message){clearRetryCard();const d=document.createElement('div');d.id='aiRetryCard';d.className='entry system';d.innerHTML=`<b>Mestre:</b> ${esc(message)}<br><button class="btn small" style="margin-top:8px" onclick="retryLastAI()">TENTAR CONTINUAR</button>`;$('story').appendChild(d);$('story').scrollTop=$('story').scrollHeight;}
   function applyRewards(text){
