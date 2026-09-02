@@ -8,7 +8,7 @@
     "stats": "1d8 cortante • Versátil (1d10)",
     "icon": "⚔️",
     "classes": ["Guerreiro", "Paladino", "Patrulheiro"],
-    "image": "assets/equipment/longsword.jpg",
+    "image": "assets/equipment/longsword.svg",
     "minStr": 10
   },
   {
@@ -20,7 +20,7 @@
     "stats": "1d8 cortante • Versátil (1d10)",
     "icon": "🪓",
     "classes": ["Guerreiro", "Bárbaro", "Paladino"],
-    "image": "assets/equipment/battleaxe.jpg",
+    "image": "assets/equipment/battleaxe.svg",
     "minStr": 10
   },
   {
