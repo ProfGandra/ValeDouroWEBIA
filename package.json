@@ -1,0 +1,53 @@
+{
+  "name": "valedouro-webia",
+  "version": "2.1.0",
+  "description": "ValeDouro Web Edition com Mestre Virtual IA - build desktop Windows",
+  "main": "electron/main.js",
+  "author": "DGandra",
+  "license": "UNLICENSED",
+  "scripts": {
+    "desktop": "electron .",
+    "build:win": "electron-builder --win nsis portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "br.com.techgandra.valedouro",
+    "productName": "ValeDouro WEBIA",
+    "directories": {
+      "output": "dist-windows"
+    },
+    "files": [
+      "index.html",
+      "assets/**/*",
+      "compendio/**/*",
+      "css/**/*",
+      "data/**/*",
+      "js/**/*",
+      "electron/**/*",
+      "VERSION.txt"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "ValeDouro-WEBIA-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ValeDouro WEBIA"
+    }
+  }
+}
