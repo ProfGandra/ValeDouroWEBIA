@@ -16,15 +16,7 @@
 </style>
 </head>
 <body>
-<section id="opening" class="screen active intro">
-  <div class="intro-stage">
-    <img class="intro-art" src="assets/valedouro-intro.png" alt="Valedouro — Mestre Virtual">
-    <button class="hot h-history" aria-label="História" title="História" onclick="show('history')"></button>
-    <button class="hot h-universe" aria-label="Universo" title="Universo" onclick="show('universe')"></button>
-    <button class="hot h-chars" aria-label="Personagens" title="Personagens" onclick="showLibrary()"></button>
-    <button class="hot h-new" aria-label="Novo jogo" title="Novo jogo" onclick="show('newgame')"></button>
-  </div>
-</section>
+<section id="opening" class="screen active intro"><div class="intro-stage"><img class="intro-art" src="assets/valedouro-intro.png" alt="Valedouro — Mestre Virtual"><button class="hot h-history" aria-label="História" title="História" onclick="show('history')"></button><button class="hot h-universe" aria-label="Universo" title="Universo" onclick="show('universe')"></button><button class="hot h-chars" aria-label="Personagens" title="Personagens" onclick="showLibrary()"></button><button class="hot h-new" aria-label="Novo jogo" title="Novo jogo" onclick="show('newgame')"></button></div></section>
 <section id="history" class="screen center"><div class="panel wide"><div class="row" style="justify-content:space-between"><h2>História de Valedouro</h2><span id="aiStatus" class="ai-status">IA: verificando…</span></div><p>Valedouro nasceu da permanência. Povos humanos, élficos e anões construíram comunidades no território ao longo de séculos, transformando uma região distante em um reino próprio.</p><p>Quando Kratóvia finalmente voltou seus olhos para o sul, encontrou uma sociedade com identidade, cidades e alianças. A guerra não foi travada para conquistar Kratóvia, mas para que Kratóvia deixasse Valedouro em paz.</p><p class="muted">Somente informações públicas aparecem nesta área.</p><button class="btn" onclick="show('opening')">Voltar</button></div></section>
 <section id="universe" class="screen iframe-wrap"><div class="topbar"><strong>UNIVERSO — COMPÊNDIO</strong><div class="row"><span id="aiStatusUniverse" class="ai-status">Conteúdo público</span><button class="btn" onclick="show('opening')">Voltar</button></div></div><iframe src="https://profgandra.github.io/ValeDouro/compendio/index.html" title="Compêndio de Valedouro"></iframe><div class="compendium-fallback">Se o compêndio não carregar nesta janela, o restante do jogo continua funcionando normalmente. O conteúdo público permanece preservado no projeto ValeDouro.</div></section>
 <section id="characters" class="screen center"><div class="panel wide"><div class="row" style="justify-content:space-between"><h2>Personagens deste navegador</h2><button class="btn" onclick="show('opening')">Voltar</button></div><div id="library" class="library"></div></div></section>
@@ -34,11 +26,7 @@
 <div id="sheetModal" class="modal"><div class="panel sheet"><div class="row no-print" style="justify-content:space-between"><h2>Ficha de Personagem</h2><button class="btn" onclick="closeSheet()">Fechar</button></div><div id="sheetContent"></div></div></div>
 <div id="dgandraSignature" class="dg-signature home"><img src="assets/branding/dgandra-signature.png?v=20260903-1" alt="Desenvolvido por DGandra - 2026"></div>
 <script src="js/app.js"></script>
-<script src="js/hp-rules.js"></script>
-<script src="js/equipment.js"></script>
-<script src="js/resilience.js"></script>
-<script src="js/live-sheet.js"></script>
-<script src="js/branding.js?v=20260903-1"></script>
+<script src="js/campaign.js?v=20260903-1"></script>
+<script src="js/hp-rules.js"></script><script src="js/equipment.js"></script><script src="js/resilience.js"></script><script src="js/live-sheet.js"></script><script src="js/branding.js?v=20260903-1"></script>
 <script>(function(){const originalCheckAI=window.checkAI;if(typeof originalCheckAI==='function'){window.checkAI=async function(){await originalCheckAI();const src=document.getElementById('aiStatus');['aiStatusGame','aiStatusPlay'].forEach(id=>{const e=document.getElementById(id);if(e&&src){e.textContent=src.textContent;e.className=src.className;}});};setTimeout(()=>window.checkAI(),100);}})();</script>
-</body>
-</html>
+</body></html>

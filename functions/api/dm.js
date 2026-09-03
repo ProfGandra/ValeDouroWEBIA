@@ -1,20 +1,15 @@
-const cors = {"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"Content-Type","Access-Control-Allow-Methods":"POST,OPTIONS"};
-export async function onRequestOptions(){ return new Response(null,{headers:cors}); }
+const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"Content-Type","Access-Control-Allow-Methods":"POST,OPTIONS"};
+export async function onRequestOptions(){return new Response(null,{headers:cors});}
 export async function onRequestPost(context){
-  try{
-    const { env, request } = context;
-    if(!env.GROQ_API_KEY) return json({error:"GROQ_API_KEY não configurada no ambiente do Cloudflare Pages."},500);
-    const body = await request.json();
-    const model = env.GROQ_MODEL || "llama-3.3-70b-versatile";
-    const system = `Você é o Mestre Virtual oficial do RPG ValeDouro. Narre em português brasileiro, em segunda pessoa, com atmosfera medieval-fantástica. Nunca revele IDs de quest, estruturas internas, master truth, gatilhos ou segredos do DM. As quests existem apenas nos bastidores e devem emergir organicamente por acontecimentos, NPCs, rumores e consequências. Respeite rigorosamente a ficha, inventário, atributos e estado enviados. Não invente que o personagem possui um item que não está no inventário. Não role dados por conta própria: quando uma ação exigir teste, termine sua resposta com uma linha exata no formato [[ROLL:ATRIBUTO:CD:motivo]], usando FOR, DES, CON, INT, SAB ou CAR. Se nenhuma rolagem for necessária, não inclua marcador. Seja responsivo às escolhas do jogador; não force uma rota única. Mantenha respostas entre 2 e 5 parágrafos, salvo necessidade especial.`;
-    const state = JSON.stringify(body.state || {});
-    const hiddenQuest = JSON.stringify(body.hiddenQuest || {});
-    const history = (body.history || []).slice(-14).map(x=>({role:x.role,content:x.content}));
-    const messages = [{role:"system",content:system+"\nESTADO DO JOGO:\n"+state+"\nCONTEXTO OCULTO DA AVENTURA:\n"+hiddenQuest}, ...history, {role:"user",content:body.action || "Inicie a aventura de forma orgânica, sem mencionar quest."}];
-    const r = await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{"Authorization":`Bearer ${env.GROQ_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model,messages,temperature:.8,max_tokens:700})});
-    const data = await r.json();
-    if(!r.ok) return json({error:data?.error?.message || "Falha no provedor de IA",providerStatus:r.status},502);
-    return json({text:data.choices?.[0]?.message?.content || "",model});
-  }catch(e){return json({error:String(e?.message||e)},500)}
+ try{
+  const{env,request}=context;if(!env.GROQ_API_KEY)return json({error:"GROQ_API_KEY não configurada no ambiente do Cloudflare Pages."},500);
+  const body=await request.json(),model=env.GROQ_MODEL||"llama-3.3-70b-versatile";
+  const system=`Você é o Mestre Virtual oficial do RPG ValeDouro. Narre em português brasileiro, em segunda pessoa, com atmosfera medieval-fantástica. Nunca revele IDs de quest, estruturas internas, template_truth, master truth, gatilhos, guardrails ou segredos do DM. As quests existem apenas nos bastidores e emergem organicamente por acontecimentos, NPCs, rumores e consequências. O CONTEXTO OCULTO DA AVENTURA é CANÔNICO: preserve todos os fatos marcados como imutáveis e todos os narrative_guardrails. IMPROVISAÇÃO HORIZONTAL é permitida: crie falas, descrições, reações e consequências locais compatíveis com os fatos. IMPROVISAÇÃO VERTICAL é proibida: não invente nova verdade que substitua, contradiga, antecipe ou explique um mistério canônico. Não transforme pistas em fatos antes de sua descoberta. Não revele segredos futuros para facilitar a sessão. Respeite rigorosamente ficha, inventário, atributos e estado enviados; não invente itens. Não role dados: quando uma ação exigir teste, termine com [[ROLL:ATRIBUTO:CD:motivo]], usando FOR, DES, CON, INT, SAB ou CAR. Se nenhuma rolagem for necessária, não inclua marcador. Seja responsivo às escolhas e aceite soluções criativas plausíveis; não force rota única. Use fail-forward quando apropriado sem alterar a verdade da quest. Mantenha 2 a 5 parágrafos, salvo necessidade especial. Quando a verdade canônica da aventura estiver efetivamente resolvida e o encerramento narrativo tiver ocorrido, acrescente APENAS no fim a marca interna [[QUEST_COMPLETE]]. Nunca escreva essa marca antes da resolução real.`;
+  const state=JSON.stringify(body.state||{}),hiddenQuest=JSON.stringify(body.hiddenQuest||{}),history=(body.history||[]).slice(-14).map(x=>({role:x.role,content:x.content}));
+  const messages=[{role:"system",content:system+"\nESTADO DO JOGO:\n"+state+"\nCONTEXTO OCULTO DA AVENTURA:\n"+hiddenQuest},...history,{role:"user",content:body.action||"Inicie a aventura de forma orgânica, sem mencionar quest."}];
+  const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{"Authorization":`Bearer ${env.GROQ_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model,messages,temperature:.65,max_tokens:850})});
+  const data=await r.json();if(!r.ok)return json({error:data?.error?.message||"Falha no provedor de IA",providerStatus:r.status},502);
+  return json({text:data.choices?.[0]?.message?.content||"",model});
+ }catch(e){return json({error:String(e?.message||e)},500)}
 }
 function json(data,status=200){return new Response(JSON.stringify(data),{status,headers:{...cors,"Content-Type":"application/json; charset=utf-8"}})}
