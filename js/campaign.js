@@ -17,7 +17,7 @@ const nativeFetch=window.fetch.bind(window);
 window.fetch=async function(input,init){
  const url=typeof input==='string'?input:(input?.url||'');
  if(url===AI_ENDPOINT&&init?.method==='POST'&&init.body){
-  try{const b=JSON.parse(init.body);b.state={...(b.state||{}),campaign:publicCampaignState(),health:window.ValeDouroRest?.publicState?.()||[]};init={...init,body:JSON.stringify(b)}}catch(e){console.warn('Estado persistente não injetado',e)}
+  try{const b=JSON.parse(init.body);b.state={...(b.state||{}),campaign:publicCampaignState(),health:window.ValeDouroRest?.publicState?.()||[],mana:(state.characters||[]).map(c=>({name:c.name,...(window.ValeMana?.stateFor?.(c)||{})}))};init={...init,body:JSON.stringify(b)}}catch(e){console.warn('Estado persistente não injetado',e)}
   const res=await nativeFetch(input,init);
   try{
    const data=await res.clone().json();
@@ -25,6 +25,10 @@ window.fetch=async function(input,init){
     let changed=false;
     const restRe=/\s*\[\[REST:(short|medium|normal|long):([0-9]+(?:\.[0-9]+)?)\]\]\s*/gi;
     data.text=data.text.replace(restRe,(_,type,hours)=>{window.ValeDouroRest?.restParty?.(String(type).toLowerCase(),Number(hours));changed=true;return ' '});
+    const manaRe=/\s*\[\[MANA_SPEND:(\d+(?:\.\d+)?)\]\]\s*/gi;
+    data.text=data.text.replace(manaRe,(_,amount)=>{const c=state.characters[state.active];window.ValeMana?.spend?.(c,Number(amount));changed=true;return ' '});
+    const overloadRe=/\s*\[\[ARCANE_OVERLOAD:(\d+(?:\.\d+)?)\]\]\s*/gi;
+    data.text=data.text.replace(overloadRe,(_,cost)=>{const c=state.characters[state.active];window.ValeMana?.overload?.(c,Number(cost));changed=true;return ' '});
     if(data.text.includes('[[QUEST_COMPLETE]]')){await completeCurrent();data.text=data.text.replace(/\s*\[\[QUEST_COMPLETE\]\]\s*/g,' ');changed=true;}
     if(changed){data.text=data.text.trim();const headers=new Headers(res.headers);headers.set('Content-Type','application/json; charset=utf-8');return new Response(JSON.stringify(data),{status:res.status,statusText:res.statusText,headers});}
    }
