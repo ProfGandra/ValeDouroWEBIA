@@ -1,7 +1,7 @@
 // ValeDouro WEBIA — identidade visual e avatar padrão
 (function(){
   const DEFAULT_AVATAR = 'assets/avatars/generic.webp';
-  const SIGNATURE_IMAGE = 'assets/branding/dgandra-signature.png';
+  const SIGNATURE_IMAGE = 'assets/branding/dgandra-signature.png?v=20260903-1';
 
   function ensureAvatar(character){
     if(character && !character.avatar) character.avatar = DEFAULT_AVATAR;
@@ -71,21 +71,17 @@
 
   ensureAllAvatars();
 
-  const style = document.createElement('style');
-  style.textContent = `
-    .dg-signature{position:fixed;left:12px;right:auto;bottom:10px;z-index:12;width:120px;display:block;pointer-events:none;user-select:none;opacity:.96}
-    .dg-signature.home{left:auto;right:12px;width:138px}
-    .dg-signature img{display:block;width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55))}
-    @media(max-width:800px){.dg-signature{width:88px;bottom:6px;left:6px}.dg-signature.home{right:6px;width:98px}}
-    @media print{.dg-signature{display:none!important}}
-  `;
-  document.head.appendChild(style);
-
-  const signature = document.createElement('div');
-  signature.id = 'dgandraSignature';
-  signature.className = 'dg-signature';
-  signature.innerHTML = `<img src="${SIGNATURE_IMAGE}" alt="Desenvolvido por DGandra - 2026">`;
-  document.body.appendChild(signature);
+  let signature = document.getElementById('dgandraSignature');
+  if(!signature){
+    signature = document.createElement('div');
+    signature.id = 'dgandraSignature';
+    signature.className = 'dg-signature';
+    signature.innerHTML = `<img src="${SIGNATURE_IMAGE}" alt="Desenvolvido por DGandra - 2026">`;
+    document.body.appendChild(signature);
+  } else {
+    const img = signature.querySelector('img');
+    if(img) img.src = SIGNATURE_IMAGE;
+  }
 
   function syncSignature(){
     const opening = document.getElementById('opening');
