@@ -1,7 +1,7 @@
 // ValeDouro WEBIA — identidade visual e avatar padrão
 (function(){
   const DEFAULT_AVATAR = 'assets/avatars/generic.webp';
-  const SIGNATURE_IMAGE = 'assets/branding/dgandra-signature.webp';
+  const SIGNATURE_IMAGE = 'assets/branding/dgandra-signature.png';
 
   function ensureAvatar(character){
     if(character && !character.avatar) character.avatar = DEFAULT_AVATAR;
