@@ -1,0 +1,33 @@
+{
+  "id": "QST-012",
+  "schema_version": "1.2.0",
+  "content_version": "1.0.0",
+  "identity": {
+    "title": "A Voz na Biblioteca",
+    "status": "validated",
+    "type": ["investigation", "archive", "social"],
+    "recommended_level": {"min": 2, "ideal": 3, "max": 4},
+    "recommended_party_size": 4,
+    "duration": {"minimum_sessions": 1, "maximum_sessions": 2},
+    "pillars": ["interaction", "exploration", "combat_optional"],
+    "tags": ["liceu", "library", "records", "dornelius"]
+  },
+  "canon_refs": [{"ref": "CANON:NPC:DORNELIUS", "purpose": "Dornélius is directly encountered in the Liceu library as canonical guardian of the archive."}],
+  "template_truth": {"summary": ["Uma série de registros antigos parece contradizer a planta atual de uma ala do Liceu.", "Não há falsificação recente; páginas de épocas distintas foram encadernadas juntas após uma reforma antiga.", "Dornélius percebe a anomalia, recebe os personagens na biblioteca e permite acesso controlado aos registros.", "Ele fornece fatos documentais, mas não escolhe a interpretação final nem abandona a biblioteca."], "immutable": true},
+  "propositions": [{"id": "PRP-001", "statement": "Alguém falsificou recentemente os registros.", "truth": false}, {"id": "PRP-002", "statement": "Documentos de períodos diferentes foram reunidos na mesma encadernação.", "truth": true}, {"id": "PRP-003", "statement": "A discrepância leva a uma antiga cavidade de manutenção esquecida.", "truth": true}],
+  "module_slots": [],
+  "actors": [{"id": "ACT-001", "entity_type": "individual", "role": "dornelius", "canonical": true, "canon_ref": "CANON:NPC:DORNELIUS", "initial_location": "LOC-001", "goals": ["protect_archive", "provide_records"], "constraints": ["does_not_leave_library", "does_not_supply_solution"]}, {"id": "ACT-002", "entity_type": "group", "role": "maintenance_workers", "canonical": false, "initial_location": "LOC-003", "goals": ["inspect_structure"]}],
+  "locations": [{"id": "LOC-001", "name": "Biblioteca do Liceu", "type": "library", "connections": [{"target": "LOC-002", "access": "records"}]}, {"id": "LOC-002", "name": "Corredor reformado", "type": "interior", "connections": [{"target": "LOC-003", "access": "hidden_maintenance_access"}]}, {"id": "LOC-003", "name": "Cavidade de manutenção antiga", "type": "service_space", "connections": []}],
+  "problems": [{"id": "PRB-001", "name": "Registros contraditórios", "role": "presenting_problem", "initial_state": "active", "domains": ["informational"]}, {"id": "PRB-002", "name": "Acesso antigo não catalogado", "role": "hidden_problem", "initial_state": "latent", "domains": ["technical", "physical"]}],
+  "needs": [{"id": "NED-001", "description": "Reconstruir a sequência documental correta.", "initial_state": "unmet", "generated_by": ["PRB-001"]}, {"id": "NED-002", "description": "Inspecionar a cavidade antiga com segurança.", "initial_state": "unmet", "generated_by": ["PRB-002"]}],
+  "functions": [{"id": "FUN-001", "description": "Comparar datas, materiais, caligrafia e plantas.", "satisfies": ["NED-001"]}, {"id": "FUN-002", "description": "Abrir e avaliar acesso antigo sem dano estrutural.", "satisfies": ["NED-002"]}],
+  "resources": [], "causal_relations": [], "evidence": [],
+  "information": [{"id": "INF-001", "content": "Dornélius confirma que o volume reúne documentos de épocas diferentes e que a ordem atual não é necessariamente cronológica.", "type": "documented_fact", "source": "ACT-001", "sincerity": "sincere"}],
+  "claims": [], "reports": [], "provenance_chains": [], "information_transformations": [], "source_relations": [], "evidence_graph": [], "risks": [], "processes": [], "triggers": [], "events": [],
+  "known_solutions": [{"id": "SOL-001", "target_need": "NED-001", "method": "Ordenar registros por data, material, referência arquitetônica ou outra evidência."}, {"id": "SOL-002", "target_need": "NED-002", "method": "Acessar pela abertura existente ou criar acesso técnico seguro."}],
+  "known_solutions_exhaustive": false,
+  "steam_concepts": [],
+  "player_freedoms": [{"type": "investigation_order_free", "scope": "global"}, {"type": "creative_solution_allowed", "scope": "global"}, {"type": "magic_not_artificially_blocked", "scope": "global"}, {"type": "no_compensatory_obstacle", "scope": "global"}],
+  "narrative_guardrails": [{"type": "instruction", "text": "Dornélius deve ser encontrado pessoalmente na biblioteca."}, {"type": "instruction", "text": "Dornélius não sai da biblioteca e não entrega a solução pronta."}, {"type": "instruction", "text": "Não transformar a discrepância documental em conspiração recente."}],
+  "resolution_model": {"quest_completion_is_binary": false, "problem_resolution_states": ["active", "latent", "stabilized", "delegated", "under_resolution", "resolved", "transformed", "recurring", "abandoned"], "milestone_progression": true}
+}
