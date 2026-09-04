@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "spells": [
+    {"id":"light","name":"Luz","circle":0,"tradition":"divine","classes":["Clérigo"],"range":"toque","duration":"1 hora","concentration":false,"components":["verbal","material-trivial"],"tags":["utility"],"effect":"Faz um objeto emitir luz sem causar dano."},
+    {"id":"healing-word","name":"Palavra Restauradora","circle":1,"tradition":"divine","classes":["Clérigo"],"range":"curto","duration":"instantânea","concentration":false,"components":["verbal"],"tags":["healing","stabilization"],"effect":"Recupera HP funcional e pode estabilizar, mas não repara fraturas, amputações ou trauma estrutural."},
+    {"id":"blessing","name":"Bênção","circle":1,"tradition":"divine","classes":["Clérigo"],"range":"curto","duration":"concentração","concentration":true,"components":["verbal","somatic"],"tags":["support"],"effect":"Concede auxílio sobrenatural enquanto a concentração for mantida."},
+    {"id":"arcane-bolt","name":"Raio Arcano","circle":0,"tradition":"arcane","classes":["Mago","Feiticeiro","Bruxo"],"range":"médio","duration":"instantânea","concentration":false,"components":["verbal","somatic"],"tags":["damage"],"effect":"Projétil simples de energia arcana."},
+    {"id":"arcane-shield","name":"Escudo Arcano","circle":1,"tradition":"arcane","classes":["Mago","Feiticeiro"],"range":"pessoal","duration":"breve","concentration":false,"components":["verbal","somatic"],"tags":["defense"],"effect":"Defesa mágica momentânea contra uma ameaça imediata."},
+    {"id":"ember-sphere","name":"Esfera de Brasas","circle":1,"tradition":"arcane","classes":["Mago","Feiticeiro"],"range":"médio","duration":"instantânea","concentration":false,"components":["verbal","somatic","material-trivial"],"tags":["damage","fire"],"effect":"Explosão pequena de fogo arcano em uma área restrita."},
+    {"id":"guiding-spark","name":"Centelha Guia","circle":0,"tradition":"natural","classes":["Ranger","Patrulheiro","Druida"],"range":"curto","duration":"breve","concentration":false,"components":["verbal","somatic"],"tags":["utility"],"effect":"Cria uma indicação luminosa sutil útil para orientação e sinalização."},
+    {"id":"thorn-snare","name":"Laço de Espinhos","circle":1,"tradition":"natural","classes":["Ranger","Patrulheiro","Druida"],"range":"curto","duration":"concentração","concentration":true,"components":["somatic","material-trivial"],"tags":["control","nature"],"effect":"Vegetação prende ou dificulta o deslocamento de um alvo enquanto a concentração for mantida."}
+  ]
+}
