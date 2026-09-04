@@ -1,11 +1,10 @@
 // ValeDouro WEBIA — configuração pública do Firebase.
-// Preencha estes valores após criar o projeto Firebase e registrar um Web App.
 // Estes identificadores são públicos por natureza; a proteção dos dados é feita pelas regras do Firestore.
 window.VALEDOURO_FIREBASE_CONFIG = window.VALEDOURO_FIREBASE_CONFIG || {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: ''
+  apiKey: 'AIzaSyCbuR7MDygCfTrexGaBq5mWa1h3Shn-_ts',
+  authDomain: 'valedourowebia.firebaseapp.com',
+  projectId: 'valedourowebia',
+  storageBucket: 'valedourowebia.firebasestorage.app',
+  messagingSenderId: '1087126816054',
+  appId: '1:1087126816054:web:eef7e9a164d1b546005f97'
 };
