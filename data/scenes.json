@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "allowedExtensions": ["png", "webp", "jpg", "jpeg"],
+  "defaultAspectRatio": "16:9",
+  "categories": [
+    "city",
+    "village",
+    "forest",
+    "road",
+    "tavern",
+    "port",
+    "castle",
+    "liceu",
+    "granberg",
+    "wilderness",
+    "dungeon",
+    "combat",
+    "events",
+    "npcs"
+  ],
+  "scenes": []
+}
