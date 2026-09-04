@@ -100,4 +100,11 @@
 
   const observer = new MutationObserver(syncSignature);
   document.querySelectorAll('.screen').forEach(screen => observer.observe(screen,{attributes:true,attributeFilter:['class']}));
+
+  if(!document.querySelector('script[data-vd-history-controls]')){
+    const historyScript=document.createElement('script');
+    historyScript.src='js/history-controls.js?v=20260904-1';
+    historyScript.dataset.vdHistoryControls='1';
+    document.head.appendChild(historyScript);
+  }
 })();
