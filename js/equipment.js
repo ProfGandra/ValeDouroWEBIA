@@ -68,6 +68,38 @@ function deriveDefenseFromEquipment(ids){
   return {armor,shield:ids.includes('shield')};
 }
 
+function isRangerCharacter(c){
+  return (c.classes||[]).some(x=>/ranger|patrulheiro/i.test(x.name||''))||/ranger|patrulheiro/i.test(c.cls||'');
+}
+
+function hasBow(c){
+  return (c.equipment||[]).some(id=>id==='longbow'||/bow|arco/i.test(String(id)));
+}
+
+function ensureRangerBowQuiver(c){
+  if(!c||!isRangerCharacter(c)||!hasBow(c)||!window.ValeInventory?.ensure) return;
+  const inv=window.ValeInventory.ensure(c);
+  if(!Array.isArray(inv.items)) inv.items=[];
+  // A concessão é única: mesmo uma aljava vazia continua registrada e não é reabastecida automaticamente.
+  if(inv.items.some(x=>x.id==='ranger-quiver-arrows')) return;
+  inv.items.push({
+    id:'ranger-quiver-arrows',
+    name:'Aljava com Flechas',
+    qty:30,
+    unit:'flechas',
+    category:'Munição',
+    state:'available',
+    consumable:true,
+    ammunition:true,
+    container:'quiver',
+    maxQty:30,
+    source:'Equipamento inicial de Patrulheiro'
+  });
+  inv.history=Array.isArray(inv.history)?inv.history:[];
+  inv.history.unshift({at:new Date().toISOString(),type:'ranger-bow-quiver',item:'ranger-quiver-arrows',qty:30});
+  window.ValeInventory.persist(c);
+}
+
 const baseRenderCreateSlot=renderCreateSlot;
 renderCreateSlot=function(i){
   baseRenderCreateSlot(i);
@@ -136,12 +168,14 @@ collectChars=function(){
     }));
   }
   state.characters=result;
+  state.characters.forEach(ensureRangerBowQuiver);
   saveChars();
   showReview();
 };
 
 const baseSheet=sheet;
 sheet=function(c){
+  ensureRangerBowQuiver(c);
   const base=baseSheet(c);
   const ids=Array.isArray(c.equipment)?c.equipment:[];
   const names=ids.map(id=>VD_EQUIPMENT.find(x=>x.id===id)?.name||id);
@@ -149,6 +183,7 @@ sheet=function(c){
 };
 
 partyForAI=function(){
+  state.characters.forEach(ensureRangerBowQuiver);
   return state.characters.map(c=>({
     name:c.name,
     race:c.race,
