@@ -107,4 +107,11 @@
     historyScript.dataset.vdHistoryControls='1';
     document.head.appendChild(historyScript);
   }
+
+  if(!document.querySelector('script[data-vd-scene-fallback]')){
+    const sceneFallback=document.createElement('script');
+    sceneFallback.src='js/scene-visuals-fallback.js?v=20260904-1';
+    sceneFallback.dataset.vdSceneFallback='1';
+    document.head.appendChild(sceneFallback);
+  }
 })();
