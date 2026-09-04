@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "aliases": {"Patrulheiro": "Ranger"},
+  "classes": {
+    "Guerreiro": {
+      "features": [
+        {"id":"fighter-second-wind","name":"Segundo Fôlego","level":1,"type":"active","action":"bonus","uses":1,"recharge":"short","description":"Recuperação de combate limitada; o efeito concreto é resolvido pelo motor e pelo Mestre sem remover ferimentos estruturais."},
+        {"id":"fighter-fighting-style","name":"Estilo de Combate","level":1,"type":"choice","choice":{"id":"fighter-style","label":"Escolha um Estilo de Combate","options":["Defesa","Arquearia","Duelismo","Combate com Arma Grande"]}},
+        {"id":"fighter-action-surge","name":"Surto de Ação","level":2,"type":"active","action":"free","uses":1,"recharge":"short","description":"Permite um esforço extraordinário em combate; o Mestre deve respeitar o limite de usos."}
+      ]
+    },
+    "Ranger": {
+      "features": [
+        {"id":"ranger-wilderness-training","name":"Treinamento de Ermos","level":1,"type":"passive","description":"Experiência prática com rastreamento, orientação, coleta e sobrevivência em ambientes naturais."},
+        {"id":"ranger-first-aid-training","name":"Treinamento de Primeiros Socorros","level":1,"type":"passive","description":"Rangers carregam Kit de Primeiros Socorros e sabem utilizá-lo; herbalismo continua sendo preferido quando há tempo e recursos."},
+        {"id":"ranger-fighting-style","name":"Estilo de Combate","level":2,"type":"choice","choice":{"id":"ranger-style","label":"Escolha um Estilo de Combate","options":["Arquearia","Defesa","Duelismo"]}},
+        {"id":"ranger-natural-spellcasting","name":"Conjuração Natural","level":2,"type":"passive","description":"Acesso à tradição natural. Não utiliza Mana arcana."}
+      ]
+    },
+    "Mago": {
+      "features": [
+        {"id":"wizard-arcane-spellcasting","name":"Conjuração Arcana","level":1,"type":"passive","description":"Permite aprender, preparar e lançar magias arcanas usando Mana."},
+        {"id":"wizard-arcane-recovery","name":"Recuperação Arcana","level":1,"type":"active","action":"rest","uses":1,"recharge":"normal","description":"Recuperação especial de energia arcana, sujeita às regras de Mana e descanso do ValeDouro."}
+      ]
+    },
+    "Clérigo": {
+      "features": [
+        {"id":"cleric-divine-spellcasting","name":"Conjuração Divina","level":1,"type":"passive","description":"Acesso à tradição divina. Não utiliza Mana arcana."},
+        {"id":"cleric-channel-faith","name":"Canalizar Fé","level":2,"type":"active","action":"action","uses":1,"recharge":"normal","description":"Manifestação divina limitada por descanso; efeitos específicos dependem da escolha e contexto do personagem."}
+      ]
+    }
+  }
+}
