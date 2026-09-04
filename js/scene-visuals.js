@@ -4,12 +4,12 @@ const KEY='valedouro.sceneVisual.v1';
 const ASSETS={
   'QST-001':{
     'LOC-001':{src:'assets/quests/QST-001/qst001_loc001_saida_valedouro.png',alt:'Saída de Valedouro'},
-    'LOC-002':{src:'assets/quests/QST-001/qst001_loc002_ultimo_ponto.png',alt:'Último ponto de passagem confirmado'},
-    'LOC-003':{src:'assets/quests/QST-001/qst001_loc003_trecho_falha.png',alt:'Trecho provável da falha'},
+    'LOC-002':{src:'assets/quests/QST-001/qst001_loc002_ultimo_ponto.png',alt:'Estrada comercial'},
+    'LOC-003':{src:'assets/quests/QST-001/qst001_loc003_trecho_falha.png',alt:'Trecho acidentado da estrada'},
     'LOC-004':{src:'assets/quests/QST-001/qst001_loc004_caravana.png',alt:'Local da caravana'},
-    'LOC-005':{src:'assets/quests/QST-001/qst001_loc005_rota_bandidos.png',alt:'Rota de retirada dos bandidos'},
-    'LOC-006':{src:'assets/quests/QST-001/qst001_loc006_mata_aprendiz.png',alt:'Mata e rota do aprendiz'},
-    'LOC-007':{src:'assets/quests/QST-001/qst001_loc007_queda_aprendiz.png',alt:'Local da queda do aprendiz'}
+    'LOC-005':{src:'assets/quests/QST-001/qst001_loc005_rota_bandidos.png',alt:'Trilha próxima à estrada'},
+    'LOC-006':{src:'assets/quests/QST-001/qst001_loc006_mata_aprendiz.png',alt:'Interior da floresta'},
+    'LOC-007':{src:'assets/quests/QST-001/qst001_loc007_queda_aprendiz.png',alt:'Depressão rochosa na floresta'}
   }
 };
 function campaignQuest(){try{return window.ValeDouroCampaign?.read?.()?.currentQuestId||state?.hiddenQuest?.id||null}catch{return null}}
@@ -27,12 +27,13 @@ window.ValeSceneVisuals={assets:ASSETS,read:ensureState,setScene,render,reset};
 const previousFetch=window.fetch.bind(window);
 window.fetch=async function(input,init){
   const url=typeof input==='string'?input:(input?.url||'');
+  const aiUrl=(typeof AI_ENDPOINT!=='undefined'?AI_ENDPOINT:null);
   let nextInit=init;
-  if(url===window.AI_ENDPOINT||url===(typeof AI_ENDPOINT!=='undefined'?AI_ENDPOINT:null)){
-    if(init?.method==='POST'&&init.body){try{const b=JSON.parse(init.body),q=campaignQuest(),rule=sceneRule(q);if(rule){b.state={...(b.state||{}),sceneVisual:{questId:q,locationId:ensureState().locationId},sceneVisualRules:[rule],capabilityRules:[...((b.state?.capabilityRules)||[]),rule]};nextInit={...init,body:JSON.stringify(b)}}}catch(e){console.warn('Regra visual não injetada',e)}}
+  if(url===aiUrl){
+    if(init?.method==='POST'&&init.body){try{const b=JSON.parse(init.body),q=campaignQuest(),rule=sceneRule(q);if(rule){b.world={...(b.world||{}),scene_visual_instruction:rule,current_visual_location:ensureState().locationId};if(b.quest)b.quest={...b.quest,visual_scene_directive:rule};b.state={...(b.state||{}),sceneVisual:{questId:q,locationId:ensureState().locationId},sceneVisualRules:[rule],capabilityRules:[...((b.state?.capabilityRules)||[]),rule]};nextInit={...init,body:JSON.stringify(b)}}}catch(e){console.warn('Regra visual não injetada',e)}}
   }
   const res=await previousFetch(input,nextInit);
-  if(!(url===window.AI_ENDPOINT||url===(typeof AI_ENDPOINT!=='undefined'?AI_ENDPOINT:null)))return res;
+  if(url!==aiUrl)return res;
   try{
     const data=await res.clone().json();let changed=false;
     for(const field of ['reply','text'])if(typeof data?.[field]==='string'){
