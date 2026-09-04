@@ -2,6 +2,9 @@
 // Firestore é a fonte de verdade; localStorage funciona como cache local/offline.
 (async function(){
 'use strict';
+const uiFix=document.createElement('style');
+uiFix.textContent=`body:has(#game.active) #cloudAccount{top:78px!important;right:12px!important}body:has(#game.active) #cloudMini{right:12px!important}@media(max-width:800px){body:has(#game.active) #cloudAccount{top:92px!important;right:6px!important;max-width:calc(100vw - 12px)}}`;
+document.head.appendChild(uiFix);
 const PREFIX='valedouro.';
 const META_KEY='valedouro.cloud.meta.v1';
 const DEVICE_KEY='valedouro.cloud.device.v1';
@@ -17,7 +20,7 @@ let fb={};
 const deviceId=(()=>{let id=localStorage.getItem(DEVICE_KEY);if(!id){id='vd-device-'+(crypto.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2));nativeSet.call(localStorage,DEVICE_KEY,id)}return id})();
 function loadMeta(){try{const x=JSON.parse(localStorage.getItem(META_KEY)||'{}');return x&&typeof x==='object'?x:{}}catch{return {}}}
 function saveMeta(meta){nativeSet.call(localStorage,META_KEY,JSON.stringify(meta))}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]))}
 function status(text,kind=''){const e=document.getElementById('cloudStatus');if(e){e.textContent=text;e.className='cloud-status '+kind}const mini=document.getElementById('cloudMini');if(mini)mini.textContent=text}
 function updateUI(){const login=document.getElementById('googleLoginBtn'),logout=document.getElementById('googleLogoutBtn'),sync=document.getElementById('cloudSyncBtn'),name=document.getElementById('cloudUserName'),avatar=document.getElementById('cloudUserAvatar');if(!configured){if(login){login.disabled=true;login.textContent='Google não configurado'}status('☁ Nuvem não configurada','warn');return}if(currentUser){if(login)login.style.display='none';if(logout)logout.style.display='inline-flex';if(sync)sync.style.display='inline-flex';if(name){name.textContent=currentUser.displayName||currentUser.email||'Jogador';name.style.display='inline'}if(avatar&&currentUser.photoURL){avatar.src=currentUser.photoURL;avatar.style.display='block'}}else{if(login){login.style.display='inline-flex';login.disabled=false;login.textContent='Entrar com Google'}if(logout)logout.style.display='none';if(sync)sync.style.display='none';if(name)name.style.display='none';if(avatar)avatar.style.display='none';status('☁ Entre com Google para salvar na nuvem','') }}
 function trackedKeys(){const out=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(PREFIX)&&!EXCLUDED.has(k)&&!k.startsWith('valedouro.cloud.'))out.push(k)}return out.sort()}
