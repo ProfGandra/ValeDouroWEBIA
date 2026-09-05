@@ -70,3 +70,6 @@ window.addEventListener('valedouro:quest-complete',()=>setTimeout(render,0));
 const oldShow=window.show;if(typeof oldShow==='function')window.show=function(id){const r=oldShow.apply(this,arguments);if(id==='game')setTimeout(render,0);return r};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render);else render();
 })();
+
+// Carrega o subsistema de trilha sonora sem acoplar sua lógica ao sistema visual.
+(()=>{if(document.getElementById('valeAudioManagerScript'))return;const s=document.createElement('script');s.id='valeAudioManagerScript';s.src='js/audio-manager.js?v=20260905-1';document.head.appendChild(s)})();
