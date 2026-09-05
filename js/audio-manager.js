@@ -3,6 +3,7 @@
 
 const STORAGE_KEY='valedouro.audio.v3';
 const BASE='assets/audio/music/';
+const MASTER_GAIN=0.30;
 const TRACKS={
   main_menu:{src:BASE+'VD_MAIN_MENU_01.mp3',label:'Menu principal',loop:true},
   exploration:{src:BASE+'VD_EXPLORATION_01.mp3',label:'Exploração',loop:true},
@@ -41,7 +42,7 @@ const player=new Audio();
 player.preload='auto';
 
 function saveSettings(){localStorage.setItem(STORAGE_KEY,JSON.stringify(settings))}
-function audibleVolume(){return Math.pow(settings.volume,2)}
+function audibleVolume(){return clamp(Math.pow(settings.volume,2)*MASTER_GAIN,0,1)}
 function applyVolume(){player.volume=audibleVolume()}
 
 async function ensurePlayback(){
@@ -194,6 +195,6 @@ function hookShow(){const oldShow=window.show;if(typeof oldShow==='function'&&!w
 function unlockFromGesture(){unlocked=true;if(settings.enabled&&settings.volume>0&&currentKey&&player.paused)ensurePlayback()}
 function init(){installUI();installAIBridge();hookShow();if(activeScreen()==='opening')play('main_menu');document.addEventListener('pointerdown',unlockFromGesture,{once:true,capture:true});document.addEventListener('keydown',unlockFromGesture,{once:true,capture:true})}
 
-window.ValeAudio={tracks:TRACKS,play,stop,pause,resume,toggle,setEnabled,setVolume,getState:()=>({enabled:settings.enabled,volume:settings.volume,currentKey,unlocked,paused:player.paused,actualVolume:player.volume}),inferFromNarrative,player};
+window.ValeAudio={tracks:TRACKS,play,stop,pause,resume,toggle,setEnabled,setVolume,getState:()=>({enabled:settings.enabled,volume:settings.volume,masterGain:MASTER_GAIN,currentKey,unlocked,paused:player.paused,actualVolume:player.volume}),inferFromNarrative,player};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
