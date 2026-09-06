@@ -100,7 +100,7 @@ async function trigger(key){
     const shot=await playAudio(cfg.audio,cfg.gain);
     if(cfg.visual==='lightning')flash('lightning');
     if(cfg.visual==='martelo'){
-      await sleep(70);
+      await sleep(300);
       flash('flash');
       shake();
     }
