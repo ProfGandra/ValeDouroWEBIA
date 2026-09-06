@@ -4,6 +4,17 @@
 const KEY='valedouro.terms.acceptance.v1';
 const VERSION='2026-09-05';
 
+function loadOptionalAudioSystems(){
+  const scripts=[
+    ['valeAmbienceManagerScript','js/ambience-manager.js?v=20260906-1'],
+    ['valeFxManagerScript','js/fx-manager.js?v=20260906-1']
+  ];
+  for(const [id,src] of scripts){
+    if(document.getElementById(id))continue;
+    const s=document.createElement('script');s.id=id;s.src=src;s.defer=true;document.head.appendChild(s);
+  }
+}
+
 function readAcceptance(){
   try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch{return null}
 }
@@ -29,6 +40,7 @@ async function acceptAndEnter(){
   try{if(window.ValeCloud?.user)await window.ValeCloud.syncNow()}catch(e){console.warn('Aceite salvo localmente; sincronização será tentada novamente.',e)}
 }
 function init(){
+  loadOptionalAudioSystems();
   const g=gate();if(!g)return;
   const check=document.getElementById('valeTermsCheck');
   const btn=document.getElementById('valeEnterBtn');
