@@ -96,16 +96,20 @@ async function trigger(key){
   if(key==='MARTELO_SAO_TELMO'&&busy)return false;
   if(key==='MARTELO_SAO_TELMO')busy=true;
   try{
-    if(cfg.visual==='lightning')flash('lightning');
-    if(cfg.visual==='martelo'){flash('flash');shake()}
     if(Number.isFinite(+cfg.duck))duckMusic(+cfg.duck,180);
-    await playAudio(cfg.audio,cfg.gain);
+    const shot=await playAudio(cfg.audio,cfg.gain);
+    if(cfg.visual==='lightning')flash('lightning');
+    if(cfg.visual==='martelo'){
+      await sleep(70);
+      flash('flash');
+      shake();
+    }
     if(cfg.impact?.audio){
       await sleep(Number(cfg.impact.delay_ms||0));
       await playAudio(cfg.impact.audio,cfg.impact.gain);
     }
     if(Number.isFinite(+cfg.restore_ms))setTimeout(()=>restoreMusic(Number(cfg.restore_ms||1200)),250);
-    window.dispatchEvent(new CustomEvent('valedouro:fx',{detail:{key,label:cfg.label||key}}));
+    window.dispatchEvent(new CustomEvent('valedouro:fx',{detail:{key,label:cfg.label||key,shotStarted:!!shot}}));
     return true;
   }finally{
     if(key==='MARTELO_SAO_TELMO')setTimeout(()=>{busy=false},1200);
