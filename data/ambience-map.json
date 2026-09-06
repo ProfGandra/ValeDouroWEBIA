@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "ambiences": {
+    "HARBOR_CLEAR": {
+      "label": "Docas de ValeDouro — dia claro",
+      "layers": [
+        {"id":"harbor_water","src":"assets/audio/ambience/sea/harbor_calm_01.mp3","loop":true,"gain":0.50},
+        {"id":"seagulls_day","src":"assets/audio/ambience/sea/harbour_seagulls_day.mp3","loop":true,"gain":0.22}
+      ]
+    },
+    "HARBOR_CLOUDY": {
+      "label": "Docas de ValeDouro — tempo nublado",
+      "layers": [
+        {"id":"harbor_water","src":"assets/audio/ambience/sea/harbor_calm_01.mp3","loop":true,"gain":0.50}
+      ]
+    },
+    "HARBOR_LIGHT_RAIN": {
+      "label": "Docas de ValeDouro — chuva leve",
+      "layers": [
+        {"id":"harbor_water","src":"assets/audio/ambience/sea/harbor_calm_01.mp3","loop":true,"gain":0.40},
+        {"id":"rain_light","src":"assets/audio/ambience/weather/rain_light_01.mp3","loop":true,"gain":0.38}
+      ]
+    },
+    "HARBOR_HEAVY_RAIN": {
+      "label": "Docas de ValeDouro — chuva forte",
+      "layers": [
+        {"id":"harbor_water","src":"assets/audio/ambience/sea/harbor_calm_01.mp3","loop":true,"gain":0.30},
+        {"id":"rain_heavy","src":"assets/audio/ambience/weather/rain_heavy_01.mp3","loop":true,"gain":0.55}
+      ]
+    },
+    "URBAN_SHELTER_LIGHT_RAIN": {
+      "label": "Abrigo urbano — chuva leve",
+      "layers": [
+        {"id":"rain_light","src":"assets/audio/ambience/weather/rain_light_01.mp3","loop":true,"gain":0.45}
+      ]
+    },
+    "STORM_HEAVY_INDOOR": {
+      "label": "Interior protegido — temporal forte",
+      "layers": [
+        {"id":"storm_indoor","src":"assets/audio/ambience/weather/storm_heavy_indoor_01_.mp3","loop":true,"gain":0.50}
+      ]
+    },
+    "NONE": {
+      "label": "Sem ambience adicional",
+      "layers": []
+    }
+  },
+  "fx": {
+    "THUNDER_CLOSE": {
+      "label": "Trovão próximo",
+      "audio": "assets/audio/fx/weather/thunder_close_01.mp3",
+      "gain": 0.78,
+      "visual": "lightning"
+    },
+    "MARTELO_SAO_TELMO": {
+      "label": "Disparo dos Martelos de São Telmo",
+      "audio": "assets/audio/fx/artillery/martelo_sao_telmo_fire_01.mp3",
+      "gain": 0.92,
+      "visual": "martelo",
+      "duck": 0.20,
+      "impact": {
+        "audio": "assets/audio/fx/artillery/explosion_distant_01.mp3",
+        "gain": 0.72,
+        "delay_ms": 2100
+      },
+      "restore_ms": 2800
+    }
+  }
+}
