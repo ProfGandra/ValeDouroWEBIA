@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "quests": {
+    "QST-001": [
+      {"id":"LOC-001","src":"assets/quests/QST-001/qst001_loc001_saida_valedouro.png","label":"Saída de ValeDouro"},
+      {"id":"LOC-002","src":"assets/quests/QST-001/qst001_loc002_ultimo_ponto.png","label":"Último ponto de passagem"},
+      {"id":"LOC-003","src":"assets/quests/QST-001/qst001_loc003_trecho_falha.png","label":"Trecho provável da falha"},
+      {"id":"LOC-004","src":"assets/quests/QST-001/qst001_loc004_caravana.png","label":"Local da caravana"},
+      {"id":"LOC-005","src":"assets/quests/QST-001/qst001_loc005_rota_bandidos.png","label":"Rota dos bandidos"},
+      {"id":"LOC-006","src":"assets/quests/QST-001/qst001_loc006_mata_aprendiz.png","label":"Mata e rota do aprendiz"},
+      {"id":"LOC-007","src":"assets/quests/QST-001/qst001_loc007_queda_aprendiz.png","label":"Local da queda do aprendiz"}
+    ],
+    "QST-002": [
+      {"id":"LOC-001","src":"assets/quests/QST-002/qst002_loc001_acesso_ponte.png","label":"Acesso à ponte"},
+      {"id":"LOC-002","src":"assets/quests/QST-002/qst002_loc002_ponte_velha.png","label":"Ponte velha"},
+      {"id":"LOC-003","src":"assets/quests/QST-002/qst002_loc003_margem_oposta.png","label":"Margem oposta"},
+      {"id":"LOC-004","src":"assets/quests/QST-002/qst002_loc004_desvio.png","label":"Desvio"}
+    ],
+    "QST-003": [
+      {"id":"LOC-001","src":"assets/quests/QST-003/qst003_loc001_comunidade.png","label":"Comunidade"},
+      {"id":"LOC-002","src":"assets/quests/QST-003/qst003_loc002_cercados.png","label":"Cercados"},
+      {"id":"LOC-003","src":"assets/quests/QST-003/qst003_loc003_rastreamento.png","label":"Área de rastreamento"},
+      {"id":"LOC-004","src":"assets/quests/QST-003/qst003_loc004_area_criatura.png","label":"Área da criatura"}
+    ],
+    "QST-004": [
+      {"id":"LOC-001","src":"assets/quests/QST-004/qst004_loc001_posto.png","label":"Posto"},
+      {"id":"LOC-002","src":"assets/quests/QST-004/qst004_loc002_elevacao.png","label":"Elevação"},
+      {"id":"LOC-003","src":"assets/quests/QST-004/qst004_loc003_queda.png","label":"Local da queda"},
+      {"id":"LOC-004","src":"assets/quests/QST-004/qst004_loc004_viajantes.png","label":"Viajantes"}
+    ],
+    "QST-005": [
+      {"id":"LOC-001","src":"assets/quests/QST-005/qst005_loc001_biblioteca.png","label":"Biblioteca"},
+      {"id":"LOC-002","src":"assets/quests/QST-005/qst005_loc002_mecanismo.png","label":"Mecanismo"},
+      {"id":"LOC-003","src":"assets/quests/QST-005/qst005_loc003_bloqueio.png","label":"Bloqueio"}
+    ],
+    "QST-006": [
+      {"id":"LOC-001","src":"assets/quests/QST-006/qst006_loc001_partida.png","label":"Partida"},
+      {"id":"LOC-002","src":"assets/quests/QST-006/qst006_loc002_observacao.png","label":"Ponto de observação"},
+      {"id":"LOC-003","src":"assets/quests/QST-006/qst006_loc003_triangulacao.png","label":"Triangulação"},
+      {"id":"LOC-004","src":"assets/quests/QST-006/qst006_loc004_saqueadores.png","label":"Saqueadores"},
+      {"id":"LOC-005","src":"assets/quests/QST-006/qst006_loc005_sepultamento.png","label":"Sepultamento"},
+      {"id":"LOC-006","src":"assets/quests/QST-006/qst006_loc006_campo_batalha.png","label":"Campo de batalha"}
+    ],
+    "QST-007": [
+      {"id":"LOC-001","src":"assets/quests/QST-007/qst007_loc001_entrada.png","label":"Entrada"},
+      {"id":"LOC-002","src":"assets/quests/QST-007/qst007_loc002_galerias.png","label":"Galerias"},
+      {"id":"LOC-003","src":"assets/quests/QST-007/qst007_loc003_grupo_a.png","label":"Grupo A"},
+      {"id":"LOC-004","src":"assets/quests/QST-007/qst007_loc004_grupo_b.png","label":"Grupo B"},
+      {"id":"LOC-005","src":"assets/quests/QST-007/qst007_loc005_grupo_c.png","label":"Grupo C"}
+    ],
+    "QST-008": [
+      {"id":"LOC-001","src":"assets/quests/QST-008/qst008_loc001_sao_jeronimo.png","label":"São Jerônimo"},
+      {"id":"LOC-002","src":"assets/quests/QST-008/qst008_loc002_canal.png","label":"Canal"},
+      {"id":"LOC-003","src":"assets/quests/QST-008/qst008_loc003_vazamento.png","label":"Vazamento"},
+      {"id":"LOC-004","src":"assets/quests/QST-008/qst008_loc004_captacao.png","label":"Captação"}
+    ],
+    "QST-009": [
+      {"id":"LOC-001","src":"assets/quests/QST-009/qst009_loc001_relatos.png","label":"Área dos relatos"},
+      {"id":"LOC-002","src":"assets/quests/QST-009/qst009_loc002_incidente.png","label":"Local do incidente"},
+      {"id":"LOC-003","src":"assets/quests/QST-009/qst009_loc003_rastros.png","label":"Rastros"},
+      {"id":"LOC-004","src":"assets/quests/QST-009/qst009_loc004_criatura.png","label":"Criatura"}
+    ],
+    "QST-010": [
+      {"id":"LOC-001","src":"assets/quests/QST-010/qst010_loc001_comunidade.png","label":"Comunidade"},
+      {"id":"LOC-002","src":"assets/quests/QST-010/qst010_loc002_torre.png","label":"Torre"},
+      {"id":"LOC-003","src":"assets/quests/QST-010/qst010_loc003_sino.png","label":"Sino"}
+    ],
+    "QST-011": [
+      {"id":"SCN-001","src":"assets/quests/QST-011/qst011_cena01_chegada_liceu.png","label":"Chegada ao Liceu"},
+      {"id":"SCN-002","src":"assets/quests/QST-011/qst011_cena02_trilha_dante.png","label":"Trilha de Dante"},
+      {"id":"SCN-003","src":"assets/quests/QST-011/qst011_cena03_desprendimento.png","label":"Desprendimento"},
+      {"id":"SCN-004","src":"assets/quests/QST-011/qst011_cena04_retorno.png","label":"Retorno"}
+    ],
+    "QST-012": [
+      {"id":"SCN-001","src":"assets/quests/QST-012/qst012_cena01_biblioteca.png","label":"Biblioteca"},
+      {"id":"SCN-002","src":"assets/quests/QST-012/qst012_cena02_tubos.png","label":"Tubos"},
+      {"id":"SCN-003","src":"assets/quests/QST-012/qst012_cena03_funcionario.png","label":"Funcionário"},
+      {"id":"SCN-004","src":"assets/quests/QST-012/qst012_cena04_pos_resgate.png","label":"Pós-resgate"}
+    ],
+    "QST-013": [
+      {"id":"SCN-001","src":"assets/quests/QST-013/qst013_cena01_jardins.png","label":"Jardins"},
+      {"id":"SCN-002","src":"assets/quests/QST-013/qst013_cena02_area_silenciosa.png","label":"Área silenciosa"},
+      {"id":"SCN-003","src":"assets/quests/QST-013/qst013_cena03_mecanismo.png","label":"Mecanismo"}
+    ],
+    "QST-014": [
+      {"id":"SCN-001","src":"assets/quests/QST-014/qst014_cena01_oficina.png","label":"Oficina"},
+      {"id":"SCN-002","src":"assets/quests/QST-014/qst014_cena02_maquina.png","label":"Máquina"},
+      {"id":"SCN-003","src":"assets/quests/QST-014/qst014_cena03_eixo.png","label":"Eixo"}
+    ],
+    "QST-015": [
+      {"id":"SCN-001","src":"assets/quests/QST-015/qst015_cena01_laboratorio.png","label":"Laboratório"},
+      {"id":"SCN-002","src":"assets/quests/QST-015/qst015_cena02_forno.png","label":"Forno"},
+      {"id":"SCN-003","src":"assets/quests/QST-015/qst015_cena03_placa.png","label":"Placa"}
+    ],
+    "QST-016": [
+      {"id":"SCN-001","src":"assets/quests/QST-016/qst016_cena01_cartografia.png","label":"Cartografia"},
+      {"id":"SCN-002","src":"assets/quests/QST-016/qst016_cena02_corredor_oculto.png","label":"Corredor oculto"},
+      {"id":"SCN-003","src":"assets/quests/QST-016/qst016_cena03_nucleo.png","label":"Núcleo"}
+    ],
+    "QST-017": [
+      {"id":"SCN-001","src":"assets/quests/QST-017/qst017_cena01_observatorio.png","label":"Observatório"},
+      {"id":"SCN-002","src":"assets/quests/QST-017/qst017_cena02_estrela.png","label":"Estrela"},
+      {"id":"SCN-003","src":"assets/quests/QST-017/qst017_cena03_nucleo_noturno.png","label":"Núcleo noturno"}
+    ],
+    "QST-018": [
+      {"id":"SCN-001","src":"assets/quests/QST-018/qst018_cena01_parede.png","label":"Parede"},
+      {"id":"SCN-002","src":"assets/quests/QST-018/qst018_cena02_camara.png","label":"Câmara"},
+      {"id":"SCN-003","src":"assets/quests/QST-018/qst018_cena03_ramal.png","label":"Ramal"}
+    ],
+    "QST-019": [
+      {"id":"SCN-001","src":"assets/quests/QST-019/qst019_cena01_liceu_desperta.png","label":"O Liceu desperta"},
+      {"id":"SCN-002","src":"assets/quests/QST-019/qst019_cena02_automato.png","label":"Autômato"},
+      {"id":"SCN-003","src":"assets/quests/QST-019/qst019_cena03_perseguicao.png","label":"Perseguição"},
+      {"id":"SCN-004","src":"assets/quests/QST-019/qst019_cena04_grande_biblioteca.png","label":"Grande Biblioteca"},
+      {"id":"SCN-005","src":"assets/quests/QST-019/qst019_cena05_gabinete.png","label":"Gabinete"},
+      {"id":"SCN-006","src":"assets/quests/QST-019/qst019_cena06_vassoura.png","label":"Vassoura"}
+    ],
+    "QST-020": [
+      {"id":"SCN-001","src":"assets/quests/QST-020/qst020_cena01_festa.png","label":"Festa"},
+      {"id":"SCN-002","src":"assets/quests/QST-020/qst020_cena02_pedra_sobre_pedra.png","label":"Pedra sobre pedra"},
+      {"id":"SCN-003","src":"assets/quests/QST-020/qst020_cena03_narrativa_elfica.png","label":"Narrativa élfica"},
+      {"id":"SCN-004","src":"assets/quests/QST-020/qst020_cena04_eustaquio_automato.png","label":"Eustáquio e o autômato"},
+      {"id":"SCN-005","src":"assets/quests/QST-020/qst020_cena05_manha_seguinte.png","label":"Manhã seguinte"}
+    ]
+  }
+}
