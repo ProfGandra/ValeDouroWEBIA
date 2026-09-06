@@ -37,19 +37,14 @@ function actualGain(layerGain=1){
 function ambience(key){return catalog?.ambiences?.[normalizeKey(key)]||null}
 function layerById(id){return players.get(id)||null}
 
-function syncVolumes(){
-  for(const entry of players.values())entry.audio.volume=actualGain(entry.gain);
-}
+function syncVolumes(){for(const entry of players.values())entry.audio.volume=actualGain(entry.gain)}
 
 async function ensureEntry(layer){
   let entry=layerById(layer.id);
   if(!entry){
     const audio=new Audio();
-    audio.preload='auto';
-    audio.src=layer.src;
-    audio.loop=layer.loop!==false;
-    entry={audio,gain:Number(layer.gain||1),src:layer.src};
-    players.set(layer.id,entry);
+    audio.preload='auto';audio.src=layer.src;audio.loop=layer.loop!==false;
+    entry={audio,gain:Number(layer.gain||1),src:layer.src};players.set(layer.id,entry);
   }
   entry.gain=Number(layer.gain||1);
   if(entry.src!==layer.src){entry.audio.pause();entry.audio.src=layer.src;entry.audio.currentTime=0;entry.src=layer.src}
@@ -112,14 +107,14 @@ function installAIBridge(){
   }
 }
 
-function watchAudioSettings(){
-  setInterval(()=>syncVolumes(),500);
+function watchAudioSettings(){setInterval(()=>syncVolumes(),500)}
+function loadSeasonGate(){
+  if(document.getElementById('valeSeasonGateScript')||window.ValeSeasonGate)return;
+  const s=document.createElement('script');s.id='valeSeasonGateScript';s.src='js/season-gate.js?v=20260906-1';s.defer=true;document.head.appendChild(s);
 }
 
 async function init(){
-  await loadCatalog();
-  installAIBridge();
-  watchAudioSettings();
+  await loadCatalog();installAIBridge();watchAudioSettings();loadSeasonGate();
   document.addEventListener('pointerdown',unlock,{once:true,capture:true});
   document.addEventListener('keydown',unlock,{once:true,capture:true});
 }
