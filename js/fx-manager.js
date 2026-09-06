@@ -7,6 +7,7 @@ let catalog={ambiences:{},fx:{}};
 let catalogPromise=null;
 let unlocked=false;
 let busy=false;
+let musicRestoreVolume=null;
 const active=new Set();
 
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
@@ -34,6 +35,27 @@ function actualGain(gain=1){
   return clamp(Math.pow(s.volume,2)*MASTER_GAIN*Number(gain||1),0,1);
 }
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+function tweenVolume(audio,to,duration=180){
+  if(!audio)return;
+  const from=Number(audio.volume||0),target=clamp(Number(to)||0,0,1),start=performance.now();
+  const step=now=>{
+    const p=Math.min(1,(now-start)/Math.max(1,duration));
+    audio.volume=from+(target-from)*p;
+    if(p<1)requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function duckMusic(factor=.2,duration=180){
+  const p=window.ValeAudio?.player;if(!p)return;
+  if(musicRestoreVolume===null)musicRestoreVolume=p.volume;
+  tweenVolume(p,clamp(musicRestoreVolume*factor,0,1),duration);
+}
+function restoreMusic(duration=1200){
+  const p=window.ValeAudio?.player;if(!p||musicRestoreVolume===null)return;
+  const target=musicRestoreVolume;musicRestoreVolume=null;
+  tweenVolume(p,target,duration);
+}
 
 function ensureOverlay(){
   let el=document.getElementById('valeFxOverlay');
@@ -76,13 +98,13 @@ async function trigger(key){
   try{
     if(cfg.visual==='lightning')flash('lightning');
     if(cfg.visual==='martelo'){flash('flash');shake()}
-    if(Number.isFinite(+cfg.duck))window.ValeAudio?.duck?.(+cfg.duck,180);
+    if(Number.isFinite(+cfg.duck))duckMusic(+cfg.duck,180);
     await playAudio(cfg.audio,cfg.gain);
     if(cfg.impact?.audio){
       await sleep(Number(cfg.impact.delay_ms||0));
       await playAudio(cfg.impact.audio,cfg.impact.gain);
     }
-    if(Number.isFinite(+cfg.restore_ms))setTimeout(()=>window.ValeAudio?.restore?.(Number(cfg.restore_ms||1200)),250);
+    if(Number.isFinite(+cfg.restore_ms))setTimeout(()=>restoreMusic(Number(cfg.restore_ms||1200)),250);
     window.dispatchEvent(new CustomEvent('valedouro:fx',{detail:{key,label:cfg.label||key}}));
     return true;
   }finally{
