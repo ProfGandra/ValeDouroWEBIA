@@ -38,31 +38,45 @@
     const style=document.createElement('style');
     style.id='valeQuestTrackerStyles';
     style.textContent=`
-      .journey-tracker{margin:14px 0 16px;padding:13px 14px;border:1px solid rgba(201,164,92,.38);border-radius:12px;background:linear-gradient(180deg,rgba(54,40,24,.72),rgba(24,18,13,.86));box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
-      .journey-tracker .journey-kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#c8a55f;font-weight:800;margin-bottom:8px}
-      .journey-tracker .journey-label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9f927f;margin-top:7px}
-      .journey-tracker .journey-title{font-family:Georgia,'Times New Roman',serif;color:#f0d79b;font-weight:700;font-size:16px;line-height:1.25;margin-top:2px}
-      .journey-tracker .journey-objective{font-size:12px;line-height:1.45;color:#ded1bd;margin-top:3px}
-      .journey-tracker .journey-free{color:#bfc8b5}
-      @media(max-width:900px){.journey-tracker{margin:10px 0;padding:11px 12px}.journey-tracker .journey-title{font-size:15px}}
-      @media print{.journey-tracker{display:none!important}}
+      .journey-modal-card{width:min(620px,92vw);max-height:82vh;overflow:auto}
+      .journey-modal-body{padding-top:6px}
+      .journey-kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#c8a55f;font-weight:800;margin-bottom:10px}
+      .journey-label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9f927f;margin-top:10px}
+      .journey-title{font-family:Georgia,'Times New Roman',serif;color:#f0d79b;font-weight:700;font-size:21px;line-height:1.3;margin-top:4px}
+      .journey-objective{font-size:14px;line-height:1.55;color:#ded1bd;margin-top:5px}
+      .journey-free{color:#bfc8b5}
+      @media(max-width:700px){.journey-title{font-size:18px}.journey-objective{font-size:13px}}
+      @media print{#journeyModal,#journeyTopBtn{display:none!important}}
     `;
     document.head.appendChild(style);
   }
 
-  function ensurePanel(){
-    const aside=document.querySelector('#game .gamegrid aside');
-    if(!aside)return null;
-    let panel=document.getElementById('journeyTracker');
-    if(panel)return panel;
-    panel=document.createElement('section');
-    panel.id='journeyTracker';
-    panel.className='journey-tracker';
-    panel.setAttribute('aria-live','polite');
-    const visual=document.getElementById('sceneVisual');
-    if(visual&&visual.parentNode===aside) visual.insertAdjacentElement('afterend',panel);
-    else aside.appendChild(panel);
-    return panel;
+  function ensureButton(){
+    if(document.getElementById('journeyTopBtn'))return;
+    const game=document.getElementById('game');
+    if(!game)return;
+    const inventoryBtn=[...game.querySelectorAll('.topbar .row .btn')].find(b=>/invent[aá]rio/i.test(b.textContent||''));
+    if(!inventoryBtn)return;
+    const btn=document.createElement('button');
+    btn.id='journeyTopBtn';
+    btn.type='button';
+    btn.className='btn small';
+    btn.textContent='Jornada';
+    btn.addEventListener('click',openJourney);
+    inventoryBtn.insertAdjacentElement('beforebegin',btn);
+  }
+
+  function ensureModal(){
+    let modal=document.getElementById('journeyModal');
+    if(modal)return modal;
+    modal=document.createElement('div');
+    modal.id='journeyModal';
+    modal.className='modal';
+    modal.innerHTML=`<div class="panel sheet journey-modal-card"><div class="row" style="justify-content:space-between"><h2>Diário de Jornada</h2><button class="btn" type="button" id="journeyCloseBtn">Fechar</button></div><div id="journeyModalContent" class="journey-modal-body" aria-live="polite"></div></div>`;
+    document.body.appendChild(modal);
+    modal.querySelector('#journeyCloseBtn')?.addEventListener('click',closeJourney);
+    modal.addEventListener('click',e=>{if(e.target===modal)closeJourney()});
+    return modal;
   }
 
   function resolvedEntry(id){
@@ -76,19 +90,29 @@
     return trackerData?.default_free_roam||{title:'Mundo Livre',objective:'Explore ValeDouro e os locais já conhecidos no seu próprio ritmo.'};
   }
 
+  function escapeHtml(s){
+    return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
   async function render(force=false){
     await loadData();
+    ensureButton();
+    ensureModal();
     const id=activeId();
     if(!force&&id===lastQuestId)return;
     lastQuestId=id;
-    const panel=ensurePanel();
-    if(!panel)return;
+    const content=document.getElementById('journeyModalContent');
+    if(!content)return;
     const entry=resolvedEntry(id);
-    panel.innerHTML=`<div class="journey-kicker">Jornada</div><div class="journey-label">${id?'Missão ativa':'Estado atual'}</div><div class="journey-title${id?'':' journey-free'}">${escapeHtml(entry.title)}</div><div class="journey-label">${id?'Objetivo principal':'Orientação'}</div><div class="journey-objective">${escapeHtml(entry.objective)}</div>`;
+    content.innerHTML=`<div class="journey-kicker">Jornada</div><div class="journey-label">${id?'Missão ativa':'Estado atual'}</div><div class="journey-title${id?'':' journey-free'}">${escapeHtml(entry.title)}</div><div class="journey-label">${id?'Objetivo principal':'Orientação'}</div><div class="journey-objective">${escapeHtml(entry.objective)}</div>`;
   }
 
-  function escapeHtml(s){
-    return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  async function openJourney(){
+    await render(true);
+    ensureModal().classList.add('active');
+  }
+  function closeJourney(){
+    document.getElementById('journeyModal')?.classList.remove('active');
   }
 
   function setObjective(questId,objective,title){
@@ -104,7 +128,9 @@
     if(questId&&local[questId]){delete local[questId];writeLocal(local);render(true)}
   }
 
-  window.ValeQuestTracker={render,setObjective,clearObjective,current(){const id=activeId();return {questId:id,...resolvedEntry(id)}}};
+  window.ValeQuestTracker={render,setObjective,clearObjective,open:openJourney,close:closeJourney,current(){const id=activeId();return {questId:id,...resolvedEntry(id)}}};
+  window.openJourney=openJourney;
+  window.closeJourney=closeJourney;
 
   injectStyles();
   window.addEventListener('valedouro:quest-complete',()=>setTimeout(()=>render(true),0));
