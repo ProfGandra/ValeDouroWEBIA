@@ -25,35 +25,81 @@
     const active=state.characters[state.active];
     return{
       action:`${compactText(action,900)}\n\n${continuityDirective()}\n${inventoryDirective(active)}\n${rewardDirective()}`,
-      player:{
-        active_character:active?.name,
-        inventory_is_authoritative:true,
-        active_equipment:characterEquipment(active),
-        party:compactParty()
-      },
+      player:{active_character:active?.name,inventory_is_authoritative:true,active_equipment:characterEquipment(active),party:compactParty()},
       quest:compactQuest(),
       world:{quests_hidden:true,multiplayer:state.characters.length>1},
       history:compactHistory()
     };
   }
-  function clearRetryCard(){const old=document.getElementById('aiRetryCard');if(old)old.remove();}
-  function showRetryCard(message){clearRetryCard();const d=document.createElement('div');d.id='aiRetryCard';d.className='entry system';d.innerHTML=`<b>Mestre:</b> ${esc(message)}<br><button class="btn small" style="margin-top:8px" onclick="retryLastAI()">TENTAR CONTINUAR</button>`;$('story').appendChild(d);$('story').scrollTop=$('story').scrollHeight;}
+
+  let retryTimer=null;
+  function clearRetryTimer(){if(retryTimer){clearInterval(retryTimer);retryTimer=null;}}
+  function clearRetryCard(){clearRetryTimer();const old=document.getElementById('aiRetryCard');if(old)old.remove();}
+  function retryRemaining(){return Math.max(0,Number(state.aiRetryNotBefore||0)-Date.now());}
+  function updateRetryButton(){
+    const btn=document.getElementById('aiRetryBtn');if(!btn)return;
+    const ms=retryRemaining();
+    if(state.aiRetryInFlight){btn.disabled=true;btn.textContent='TENTANDO…';return;}
+    if(ms>0){btn.disabled=true;btn.textContent=`TENTAR CONTINUAR (${Math.ceil(ms/1000)}s)`;return;}
+    btn.disabled=false;btn.textContent='TENTAR CONTINUAR';
+  }
+  function showRetryCard(message,cooldownMs=0){
+    clearRetryCard();
+    state.aiAwaitingRetry=true;
+    state.aiRetryNotBefore=Date.now()+Math.max(0,Number(cooldownMs)||0);
+    const d=document.createElement('div');d.id='aiRetryCard';d.className='entry system';
+    d.innerHTML=`<b>Mestre:</b> ${esc(message)}<br><button id="aiRetryBtn" class="btn small" style="margin-top:8px" onclick="retryLastAI()">TENTAR CONTINUAR</button>`;
+    $('story').appendChild(d);$('story').scrollTop=$('story').scrollHeight;
+    updateRetryButton();
+    if(cooldownMs>0)retryTimer=setInterval(()=>{updateRetryButton();if(retryRemaining()<=0){clearRetryTimer();}},250);
+  }
+  function parseRetryAfter(response){
+    try{
+      const raw=response?.headers?.get?.('Retry-After');if(!raw)return 15000;
+      const seconds=Number(raw);if(Number.isFinite(seconds))return Math.max(3000,Math.min(60000,seconds*1000));
+      const date=Date.parse(raw);if(Number.isFinite(date))return Math.max(3000,Math.min(60000,date-Date.now()));
+    }catch{}
+    return 15000;
+  }
   function applyRewards(text){
     const rx=/\[\[VDREWARD:(item|xp|bonus|gold|silver|copper):([^:\]]+):([^\]]+)\]\]/gi;let m;
     while((m=rx.exec(text))){const type=m[1].toLowerCase(),raw=m[2],name=m[3].trim();if(typeof window.applyCharacterReward==='function'){if(type==='item')window.applyCharacterReward(state.active,{type,name,qty:Math.max(1,Number(raw)||1),note:'Recompensa de quest'});else window.applyCharacterReward(state.active,{type,value:Number(raw)||0,name});}}
   }
-  window.retryLastAI=async function(){if(!state.lastRetryAction)return;clearRetryCard();await window.askAI(state.lastRetryAction,true);};
+
+  window.retryLastAI=async function(){
+    if(!state.lastRetryAction||state.aiRetryInFlight)return;
+    if(retryRemaining()>0){updateRetryButton();return;}
+    state.aiRetryInFlight=true;updateRetryButton();
+    try{await window.askAI(state.lastRetryAction,true);}finally{state.aiRetryInFlight=false;updateRetryButton();}
+  };
+
   window.askAI=async function(action,isRetry=false){
     $('actBtn').disabled=true;const wait=addStory('<b>Mestre:</b> pensando…','master');
     try{
-      const payload=buildPayload(action);const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let d={};try{d=await r.json();}catch{}
-      if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||'Falha na IA');err.providerStatus=status;throw err;}
-      wait.remove();clearRetryCard();state.lastRetryAction=null;const text=d.reply||'';state.history.push({role:'assistant',content:text});applyRewards(text);
+      const payload=buildPayload(action);
+      const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let d={};try{d=await r.json();}catch{}
+      if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||'Falha na IA');err.providerStatus=status;err.retryAfterMs=Number(status)===429?parseRetryAfter(r):3000;throw err;}
+      wait.remove();clearRetryCard();state.lastRetryAction=null;state.aiAwaitingRetry=false;state.aiRetryNotBefore=0;
+      const text=d.reply||'';state.history.push({role:'assistant',content:text});applyRewards(text);
       const clean=text.replace(/\[\[ROLL:[^\]]+\]\]/g,'').replace(/\[\[VDREWARD:[^\]]+\]\]/g,'').trim();addStory(`<b>Mestre:</b> ${esc(clean).replace(/\n/g,'<br>')}`,'master');
       const m=text.match(/\[\[ROLL:(FOR|DES|CON|INT|SAB|CAR):(\d+):([^\]]+)\]\]/);if(m)requestRoll(m[1],+m[2],m[3]);
       if(state.lastRollAwaitingNarration){state.lastRollAwaitingNarration=false;setTimeout(()=>$('rollbox').classList.remove('active'),700);}
-    }catch(e){wait.remove();state.lastRetryAction=action;if(Number(e.providerStatus)===429)showRetryCard('O Mestre atingiu temporariamente o limite de uso da IA. A ação e qualquer rolagem já realizada foram preservadas. Aguarde alguns segundos e clique em TENTAR CONTINUAR.');else showRetryCard(`Falha temporária ao consultar o Mestre Virtual. A ação foi preservada. ${e.message||''}`.trim());}
-    finally{$('actBtn').disabled=!!state.pendingCheck;}
+    }catch(e){
+      wait.remove();state.lastRetryAction=action;state.aiAwaitingRetry=true;
+      if(Number(e.providerStatus)===429)showRetryCard('O Mestre atingiu temporariamente o limite de uso da IA. A ação e qualquer rolagem já realizada foram preservadas. Aguarde o contador e tente continuar.',e.retryAfterMs||15000);
+      else showRetryCard(`Falha temporária ao consultar o Mestre Virtual. A ação foi preservada. ${e.message||''}`.trim(),e.retryAfterMs||3000);
+    }finally{$('actBtn').disabled=!!state.pendingCheck||!!state.aiAwaitingRetry;}
   };
+
+  // Impede uma segunda declaração enquanto a primeira ainda aguarda resposta da IA.
+  const previousAct=window.act;
+  if(typeof previousAct==='function')window.act=async function(){
+    if(state.aiAwaitingRetry){
+      const card=document.getElementById('aiRetryCard');if(card)card.scrollIntoView({behavior:'smooth',block:'nearest'});
+      return;
+    }
+    return previousAct.apply(this,arguments);
+  };
+
   window.rollCheck=async function(){const r=state.pendingCheck;if(!r)return;const p=state.characters[r.playerIndex];const d20=1+Math.floor(Math.random()*20);const bonus=mod(p.attrs[r.attr]);const total=d20+bonus;const success=total>=r.cd;$('die').textContent=d20;$('rollResult').innerHTML=`${esc(p.name)}: ${r.attr} ${fmt(bonus)} = <strong>${total}</strong> vs CD ${r.cd} — <span class="${success?'pass':'fail'}">${success?'SUCESSO':'FALHA'}</span>`;$('rollBtn').disabled=true;addStory(`<b>Rolagem de ${esc(p.name)}:</b> d20 ${d20} ${fmt(bonus)} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'}`,'system');const msg=`Resultado do teste de ${p.name}: ${r.attr}; d20 ${d20}; mod ${bonus}; total ${total}; CD ${r.cd}; ${success?'sucesso':'falha'}; motivo: ${compactText(r.motivo,220)}. Narre a consequência e continue.`;state.history.push({role:'user',content:msg});state.pendingCheck=null;state.lastRollAwaitingNarration=true;state.lastRetryAction=msg;await window.askAI(msg,false);};
 })();
