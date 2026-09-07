@@ -121,4 +121,11 @@
     questTracker.dataset.vdQuestTracker='1';
     document.head.appendChild(questTracker);
   }
+
+  if(!document.querySelector('script[data-vd-master-hardening]')){
+    const masterHardening=document.createElement('script');
+    masterHardening.src='js/master-context-hardening.js?v=20260907-1';
+    masterHardening.dataset.vdMasterHardening='1';
+    document.head.appendChild(masterHardening);
+  }
 })();
