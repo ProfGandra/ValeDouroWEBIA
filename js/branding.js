@@ -114,4 +114,11 @@
     sceneFallback.dataset.vdSceneFallback='1';
     document.head.appendChild(sceneFallback);
   }
+
+  if(!document.querySelector('script[data-vd-quest-tracker]')){
+    const questTracker=document.createElement('script');
+    questTracker.src='js/quest-tracker.js?v=20260907-1';
+    questTracker.dataset.vdQuestTracker='1';
+    document.head.appendChild(questTracker);
+  }
 })();
