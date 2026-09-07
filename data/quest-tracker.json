@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "default_free_roam": {
+    "title": "Mundo Livre",
+    "objective": "Explore ValeDouro e os locais já conhecidos no seu próprio ritmo."
+  },
+  "quests": {
+    "QST-001": {"title":"A Caravana que Não Chegou","objective":"Investigue o desaparecimento da caravana e descubra o que aconteceu."},
+    "QST-002": {"title":"A Ponte Velha","objective":"Examine a Ponte Velha e encontre uma forma segura de lidar com o problema da passagem."},
+    "QST-003": {"title":"O Rebanho da Colina","objective":"Descubra o que está perturbando o rebanho e proteja a comunidade local."},
+    "QST-004": {"title":"Quatro Sentinelas, Três Relatórios","objective":"Localize as sentinelas e esclareça o que aconteceu no posto de fronteira."},
+    "QST-005": {"title":"O Aprendiz Desaparecido","objective":"Encontre o aprendiz desaparecido e conduza a situação a uma solução segura."},
+    "QST-006": {"title":"Luzes nas Terras Devastadas","objective":"Investigue as luzes observadas nas Terras Devastadas."},
+    "QST-007": {"title":"A Mina Silenciosa","objective":"Investigue a mina e descubra por que suas atividades cessaram."},
+    "QST-008": {"title":"Água para São Jerônimo","objective":"Descubra a causa do problema no abastecimento de água de São Jerônimo."},
+    "QST-009": {"title":"O Monstro da Estrada Norte","objective":"Investigue os acontecimentos na Estrada Norte e determine a natureza da ameaça."},
+    "QST-010": {"title":"O Sino que Não Tocou","objective":"Investigue a emergência e descubra por que o sino não cumpriu sua função."},
+    "QST-011": {"title":"O Arco que Não Voltou","objective":"Siga as pistas disponíveis e descubra o que aconteceu com quem não retornou."},
+    "QST-012": {"title":"A Voz na Biblioteca","objective":"Investigue a origem da voz e os acontecimentos incomuns na Biblioteca."},
+    "QST-013": {"title":"O Jardim Silencioso","objective":"Investigue o que alterou o funcionamento normal do Jardim."},
+    "QST-014": {"title":"A Máquina que Anda Sozinha","objective":"Descubra por que a máquina está se movendo por conta própria e torne a situação segura."},
+    "QST-015": {"title":"Cinzas no Laboratório","objective":"Investigue o incidente no Laboratório e controle os riscos ainda presentes."},
+    "QST-016": {"title":"A Linha que Não Fecha","objective":"Investigue a inconsistência cartográfica e descubra por que a linha não fecha."},
+    "QST-017": {"title":"Uma Estrela Fora do Lugar","objective":"Verifique a anomalia observada e determine se sua origem está no céu, nos instrumentos ou em outra causa."},
+    "QST-018": {"title":"A Pedra que Respira","objective":"Investigue o comportamento incomum da estrutura e determine se existe risco para o Liceu."},
+    "QST-019": {"title":"Quando o Liceu Acordou","objective":"Descubra o que está acontecendo no Liceu e proteja seus ocupantes enquanto investiga."},
+    "QST-020": {"title":"A Noite em que o Liceu Não Estuda","objective":"Viva a noite no Liceu, participe das atividades e aproveite o momento com liberdade."},
+    "QST-021": {"title":"Além dos Portões","objective":"Deixe o Liceu quando estiver pronto para seguir viagem e explorar ValeDouro."}
+  }
+}
