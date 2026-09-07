@@ -19,7 +19,7 @@ function firstSceneId(q){return scenesFor(q)[0]?.id||null}
 function isQuestOpening(){
   try{return !Array.isArray(state?.history)||state.history.length===0}catch{return false}
 }
-function openingLockedScene(q){return q==='QST-001'&&isQuestOpening()?firstSceneId(q):null}
+function openingLockedScene(q){return isQuestOpening()?firstSceneId(q):null}
 
 async function loadCatalog(){
   if(catalogPromise)return catalogPromise;
@@ -34,7 +34,7 @@ async function loadCatalog(){
       console.warn('Catálogo visual indisponível:',e);
       catalog={version:1,quests:{}};
     }
-    return catalog;
+    return catalogPromise;
   })();
   return catalogPromise;
 }
@@ -89,7 +89,7 @@ function inferSceneFromNarrative(text,q=campaignQuest()){
 }
 function sceneRule(q){
   const scenes=scenesFor(q);if(!scenes.length)return null;const options=scenes.map(s=>`${s.id}=${s.label}`).join('; ');
-  const openingRule=q==='QST-001'?' Na abertura da QST-001, a cena visual fica BLOQUEADA na primeira cena até o jogador efetivamente decidir partir; não use imagens de bandidos, aprendiz, mata investigativa ou outras pistas ocultas.':'';
+  const openingRule=' Na abertura de QUALQUER Quest, a cena visual fica BLOQUEADA na primeira cena listada até que o jogador efetivamente aja e avance. Não use imagens de pistas futuras, antagonistas, locais ocultos, consequências ainda não descobertas ou destinos apenas mencionados.';
   return `CONTROLE VISUAL DE CENA: a quest atual possui estas cenas visuais: ${options}. Quando os personagens passarem fisicamente para uma dessas cenas, inclua ao FINAL da resposta exatamente um marcador [[SCENE:ID]], substituindo ID por um dos IDs listados. Use apenas IDs desta lista. Não troque a cena por mera menção, lembrança, observação distante ou pista sobre outro lugar. Na abertura da quest, use a primeira cena listada quando ela corresponder ao ponto inicial. O marcador é metadado interno: não o explique ao jogador.${openingRule}`
 }
 
