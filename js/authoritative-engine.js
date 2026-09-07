@@ -14,13 +14,13 @@ function read(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch{ret
 function save(s){s.version=1;s.updatedAt=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(s));return s}
 function auth(){const s=read();s.encounters=s.encounters||{};s.rolls=s.rolls||{};s.facts=s.facts||{};return s}
 function normalize(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim()}
-function questId(){try{return window.ValeDouroCampaign?.read?.()?.currentQuestId||window.state?.hiddenQuest?.id||null}catch{return null}}
+function questId(){try{return window.ValeDouroCampaign?.read?.()?.currentQuestId||state?.hiddenQuest?.id||null}catch{return null}}
 function sceneId(){try{return window.ValeSceneVisuals?.read?.()?.sceneId||null}catch{return null}}
 function encounterKey(){return `${questId()||'free'}:${sceneId()||'scene'}`}
 function currentEncounter(){const s=auth(),k=encounterKey();s.encounters[k]=s.encounters[k]||{visibleHostiles:null,establishedAt:null,updatedAt:null};save(s);return s.encounters[k]}
 function setEncounterCount(n){if(!Number.isInteger(n)||n<1)return;const s=auth(),k=encounterKey();const e=s.encounters[k]||{};e.visibleHostiles=n;e.establishedAt=e.establishedAt||new Date().toISOString();e.updatedAt=new Date().toISOString();s.encounters[k]=e;save(s)}
 
-function activeCharacter(){return window.state?.characters?.[window.state?.active||0]||null}
+function activeCharacter(){return state?.characters?.[state?.active||0]||null}
 function inv(c=activeCharacter()){try{return c&&window.ValeInventory?.ensure?.(c)||null}catch{return null}}
 function inventoryItems(c=activeCharacter()){
   const i=inv(c);if(!i)return [];
@@ -61,13 +61,13 @@ function applyDeterministicState(action){
   const c=activeCharacter();if(!c)return;
   if(action.type==='drop_shield'&&c.shield){
     c.shield=false;
-    try{c.ca=window.armorCA?window.armorCA(c.armor,window.mod(c.attrs.DES),false):Math.max(0,Number(c.ca||0)-2)}catch{c.ca=Math.max(0,Number(c.ca||0)-2)}
-    try{window.saveChars?.();window.renderParty?.()}catch{}
+    try{c.ca=armorCA(c.armor,mod(c.attrs.DES),false)}catch{c.ca=Math.max(0,Number(c.ca||0)-2)}
+    try{saveChars();renderParty()}catch{}
   }
   if(action.type==='pick_shield'&&!c.shield&&Array.isArray(c.equipment)&&c.equipment.includes('shield')){
     c.shield=true;
-    try{c.ca=window.armorCA?window.armorCA(c.armor,window.mod(c.attrs.DES),true):Number(c.ca||0)+2}catch{c.ca=Number(c.ca||0)+2}
-    try{window.saveChars?.();window.renderParty?.()}catch{}
+    try{c.ca=armorCA(c.armor,mod(c.attrs.DES),true)}catch{c.ca=Number(c.ca||0)+2}
+    try{saveChars();renderParty()}catch{}
   }
 }
 function deterministicFallback(type){
@@ -91,20 +91,20 @@ function registerRollResult(r,success){const s=auth(),sig=rollSignature(r),prev=
 
 // Substitui apenas o gerador do d20 e reforça fail-forward; interface permanece igual.
 window.rollCheck=async function(){
-  const r=window.state?.pendingCheck;if(!r)return;
-  const p=window.state.characters[r.playerIndex],d20=secureDie(20),bonus=window.mod(p.attrs[r.attr]),total=d20+bonus,success=total>=r.cd;
+  const r=state?.pendingCheck;if(!r)return;
+  const p=state.characters[r.playerIndex],d20=secureDie(20),bonus=mod(p.attrs[r.attr]),total=d20+bonus,success=total>=r.cd;
   logDie(20,d20);
   document.getElementById('die').textContent=d20;
-  document.getElementById('rollResult').innerHTML=`${window.esc(p.name)}: ${r.attr} ${window.fmt(bonus)} = <strong>${total}</strong> vs CD ${r.cd} — <span class="${success?'pass':'fail'}">${success?'SUCESSO':'FALHA'}</span>`;
+  document.getElementById('rollResult').innerHTML=`${esc(p.name)}: ${r.attr} ${fmt(bonus)} = <strong>${total}</strong> vs CD ${r.cd} — <span class="${success?'pass':'fail'}">${success?'SUCESSO':'FALHA'}</span>`;
   document.getElementById('rollBtn').disabled=true;
-  window.addStory(`<b>Rolagem de ${window.esc(p.name)}:</b> d20 ${d20} ${window.fmt(bonus)} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'}`,'system');
+  addStory(`<b>Rolagem de ${esc(p.name)}:</b> d20 ${d20} ${fmt(bonus)} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'}`,'system');
   const failures=registerRollResult(r,success);
   let msg=`Resultado do teste solicitado para ${p.name}: ${r.attr}, d20=${d20}, modificador=${bonus}, total=${total}, CD=${r.cd}, resultado=${success?'sucesso':'falha'}, motivo=${r.motivo}. Narre a consequência e continue a cena.`;
   if(!success)msg+=` REGRA FAIL-FORWARD: esta falha deve alterar a situação e fazer a narrativa avançar com custo, atraso, risco ou posição desfavorável. Não bloqueie a progressão.`;
   if(!success&&failures>=2)msg+=` Esta é a ${failures}ª falha recente no mesmo tipo de teste. É PROIBIDO pedir a mesma rolagem novamente sem mudança material das circunstâncias; avance por consequência.`;
-  window.state.history.push({role:'user',content:msg});window.state.pendingCheck=null;
+  state.history.push({role:'user',content:msg});state.pendingCheck=null;
   setTimeout(()=>document.getElementById('rollbox').classList.remove('active'),1000);
-  await window.askAI(msg);
+  await askAI(msg);
 };
 window.quickDie=function(){const sides=+document.getElementById('dieType').value,n=secureDie(sides);logDie(sides,n);document.getElementById('quickResult').textContent=`d${sides}: ${n}`};
 
@@ -166,7 +166,7 @@ window.fetch=async function(input,init){
       const rr=await nativeFetch(input,{...init,body:JSON.stringify(retry)});
       try{const rd=await rr.clone().json(),rt=String(rd?.reply??rd?.text??'');if(rt&&!((action.deterministic&&rollMarker(rt))||outcomeBeforeRoll(rt)||hasAmmoContradiction(rt,snapshot)||(existing&&countFromText(rt)&&countFromText(rt)!==existing))){res=rr;data=rd;text=rt}else if(action.deterministic){data=replaceFields(data,deterministicFallback(action.type));res=jsonResponse(res,data)}}catch{if(action.deterministic){data=replaceFields(data,deterministicFallback(action.type));res=jsonResponse(res,data)}}
     }
-    const finalText=String((await res.clone().json())?.reply??(await res.clone().json())?.text??text);
+    const parsedFinal=await res.clone().json();const finalText=String(parsedFinal?.reply??parsedFinal?.text??text);
     if(!existing){const n=countFromText(finalText);if(n)setEncounterCount(n)}
     // Compatibilidade estrutural: processa conclusão de Quest também quando o backend usa reply.
     if(finalText.includes('[[QUEST_COMPLETE]]')){
@@ -184,9 +184,9 @@ if(typeof originalAct==='function')window.act=async function(){
   const raw=declaredPlayerText(),a=classifyAction(raw),c=activeCharacter();
   if(a.type==='ranged_attack'){
     const ammo=ammoItem(c);
-    if(!ammo||ammo.qty<=0){window.addStory?.('<b>Sistema:</b> Não há munição disponível no inventário para realizar esse disparo.','system');return}
+    if(!ammo||ammo.qty<=0){addStory('<b>Sistema:</b> Não há munição disponível no inventário para realizar esse disparo.','system');return}
     const ok=window.ValeInventory?.consume?.(c,ammo.id,1);
-    if(!ok){window.addStory?.('<b>Sistema:</b> A munição não pôde ser consumida; o disparo não foi executado.','system');return}
+    if(!ok){addStory('<b>Sistema:</b> A munição não pôde ser consumida; o disparo não foi executado.','system');return}
   }
   if(a.deterministic)applyDeterministicState(a);
   return originalAct.apply(this,arguments)
