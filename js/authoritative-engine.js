@@ -92,7 +92,7 @@ function masterDirective(action){return ['MOTOR AUTORITATIVO DO WEBIA — OBRIGA
 window.fetch=async function(input,init){
   const url=typeof input==='string'?input:(input?.url||''),ai=(typeof AI_ENDPOINT!=='undefined'?AI_ENDPOINT:null);if(url!==ai||!init?.body||String(init.method||'GET').toUpperCase()!=='POST')return nativeFetch(input,init);
   let body,action={type:'general',deterministic:false,requiresRoll:false},snapshot;
-  try{body=JSON.parse(init.body);action=classifyAction(actionText(body));snapshot=authoritativeSnapshot();body.state={...(body.state||{}),authoritative_state:snapshot};body.world={...(body.world||{}),authoritative_engine:masterDirective(action)};body.action=masterDirective(action)+' '+String(body.action||'')}catch(e){console.warn('Motor autoritativo: não foi possível preparar contexto',e);return nativeFetch(input,init)}
+  try{body=JSON.parse(init.body);action=classifyAction(actionText(body));snapshot=authoritativeSnapshot();body.state={...(body.state||{}),authoritative_state:snapshot};body.world={...(body.world||{}),authoritative_engine:masterDirective(action),player_declared_action:String(body.action||'')}}catch(e){console.warn('Motor autoritativo: não foi possível preparar contexto',e);return nativeFetch(input,init)}
   let res=await nativeFetch(input,{...init,body:JSON.stringify(body)});
   try{
     let data=await res.clone().json(),text=String(data?.reply??data?.text??'');const enc=currentEncounter(),count=countFromText(text),existing=enc.visibleHostiles;let violation=null;
