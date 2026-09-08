@@ -1,11 +1,10 @@
 // ValeDouro WEBIA — resiliência de IA, compactação de contexto e continuidade narrativa
 (function(){
-  const REQUEST_KEY='valedouro.ai.pending.v3';
-  const RATE_KEY='valedouro.ai.rate.v3';
+  const REQUEST_KEY='valedouro.ai.pending.v2';
+  const RATE_KEY='valedouro.ai.rate.v2';
   let inFlight=null;
   let retryTimer=null;
 
-  function aiUrl(){try{return new URL(String(AI_ENDPOINT||''),location.href).href.replace(/\/+$/,'/')}catch{return String(AI_ENDPOINT||'').replace(/\/+$/,'/')};}
   function compactText(value,max=420){const s=String(value??'');return s.length>max?s.slice(0,max)+'…':s;}
   function compactHistory(){if(!Array.isArray(state.history))return[];return state.history.slice(-2).map(x=>({role:x?.role||'user',content:compactText(x?.content||'',500)}));}
   function compactQuest(){
@@ -88,16 +87,10 @@
       const wait=addStory('<b>Mestre:</b> pensando…','master');
       try{
         const payload=buildPayload(action,requestId);
-        const r=await fetch(aiUrl(),{
-          method:'POST',
-          mode:'cors',
-          cache:'no-store',
-          credentials:'omit',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(payload)
-        });
+        // request_id permanece no corpo. Não usamos cabeçalho customizado: o Worker atual não autoriza esse header no CORS.
+        const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
         let d={};try{d=await r.json();}catch{}
-        if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||`Falha na IA (HTTP ${r.status})`);err.providerStatus=status;err.retrySeconds=providerRetrySeconds(r,d);err.httpStatus=r.status;throw err;}
+        if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||'Falha na IA');err.providerStatus=status;err.retrySeconds=providerRetrySeconds(r,d);throw err;}
         wait.remove();clearRetryCard();clearPending();resetRate();
         const text=d.reply||'';state.history.push({role:'assistant',content:text});applyRewards(text);
         const clean=text.replace(/\[\[ROLL:[^\]]+\]\]/g,'').replace(/\[\[VDREWARD:[^\]]+\]\]/g,'').trim();addStory(`<b>Mestre:</b> ${esc(clean).replace(/\n/g,'<br>')}`,'master');
@@ -105,9 +98,7 @@
         if(state.lastRollAwaitingNarration){state.lastRollAwaitingNarration=false;setTimeout(()=>$('rollbox').classList.remove('active'),700);}
       }catch(e){
         wait.remove();savePending(action,requestId);
-        console.error('ValeDouro Mestre request failed',{requestId,url:aiUrl(),name:e?.name,message:e?.message,providerStatus:e?.providerStatus,httpStatus:e?.httpStatus});
-        if(Number(e.providerStatus)===429){const seconds=register429(e.retrySeconds);showRetryCard(`O Mestre atingiu temporariamente o limite de uso da IA. A ação foi preservada. Aguarde o contador (${seconds}s) antes de continuar.`)}
-        else if(e instanceof TypeError){showRetryCard('Falha de comunicação com o Mestre Virtual. A ação foi preservada. Verifique a conexão e tente continuar novamente.');}
+        if(Number(e.providerStatus)===429){const seconds=register429(e.retrySeconds);showRetryCard(`O Mestre atingiu temporariamente o limite de uso da IA. A ação foi preservada. Para evitar novas recusas do provedor, aguarde o contador (${seconds}s) antes de continuar.`)}
         else showRetryCard(`Falha temporária ao consultar o Mestre Virtual. A ação foi preservada. ${e.message||''}`.trim());
       }finally{
         inFlight=null;setActionLocked(!!pending());
@@ -118,7 +109,5 @@
 
   window.rollCheck=async function(){const r=state.pendingCheck;if(!r)return;const p=state.characters[r.playerIndex];const d20=window.ValeAuthority?.secureDie?.(20)||(1+Math.floor(Math.random()*20));const bonus=mod(p.attrs[r.attr]);const total=d20+bonus;const success=total>=r.cd;$('die').textContent=d20;$('rollResult').innerHTML=`${esc(p.name)}: ${r.attr} ${fmt(bonus)} = <strong>${total}</strong> vs CD ${r.cd} — <span class="${success?'pass':'fail'}">${success?'SUCESSO':'FALHA'}</span>`;$('rollBtn').disabled=true;addStory(`<b>Rolagem de ${esc(p.name)}:</b> d20 ${d20} ${fmt(bonus)} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'}`,'system');const msg=`Resultado do teste de ${p.name}: ${r.attr}; d20 ${d20}; mod ${bonus}; total ${total}; CD ${r.cd}; ${success?'sucesso':'falha'}; motivo: ${compactText(r.motivo,220)}. Narre a consequência e continue.`;state.history.push({role:'user',content:msg});state.pendingCheck=null;state.lastRollAwaitingNarration=true;await window.askAI(msg,false);};
 
-  // Limpa chaves antigas que poderiam manter ações presas após as correções P0 anteriores.
-  try{localStorage.removeItem('valedouro.ai.pending.v2');localStorage.removeItem('valedouro.ai.rate.v2');}catch{}
   const p=pending();if(p?.action){state.lastRetryAction=p.action;state.lastRetryId=p.id;setTimeout(()=>{setActionLocked(true);showRetryCard('Há uma ação preservada aguardando resposta do Mestre. Aguarde o contador e use TENTAR CONTINUAR.');},0)}
 })();

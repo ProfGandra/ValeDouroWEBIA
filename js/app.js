@@ -1,4 +1,4 @@
-const AI_ENDPOINT='https://valedouro-mestre.tech-gandra.workers.dev/';
+const AI_ENDPOINT='https://valedouro-mestre.tech-gandra.workers.dev';
 const state={characters:[],active:0,history:[],pendingCheck:null,hiddenQuest:null,voice:false};
 const creationRolls={},slotModes={};
 const abilities=['FOR','DES','CON','INT','SAB','CAR'];
