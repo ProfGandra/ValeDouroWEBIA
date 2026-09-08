@@ -3,7 +3,8 @@
 'use strict';
 if(window.__VALE_MASTER_HARDENING__)return;window.__VALE_MASTER_HARDENING__=true;
 const previousFetch=window.fetch.bind(window);
-function isAI(url){try{return typeof AI_ENDPOINT!=='undefined'&&url===AI_ENDPOINT}catch{return false}}
+function normalizeUrl(url){try{return new URL(String(url),location.href).href.replace(/\/+$/,'/')}catch{return String(url||'').replace(/\/+$/,'/')}}
+function isAI(url){try{return typeof AI_ENDPOINT!=='undefined'&&normalizeUrl(url)===normalizeUrl(AI_ENDPOINT)}catch{return false}}
 function isOpening(body){const h=Array.isArray(body?.history)?body.history:[];return h.length===0&&/inicie a sess[aã]o/i.test(String(body?.action||''))}
 function compactInventory(name){try{const db=JSON.parse(localStorage.getItem('valedouro.inventory.v2')||'{}'),key=Object.keys(db).find(k=>k.startsWith(String(name||'')+'|')),inv=key?db[key]:null;if(!inv)return[];return[...(inv.items||[]),...(inv.resources||[])].filter(x=>Number(x.qty||0)>0&&!['lost','abandoned'].includes(x.state)).map(x=>({name:x.name,qty:Number(x.qty||0),unit:x.unit||'un',state:x.state||'available'}))}catch{return[]}}
 function publicActors(q){return Array.isArray(q?.actors)?q.actors.map(a=>({id:a.id,role:a.role,canonical:!!a.canonical,name:a.name||null,initial_location:a.initial_location||null,constraints:Array.isArray(a.constraints)?a.constraints:[]})):[]}
@@ -19,8 +20,7 @@ window.fetch=async function(input,init){
  const url=typeof input==='string'?input:(input&&input.url)||'';if(!isAI(url)||!init||init.method!=='POST'||!init.body)return previousFetch(input,init);
  let patched=init,opening=false,questId=null,body=null,originalQuest=null;
  try{body=JSON.parse(init.body);opening=isOpening(body);originalQuest=body?.quest||null;questId=originalQuest?.id||null;const party=Array.isArray(body?.player?.party)?body.player.party:[];body.player={...(body.player||{}),inventory_state:party.map(p=>({name:p.name,items:compactInventory(p.name)}))};body.world={...(body.world||{}),narrative_authority:'quest_and_persisted_state_only',quest_transition_policy:'natural_npc_presentation_required'};if(opening){const directive=questId==='QST-001'?q1Directive():genericDirective(originalQuest);body.quest=openingView(originalQuest);body.world={...(body.world||{}),quest_phase:'opening',opening_directive:directive,knowledge_boundary:'Somente public_knowledge, public_problems e fatos diretamente observáveis podem ser tratados como conhecidos na abertura. hidden_truth_withheld significa que causas, antagonistas, evidências, destinos ocultos e resultados não existem no conhecimento apresentado ao jogador até serem descobertos.',presenter_required:true};body.action=directive+' '+String(body.action||'')}patched={...init,body:JSON.stringify(body)}}catch(e){console.warn('Disciplina narrativa não aplicada',e)}
- const res=await previousFetch(input,patched);
- // REGRA P0: nunca faça uma segunda chamada escondida ao provedor. Erros 429/5xx precisam subir intactos para a camada de resiliência.
+ const res=await previousFetch(normalizeUrl(url),patched);
  if(!res.ok)return res;
  if(opening){
   try{const data=await res.clone().json();if(data?.ok===false)return res;const field=typeof data?.reply==='string'?'reply':(typeof data?.text==='string'?'text':null),reply=field?data[field]:'';const invalid=questId==='QST-001'?invalidQ1(reply):invalidGeneric(reply,originalQuest);if(invalid&&questId==='QST-001'&&field){data[field]=safeQ1Reply();if(typeof data.reply==='string'&&field!=='reply')data.reply=safeQ1Reply();if(typeof data.text==='string'&&field!=='text')data.text=safeQ1Reply();return jsonResponseFrom(res,data)}}catch(e){console.warn('Validação da abertura não aplicada',e)}
