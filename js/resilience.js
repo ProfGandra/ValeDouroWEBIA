@@ -1,10 +1,11 @@
 // ValeDouro WEBIA — resiliência de IA, compactação de contexto e continuidade narrativa
 (function(){
-  const REQUEST_KEY='valedouro.ai.pending.v2';
-  const RATE_KEY='valedouro.ai.rate.v2';
+  const REQUEST_KEY='valedouro.ai.pending.v3';
+  const RATE_KEY='valedouro.ai.rate.v3';
   let inFlight=null;
   let retryTimer=null;
 
+  function aiUrl(){try{return new URL(String(AI_ENDPOINT||''),location.href).href.replace(/\/+$/,'/')}catch{return String(AI_ENDPOINT||'').replace(/\/+$/,'/')};}
   function compactText(value,max=420){const s=String(value??'');return s.length>max?s.slice(0,max)+'…':s;}
   function compactHistory(){if(!Array.isArray(state.history))return[];return state.history.slice(-2).map(x=>({role:x?.role||'user',content:compactText(x?.content||'',500)}));}
   function compactQuest(){
@@ -21,6 +22,7 @@
   }
   function compactParty(){return state.characters.map(c=>({name:c.name,race:c.race,classes:(c.classes||[]).map(x=>({name:x.name,level:x.level})),attributes:c.attrs,ca:c.ca,hp:c.hp,hpMax:c.hpMax,xp:c.xp||0,bonusPoints:c.bonusPoints||0,equipment:characterEquipment(c).slice(0,12)}));}
   function continuityDirective(){return'Mantenha continuidade estrita: não contradiga fatos recentes, não confunda NPCs e não altere o estado de alguém sem causa narrada. Use a quest apenas como bastidor.';}
+  function testDirective(){return 'REGRA ABSOLUTA DE TESTES: só solicite [[ROLL:...]] quando existir incerteza relevante, risco real, oposição ativa ou consequência significativa que dependa da capacidade do personagem. NÃO peça teste para ações triviais, rotineiras, automáticas, já estabelecidas como possíveis pela narrativa ou para simplesmente executar uma direção/pista que você próprio acabou de revelar. Se o personagem já identificou uma trilha, pegadas ou caminho com sucesso, apenas seguir essa trilha não exige nova rolagem até surgir um novo obstáculo real. Largar, guardar, sacar ou trocar equipamento comum não exige teste por si só. Uma falha deve produzir consequência proporcional ao desafio e ao estado já existente da cena; NUNCA use uma falha como licença automática para criar bandidos, inimigos, emboscadas, monstros, reforços, perigos ou fatos novos que não estejam sustentados pela quest ou pelo estado persistente. Falha pode significar atraso, perda de posição, informação incompleta, custo de tempo, ruído, desgaste ou escolha pior, conforme o contexto. Não peça rolagens em sequência para a mesma dificuldade sem mudança material da situação.';}
   function inventoryDirective(active){
     const publicInventory=window.ValeInventory?.publicState?.()?.find(x=>x.name===active?.name);
     const items=publicInventory?.items?.map(x=>`${x.name} (${x.qty} ${x.unit||'un'})`)||characterEquipment(active);
@@ -31,9 +33,9 @@
     const active=state.characters[state.active];
     return{
       request_id:requestId,
-      action:`${compactText(action,900)}\n\n${continuityDirective()}\n${inventoryDirective(active)}\n${rewardDirective()}`,
+      action:`${compactText(action,900)}\n\n${continuityDirective()}\n${testDirective()}\n${inventoryDirective(active)}\n${rewardDirective()}`,
       player:{active_character:active?.name,inventory_is_authoritative:true,active_equipment:characterEquipment(active),party:compactParty()},
-      quest:compactQuest(),world:{quests_hidden:true,multiplayer:state.characters.length>1},history:compactHistory()
+      quest:compactQuest(),world:{quests_hidden:true,multiplayer:state.characters.length>1,test_policy:'roll_only_for_meaningful_uncertainty;no_repeat_check_without_new_obstacle;failure_consequences_must_be_proportional_and_cannot_spawn_unestablished_threats'},history:compactHistory()
     };
   }
   function uid(){return (crypto?.randomUUID?.()||`vd-${Date.now()}-${Math.random().toString(36).slice(2)}`);}
@@ -87,10 +89,16 @@
       const wait=addStory('<b>Mestre:</b> pensando…','master');
       try{
         const payload=buildPayload(action,requestId);
-        // request_id permanece no corpo. Não usamos cabeçalho customizado: o Worker atual não autoriza esse header no CORS.
-        const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const r=await fetch(aiUrl(),{
+          method:'POST',
+          mode:'cors',
+          cache:'no-store',
+          credentials:'omit',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(payload)
+        });
         let d={};try{d=await r.json();}catch{}
-        if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||'Falha na IA');err.providerStatus=status;err.retrySeconds=providerRetrySeconds(r,d);throw err;}
+        if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||`Falha na IA (HTTP ${r.status})`);err.providerStatus=status;err.retrySeconds=providerRetrySeconds(r,d);err.httpStatus=r.status;throw err;}
         wait.remove();clearRetryCard();clearPending();resetRate();
         const text=d.reply||'';state.history.push({role:'assistant',content:text});applyRewards(text);
         const clean=text.replace(/\[\[ROLL:[^\]]+\]\]/g,'').replace(/\[\[VDREWARD:[^\]]+\]\]/g,'').trim();addStory(`<b>Mestre:</b> ${esc(clean).replace(/\n/g,'<br>')}`,'master');
@@ -98,7 +106,9 @@
         if(state.lastRollAwaitingNarration){state.lastRollAwaitingNarration=false;setTimeout(()=>$('rollbox').classList.remove('active'),700);}
       }catch(e){
         wait.remove();savePending(action,requestId);
-        if(Number(e.providerStatus)===429){const seconds=register429(e.retrySeconds);showRetryCard(`O Mestre atingiu temporariamente o limite de uso da IA. A ação foi preservada. Para evitar novas recusas do provedor, aguarde o contador (${seconds}s) antes de continuar.`)}
+        console.error('ValeDouro Mestre request failed',{requestId,url:aiUrl(),name:e?.name,message:e?.message,providerStatus:e?.providerStatus,httpStatus:e?.httpStatus});
+        if(Number(e.providerStatus)===429){const seconds=register429(e.retrySeconds);showRetryCard(`O Mestre atingiu temporariamente o limite de uso da IA. A ação foi preservada. Aguarde o contador (${seconds}s) antes de continuar.`)}
+        else if(e instanceof TypeError){showRetryCard('Falha de comunicação com o Mestre Virtual. A ação foi preservada. Verifique a conexão e tente continuar novamente.');}
         else showRetryCard(`Falha temporária ao consultar o Mestre Virtual. A ação foi preservada. ${e.message||''}`.trim());
       }finally{
         inFlight=null;setActionLocked(!!pending());
@@ -107,7 +117,8 @@
     inFlight={id:requestId,action,promise:task};return task;
   };
 
-  window.rollCheck=async function(){const r=state.pendingCheck;if(!r)return;const p=state.characters[r.playerIndex];const d20=window.ValeAuthority?.secureDie?.(20)||(1+Math.floor(Math.random()*20));const bonus=mod(p.attrs[r.attr]);const total=d20+bonus;const success=total>=r.cd;$('die').textContent=d20;$('rollResult').innerHTML=`${esc(p.name)}: ${r.attr} ${fmt(bonus)} = <strong>${total}</strong> vs CD ${r.cd} — <span class="${success?'pass':'fail'}">${success?'SUCESSO':'FALHA'}</span>`;$('rollBtn').disabled=true;addStory(`<b>Rolagem de ${esc(p.name)}:</b> d20 ${d20} ${fmt(bonus)} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'}`,'system');const msg=`Resultado do teste de ${p.name}: ${r.attr}; d20 ${d20}; mod ${bonus}; total ${total}; CD ${r.cd}; ${success?'sucesso':'falha'}; motivo: ${compactText(r.motivo,220)}. Narre a consequência e continue.`;state.history.push({role:'user',content:msg});state.pendingCheck=null;state.lastRollAwaitingNarration=true;await window.askAI(msg,false);};
+  window.rollCheck=async function(){const r=state.pendingCheck;if(!r)return;const p=state.characters[r.playerIndex];const d20=window.ValeAuthority?.secureDie?.(20)||(1+Math.floor(Math.random()*20));const bonus=mod(p.attrs[r.attr]);const total=d20+bonus;const success=total>=r.cd;$('die').textContent=d20;$('rollResult').innerHTML=`${esc(p.name)}: ${r.attr} ${fmt(bonus)} = <strong>${total}</strong> vs CD ${r.cd} — <span class="${success?'pass':'fail'}">${success?'SUCESSO':'FALHA'}</span>`;$('rollBtn').disabled=true;addStory(`<b>Rolagem de ${esc(p.name)}:</b> d20 ${d20} ${fmt(bonus)} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'}`,'system');const msg=`Resultado do teste de ${p.name}: ${r.attr}; d20 ${d20}; mod ${bonus}; total ${total}; CD ${r.cd}; ${success?'sucesso':'falha'}; motivo: ${compactText(r.motivo,220)}. Narre a consequência de forma proporcional ao desafio e ao estado já estabelecido. Não crie inimigos, reforços, emboscadas ou ameaças novas apenas porque houve falha. Continue a cena.`;state.history.push({role:'user',content:msg});state.pendingCheck=null;state.lastRollAwaitingNarration=true;await window.askAI(msg,false);};
 
+  try{localStorage.removeItem('valedouro.ai.pending.v2');localStorage.removeItem('valedouro.ai.rate.v2');}catch{}
   const p=pending();if(p?.action){state.lastRetryAction=p.action;state.lastRetryId=p.id;setTimeout(()=>{setActionLocked(true);showRetryCard('Há uma ação preservada aguardando resposta do Mestre. Aguarde o contador e use TENTAR CONTINUAR.');},0)}
 })();
