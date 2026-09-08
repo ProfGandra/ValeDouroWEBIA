@@ -46,14 +46,13 @@
   function resetRate(){writeJSON(RATE_KEY,{failures:0,nextAt:0,lastOk:Date.now()})}
   function register429(serverSeconds){
     const s=rateState();s.failures=(s.failures||0)+1;
-    // Groq pode manter a janela por bem mais que 10 s. Sem Retry-After explícito, fazemos backoff conservador.
     const fallback=Math.min(300,60*Math.pow(2,Math.min(3,s.failures-1)));
     const seconds=Math.max(15,Number(serverSeconds)||fallback);
     s.nextAt=Date.now()+seconds*1000;s.last429=Date.now();s.waitSeconds=seconds;writeJSON(RATE_KEY,s);return seconds;
   }
   function remainingSeconds(){return Math.max(0,Math.ceil((rateState().nextAt-Date.now())/1000));}
   function setActionLocked(locked){const b=$('actBtn');const a=$('action');if(b)b.disabled=!!locked||!!state.pendingCheck;if(a)a.disabled=!!locked;}
-  function clearRetryCard(){const old=document.getElementById('aiRetryCard');if(old)old.remove();if(retryTimer){clearInterval(retryTimer);retryTimer=null;}}
+  function clearRetryCard(){document.querySelectorAll('#aiRetryCard').forEach(x=>x.remove());if(retryTimer){clearInterval(retryTimer);retryTimer=null;}}
   function showRetryCard(message){
     clearRetryCard();const d=document.createElement('div');d.id='aiRetryCard';d.className='entry system';d.innerHTML=`<b>Mestre:</b> ${esc(message)}<br><button id="aiRetryBtn" class="btn small" style="margin-top:8px" onclick="retryLastAI()">TENTAR CONTINUAR</button>`;$('story').appendChild(d);$('story').scrollTop=$('story').scrollHeight;
     const refresh=()=>{const btn=document.getElementById('aiRetryBtn');if(!btn)return;const sec=remainingSeconds();btn.disabled=sec>0||!!inFlight;btn.textContent=sec>0?`TENTAR CONTINUAR (${sec}s)`:(inFlight?'TENTANDO…':'TENTAR CONTINUAR');};
@@ -79,7 +78,6 @@
   window.askAI=async function(action,isRetry=false,forcedId=null){
     const existing=pending();
     const requestId=forcedId||(isRetry&&existing?.id)||uid();
-    // Uma ação = uma requisição ativa. Cliques/eventos duplicados recebem a mesma Promise e não geram novo POST.
     if(inFlight){return inFlight.promise}
     if(!isRetry&&existing?.action){showRetryCard('Existe uma ação aguardando resposta do Mestre. Aguarde o contador e use TENTAR CONTINUAR.');setActionLocked(true);return}
     if(!isRetry)savePending(action,requestId);
@@ -89,7 +87,8 @@
       const wait=addStory('<b>Mestre:</b> pensando…','master');
       try{
         const payload=buildPayload(action,requestId);
-        const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','X-ValeDouro-Request-Id':requestId},body:JSON.stringify(payload)});
+        // request_id permanece no corpo. Não usamos cabeçalho customizado: o Worker atual não autoriza esse header no CORS.
+        const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
         let d={};try{d=await r.json();}catch{}
         if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||'Falha na IA');err.providerStatus=status;err.retrySeconds=providerRetrySeconds(r,d);throw err;}
         wait.remove();clearRetryCard();clearPending();resetRate();
@@ -108,9 +107,7 @@
     inFlight={id:requestId,action,promise:task};return task;
   };
 
-  // Mantém a rolagem preservada; se a narração falhar por 429, o mesmo requestId/ação será reutilizado no retry.
   window.rollCheck=async function(){const r=state.pendingCheck;if(!r)return;const p=state.characters[r.playerIndex];const d20=window.ValeAuthority?.secureDie?.(20)||(1+Math.floor(Math.random()*20));const bonus=mod(p.attrs[r.attr]);const total=d20+bonus;const success=total>=r.cd;$('die').textContent=d20;$('rollResult').innerHTML=`${esc(p.name)}: ${r.attr} ${fmt(bonus)} = <strong>${total}</strong> vs CD ${r.cd} — <span class="${success?'pass':'fail'}">${success?'SUCESSO':'FALHA'}</span>`;$('rollBtn').disabled=true;addStory(`<b>Rolagem de ${esc(p.name)}:</b> d20 ${d20} ${fmt(bonus)} = ${total} vs CD ${r.cd} — ${success?'SUCESSO':'FALHA'}`,'system');const msg=`Resultado do teste de ${p.name}: ${r.attr}; d20 ${d20}; mod ${bonus}; total ${total}; CD ${r.cd}; ${success?'sucesso':'falha'}; motivo: ${compactText(r.motivo,220)}. Narre a consequência e continue.`;state.history.push({role:'user',content:msg});state.pendingCheck=null;state.lastRollAwaitingNarration=true;await window.askAI(msg,false);};
 
-  // Recupera uma ação pendente após recarregar a página, sem reenviá-la automaticamente.
   const p=pending();if(p?.action){state.lastRetryAction=p.action;state.lastRetryId=p.id;setTimeout(()=>{setActionLocked(true);showRetryCard('Há uma ação preservada aguardando resposta do Mestre. Aguarde o contador e use TENTAR CONTINUAR.');},0)}
 })();
