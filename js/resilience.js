@@ -2,42 +2,23 @@
 (function(){
   const REQUEST_KEY='valedouro.ai.pending.v3';
   const RATE_KEY='valedouro.ai.rate.v3';
+  const TURN_COOLDOWN_MS=10000;
   let inFlight=null;
   let retryTimer=null;
+  let cooldownTimer=null;
+  let cooldownUntil=0;
 
   function aiUrl(){try{return new URL(String(AI_ENDPOINT||''),location.href).href.replace(/\/+$/,'/')}catch{return String(AI_ENDPOINT||'').replace(/\/+$/,'/')};}
   function compactText(value,max=420){const s=String(value??'');return s.length>max?s.slice(0,max)+'…':s;}
   function compactHistory(){if(!Array.isArray(state.history))return[];return state.history.slice(-2).map(x=>({role:x?.role||'user',content:compactText(x?.content||'',500)}));}
-  function compactQuest(){
-    const q=state.hiddenQuest;if(!q||typeof q!=='object')return{};
-    const preferredKeys=['title','name','summary','description','objective','objectives','current','stage','state','status','hook','hooks','npcs','locations','clues','events','outcomes','secrets'];
-    const out={};for(const key of preferredKeys){if(!(key in q))continue;const v=q[key];if(typeof v==='string')out[key]=compactText(v,320);else if(Array.isArray(v))out[key]=v.slice(0,2).map(item=>{if(typeof item==='string')return compactText(item,220);if(item&&typeof item==='object'){const mini={};for(const[k,val]of Object.entries(item).slice(0,4))mini[k]=typeof val==='string'?compactText(val,180):val;return mini;}return item;});else if(v&&typeof v==='object'){const mini={};for(const[k,val]of Object.entries(v).slice(0,5))mini[k]=typeof val==='string'?compactText(val,220):val;out[key]=mini;}else out[key]=v;}
-    if(!Object.keys(out).length){for(const[k,v]of Object.entries(q).slice(0,6)){if(typeof v==='string')out[k]=compactText(v,260);else if(Array.isArray(v))out[k]=v.slice(0,2);else if(v&&typeof v==='object')out[k]=Object.fromEntries(Object.entries(v).slice(0,3));else out[k]=v;}}
-    return out;
-  }
-  function characterEquipment(c){
-    const equipped=(c?.equipment||[]).map(id=>{if(typeof VD_EQUIPMENT!=='undefined')return VD_EQUIPMENT.find(x=>x.id===id)?.name||id;return id;});
-    const inventory=(c?.inventory||[]).map(x=>x?.name||x?.item||String(x));
-    return [...equipped,...inventory].filter(Boolean);
-  }
+  function compactQuest(){const q=state.hiddenQuest;if(!q||typeof q!=='object')return{};const preferredKeys=['title','name','summary','description','objective','objectives','current','stage','state','status','hook','hooks','npcs','locations','clues','events','outcomes','secrets'];const out={};for(const key of preferredKeys){if(!(key in q))continue;const v=q[key];if(typeof v==='string')out[key]=compactText(v,320);else if(Array.isArray(v))out[key]=v.slice(0,2).map(item=>{if(typeof item==='string')return compactText(item,220);if(item&&typeof item==='object'){const mini={};for(const[k,val]of Object.entries(item).slice(0,4))mini[k]=typeof val==='string'?compactText(val,180):val;return mini;}return item;});else if(v&&typeof v==='object'){const mini={};for(const[k,val]of Object.entries(v).slice(0,5))mini[k]=typeof val==='string'?compactText(val,220):val;out[key]=mini;}else out[key]=v;}if(!Object.keys(out).length){for(const[k,v]of Object.entries(q).slice(0,6)){if(typeof v==='string')out[k]=compactText(v,260);else if(Array.isArray(v))out[k]=v.slice(0,2);else if(v&&typeof v==='object')out[k]=Object.fromEntries(Object.entries(v).slice(0,3));else out[k]=v;}}return out;}
+  function characterEquipment(c){const equipped=(c?.equipment||[]).map(id=>{if(typeof VD_EQUIPMENT!=='undefined')return VD_EQUIPMENT.find(x=>x.id===id)?.name||id;return id;});const inventory=(c?.inventory||[]).map(x=>x?.name||x?.item||String(x));return [...equipped,...inventory].filter(Boolean);}
   function compactParty(){return state.characters.map(c=>({name:c.name,race:c.race,classes:(c.classes||[]).map(x=>({name:x.name,level:x.level})),attributes:c.attrs,ca:c.ca,hp:c.hp,hpMax:c.hpMax,xp:c.xp||0,bonusPoints:c.bonusPoints||0,equipment:characterEquipment(c).slice(0,12)}));}
   function continuityDirective(){return'Mantenha continuidade estrita: não contradiga fatos recentes, não confunda NPCs e não altere o estado de alguém sem causa narrada. Use a quest apenas como bastidor.';}
   function testDirective(){return 'REGRA ABSOLUTA DE TESTES: só solicite [[ROLL:...]] quando existir incerteza relevante, risco real, oposição ativa ou consequência significativa que dependa da capacidade do personagem. NÃO peça teste para ações triviais, rotineiras, automáticas, já estabelecidas como possíveis pela narrativa ou para simplesmente executar uma direção/pista que você próprio acabou de revelar. Se o personagem já identificou uma trilha, pegadas ou caminho com sucesso, apenas seguir essa trilha não exige nova rolagem até surgir um novo obstáculo real. Largar, guardar, sacar ou trocar equipamento comum não exige teste por si só. Uma falha deve produzir consequência proporcional ao desafio e ao estado já existente da cena; NUNCA use uma falha como licença automática para criar bandidos, inimigos, emboscadas, monstros, reforços, perigos ou fatos novos que não estejam sustentados pela quest ou pelo estado persistente. Falha pode significar atraso, perda de posição, informação incompleta, custo de tempo, ruído, desgaste ou escolha pior, conforme o contexto. Não peça rolagens em sequência para a mesma dificuldade sem mudança material da situação.';}
-  function inventoryDirective(active){
-    const publicInventory=window.ValeInventory?.publicState?.()?.find(x=>x.name===active?.name);
-    const items=publicInventory?.items?.map(x=>`${x.name} (${x.qty} ${x.unit||'un'})`)||characterEquipment(active);
-    return `REGRA ABSOLUTA DE INVENTÁRIO: o estado do WEBIA é a única fonte de verdade sobre objetos possuídos e quantidades. O personagem ativo possui: ${items.length?items.join(', '):'nenhum item registrado'}. Nunca diga que um item ou munição acabou se o estado informar quantidade positiva. Se o jogador tentar usar objeto ausente, não invente que ele existe.`;
-  }
+  function inventoryDirective(active){const publicInventory=window.ValeInventory?.publicState?.()?.find(x=>x.name===active?.name);const items=publicInventory?.items?.map(x=>`${x.name} (${x.qty} ${x.unit||'un'})`)||characterEquipment(active);return `REGRA ABSOLUTA DE INVENTÁRIO: o estado do WEBIA é a única fonte de verdade sobre objetos possuídos e quantidades. O personagem ativo possui: ${items.length?items.join(', '):'nenhum item registrado'}. Nunca diga que um item ou munição acabou se o estado informar quantidade positiva. Se o jogador tentar usar objeto ausente, não invente que ele existe.`;}
   function rewardDirective(){return'Se conceder recompensa permanente, acrescente no fim, sem explicar o código: [[VDREWARD:TIPO:VALOR:NOME]]. TIPO=item,xp,bonus,gold,silver,copper. Para item, VALOR é quantidade e NOME é o item. Para números, VALOR é o total concedido e NOME é uma descrição curta. Só emita quando a recompensa estiver realmente concedida ao personagem ativo.';}
-  function buildPayload(action,requestId){
-    const active=state.characters[state.active];
-    return{
-      request_id:requestId,
-      action:`${compactText(action,900)}\n\n${continuityDirective()}\n${testDirective()}\n${inventoryDirective(active)}\n${rewardDirective()}`,
-      player:{active_character:active?.name,inventory_is_authoritative:true,active_equipment:characterEquipment(active),party:compactParty()},
-      quest:compactQuest(),world:{quests_hidden:true,multiplayer:state.characters.length>1,test_policy:'roll_only_for_meaningful_uncertainty;no_repeat_check_without_new_obstacle;failure_consequences_must_be_proportional_and_cannot_spawn_unestablished_threats'},history:compactHistory()
-    };
-  }
+  function buildPayload(action,requestId){const active=state.characters[state.active];return{request_id:requestId,action:`${compactText(action,900)}\n\n${continuityDirective()}\n${testDirective()}\n${inventoryDirective(active)}\n${rewardDirective()}`,player:{active_character:active?.name,inventory_is_authoritative:true,active_equipment:characterEquipment(active),party:compactParty()},quest:compactQuest(),world:{quests_hidden:true,multiplayer:state.characters.length>1,test_policy:'roll_only_for_meaningful_uncertainty;no_repeat_check_without_new_obstacle;failure_consequences_must_be_proportional_and_cannot_spawn_unestablished_threats'},history:compactHistory()};}
   function uid(){return (crypto?.randomUUID?.()||`vd-${Date.now()}-${Math.random().toString(36).slice(2)}`);}
   function readJSON(k,fallback={}){try{return JSON.parse(localStorage.getItem(k)||'null')||fallback}catch{return fallback}}
   function writeJSON(k,v){localStorage.setItem(k,JSON.stringify(v))}
@@ -46,74 +27,27 @@
   function pending(){return readJSON(REQUEST_KEY,null)}
   function rateState(){return readJSON(RATE_KEY,{failures:0,nextAt:0})}
   function resetRate(){writeJSON(RATE_KEY,{failures:0,nextAt:0,lastOk:Date.now()})}
-  function register429(serverSeconds){
-    const s=rateState();s.failures=(s.failures||0)+1;
-    const fallback=Math.min(300,60*Math.pow(2,Math.min(3,s.failures-1)));
-    const seconds=Math.max(15,Number(serverSeconds)||fallback);
-    s.nextAt=Date.now()+seconds*1000;s.last429=Date.now();s.waitSeconds=seconds;writeJSON(RATE_KEY,s);return seconds;
-  }
+  function register429(serverSeconds){const s=rateState();s.failures=(s.failures||0)+1;const fallback=Math.min(300,60*Math.pow(2,Math.min(3,s.failures-1)));const seconds=Math.max(15,Number(serverSeconds)||fallback);s.nextAt=Date.now()+seconds*1000;s.last429=Date.now();s.waitSeconds=seconds;writeJSON(RATE_KEY,s);return seconds;}
   function remainingSeconds(){return Math.max(0,Math.ceil((rateState().nextAt-Date.now())/1000));}
-  function setActionLocked(locked){const b=$('actBtn');const a=$('action');if(b)b.disabled=!!locked||!!state.pendingCheck;if(a)a.disabled=!!locked;}
+  function cooldownSeconds(){return Math.max(0,Math.ceil((cooldownUntil-Date.now())/1000));}
+  function renderActionState(){const b=$('actBtn'),a=$('action');if(!b||!a)return;const sec=cooldownSeconds();const locked=!!inFlight||!!pending()||sec>0;b.disabled=locked||!!state.pendingCheck;a.disabled=locked;b.textContent=sec>0?`AGIR (${sec}s)`:'AGIR';}
+  function setActionLocked(locked){const b=$('actBtn'),a=$('action');if(!b||!a)return;const sec=cooldownSeconds();b.disabled=!!locked||sec>0||!!state.pendingCheck;a.disabled=!!locked||sec>0;b.textContent=sec>0?`AGIR (${sec}s)`:'AGIR';}
+  function startTurnCooldown(){if(state.pendingCheck||pending())return;cooldownUntil=Date.now()+TURN_COOLDOWN_MS;if(cooldownTimer)clearInterval(cooldownTimer);const tick=()=>{renderActionState();if(cooldownSeconds()<=0){clearInterval(cooldownTimer);cooldownTimer=null;cooldownUntil=0;renderActionState();}};tick();cooldownTimer=setInterval(tick,250);}
   function clearRetryCard(){document.querySelectorAll('#aiRetryCard').forEach(x=>x.remove());if(retryTimer){clearInterval(retryTimer);retryTimer=null;}}
-  function showRetryCard(message){
-    clearRetryCard();const d=document.createElement('div');d.id='aiRetryCard';d.className='entry system';d.innerHTML=`<b>Mestre:</b> ${esc(message)}<br><button id="aiRetryBtn" class="btn small" style="margin-top:8px" onclick="retryLastAI()">TENTAR CONTINUAR</button>`;$('story').appendChild(d);$('story').scrollTop=$('story').scrollHeight;
-    const refresh=()=>{const btn=document.getElementById('aiRetryBtn');if(!btn)return;const sec=remainingSeconds();btn.disabled=sec>0||!!inFlight;btn.textContent=sec>0?`TENTAR CONTINUAR (${sec}s)`:(inFlight?'TENTANDO…':'TENTAR CONTINUAR');};
-    refresh();retryTimer=setInterval(refresh,1000);
-  }
-  function applyRewards(text){
-    const rx=/\[\[VDREWARD:(item|xp|bonus|gold|silver|copper):([^:\]]+):([^\]]+)\]\]/gi;let m;
-    while((m=rx.exec(text))){const type=m[1].toLowerCase(),raw=m[2],name=m[3].trim();if(typeof window.applyCharacterReward==='function'){if(type==='item')window.applyCharacterReward(state.active,{type,name,qty:Math.max(1,Number(raw)||1),note:'Recompensa de quest'});else window.applyCharacterReward(state.active,{type,value:Number(raw)||0,name});}}
-  }
-  function providerRetrySeconds(r,d){
-    const h=r.headers?.get?.('retry-after');const hs=Number(h);if(Number.isFinite(hs)&&hs>0)return hs;
-    const candidates=[d?.retry_after,d?.retryAfter,d?.provider_retry_after,d?.providerRetryAfter,d?.retry_after_seconds];
-    for(const v of candidates){const n=Number(v);if(Number.isFinite(n)&&n>0)return n}
-    return 0;
-  }
+  function showRetryCard(message){clearRetryCard();const d=document.createElement('div');d.id='aiRetryCard';d.className='entry system';d.innerHTML=`<b>Mestre:</b> ${esc(message)}<br><button id="aiRetryBtn" class="btn small" style="margin-top:8px" onclick="retryLastAI()">TENTAR CONTINUAR</button>`;$('story').appendChild(d);$('story').scrollTop=$('story').scrollHeight;const refresh=()=>{const btn=document.getElementById('aiRetryBtn');if(!btn)return;const sec=remainingSeconds();btn.disabled=sec>0||!!inFlight;btn.textContent=sec>0?`TENTAR CONTINUAR (${sec}s)`:(inFlight?'TENTANDO…':'TENTAR CONTINUAR');};refresh();retryTimer=setInterval(refresh,1000);}
+  function applyRewards(text){const rx=/\[\[VDREWARD:(item|xp|bonus|gold|silver|copper):([^:\]]+):([^\]]+)\]\]/gi;let m;while((m=rx.exec(text))){const type=m[1].toLowerCase(),raw=m[2],name=m[3].trim();if(typeof window.applyCharacterReward==='function'){if(type==='item')window.applyCharacterReward(state.active,{type,name,qty:Math.max(1,Number(raw)||1),note:'Recompensa de quest'});else window.applyCharacterReward(state.active,{type,value:Number(raw)||0,name});}}}
+  function providerRetrySeconds(r,d){const h=r.headers?.get?.('retry-after');const hs=Number(h);if(Number.isFinite(hs)&&hs>0)return hs;const candidates=[d?.retry_after,d?.retryAfter,d?.provider_retry_after,d?.providerRetryAfter,d?.retry_after_seconds];for(const v of candidates){const n=Number(v);if(Number.isFinite(n)&&n>0)return n}return 0;}
 
-  window.retryLastAI=async function(){
-    const p=pending();if(!p||!p.action||inFlight)return;
-    if(remainingSeconds()>0){showRetryCard('O limite da IA ainda está ativo. Aguarde o contador antes de tentar novamente.');return}
-    await window.askAI(p.action,true,p.id);
-  };
+  window.retryLastAI=async function(){const p=pending();if(!p||!p.action||inFlight)return;if(remainingSeconds()>0){showRetryCard('O limite da IA ainda está ativo. Aguarde o contador antes de tentar novamente.');return}await window.askAI(p.action,true,p.id);};
 
   window.askAI=async function(action,isRetry=false,forcedId=null){
-    const existing=pending();
-    const requestId=forcedId||(isRetry&&existing?.id)||uid();
-    if(inFlight){return inFlight.promise}
+    const existing=pending();const requestId=forcedId||(isRetry&&existing?.id)||uid();if(inFlight)return inFlight.promise;
+    // Cooldown bloqueia apenas uma NOVA ação do jogador. Retry e resolução de rolagem pertencem ao turno atual.
+    if(!isRetry&&!state.lastRollAwaitingNarration&&cooldownSeconds()>0){renderActionState();return;}
     if(!isRetry&&existing?.action){showRetryCard('Existe uma ação aguardando resposta do Mestre. Aguarde o contador e use TENTAR CONTINUAR.');setActionLocked(true);return}
-    if(!isRetry)savePending(action,requestId);
-    setActionLocked(true);clearRetryCard();
-
-    const task=(async()=>{
-      const wait=addStory('<b>Mestre:</b> pensando…','master');
-      try{
-        const payload=buildPayload(action,requestId);
-        const r=await fetch(aiUrl(),{
-          method:'POST',
-          mode:'cors',
-          cache:'no-store',
-          credentials:'omit',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(payload)
-        });
-        let d={};try{d=await r.json();}catch{}
-        if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||`Falha na IA (HTTP ${r.status})`);err.providerStatus=status;err.retrySeconds=providerRetrySeconds(r,d);err.httpStatus=r.status;throw err;}
-        wait.remove();clearRetryCard();clearPending();resetRate();
-        const text=d.reply||'';state.history.push({role:'assistant',content:text});applyRewards(text);
-        const clean=text.replace(/\[\[ROLL:[^\]]+\]\]/g,'').replace(/\[\[VDREWARD:[^\]]+\]\]/g,'').trim();addStory(`<b>Mestre:</b> ${esc(clean).replace(/\n/g,'<br>')}`,'master');
-        const m=text.match(/\[\[ROLL:(FOR|DES|CON|INT|SAB|CAR):(\d+):([^\]]+)\]\]/);if(m)requestRoll(m[1],+m[2],m[3]);
-        if(state.lastRollAwaitingNarration){state.lastRollAwaitingNarration=false;setTimeout(()=>$('rollbox').classList.remove('active'),700);}
-      }catch(e){
-        wait.remove();savePending(action,requestId);
-        console.error('ValeDouro Mestre request failed',{requestId,url:aiUrl(),name:e?.name,message:e?.message,providerStatus:e?.providerStatus,httpStatus:e?.httpStatus});
-        if(Number(e.providerStatus)===429){const seconds=register429(e.retrySeconds);showRetryCard(`O Mestre atingiu temporariamente o limite de uso da IA. A ação foi preservada. Aguarde o contador (${seconds}s) antes de continuar.`)}
-        else if(e instanceof TypeError){showRetryCard('Falha de comunicação com o Mestre Virtual. A ação foi preservada. Verifique a conexão e tente continuar novamente.');}
-        else showRetryCard(`Falha temporária ao consultar o Mestre Virtual. A ação foi preservada. ${e.message||''}`.trim());
-      }finally{
-        inFlight=null;setActionLocked(!!pending());
-      }
-    })();
+    if(!isRetry)savePending(action,requestId);setActionLocked(true);clearRetryCard();
+    let completed=false,requestedRoll=false;
+    const task=(async()=>{const wait=addStory('<b>Mestre:</b> pensando…','master');try{const payload=buildPayload(action,requestId);const r=await fetch(aiUrl(),{method:'POST',mode:'cors',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let d={};try{d=await r.json();}catch{}if(!r.ok||!d.ok){const status=d.provider_status||r.status;const err=new Error(d.error||`Falha na IA (HTTP ${r.status})`);err.providerStatus=status;err.retrySeconds=providerRetrySeconds(r,d);err.httpStatus=r.status;throw err;}wait.remove();clearRetryCard();clearPending();resetRate();const text=d.reply||'';state.history.push({role:'assistant',content:text});applyRewards(text);const clean=text.replace(/\[\[ROLL:[^\]]+\]\]/g,'').replace(/\[\[VDREWARD:[^\]]+\]\]/g,'').trim();addStory(`<b>Mestre:</b> ${esc(clean).replace(/\n/g,'<br>')}`,'master');const m=text.match(/\[\[ROLL:(FOR|DES|CON|INT|SAB|CAR):(\d+):([^\]]+)\]\]/);if(m){requestedRoll=true;requestRoll(m[1],+m[2],m[3]);}if(state.lastRollAwaitingNarration){state.lastRollAwaitingNarration=false;setTimeout(()=>$('rollbox').classList.remove('active'),700);}completed=true;}catch(e){wait.remove();savePending(action,requestId);console.error('ValeDouro Mestre request failed',{requestId,url:aiUrl(),name:e?.name,message:e?.message,providerStatus:e?.providerStatus,httpStatus:e?.httpStatus});if(Number(e.providerStatus)===429){register429(e.retrySeconds);showRetryCard('O Mestre atingiu temporariamente o limite de uso da IA. A ação e qualquer rolagem realizada foram preservadas. Aguarde o contador abaixo para continuar.');}else if(e instanceof TypeError)showRetryCard('Falha de comunicação com o Mestre Virtual. A ação foi preservada. Verifique a conexão e tente continuar novamente.');else showRetryCard(`Falha temporária ao consultar o Mestre Virtual. A ação foi preservada. ${e.message||''}`.trim());}finally{inFlight=null;if(completed&&!requestedRoll&&!pending())startTurnCooldown();else renderActionState();}})();
     inFlight={id:requestId,action,promise:task};return task;
   };
 
