@@ -43,7 +43,7 @@ function bindActive(itemId){const c=activeCharacter();if(c)bind(c,itemId)}
 const previousFetch=window.fetch.bind(window);
 window.fetch=async function(input,init){
   const url=typeof input==='string'?input:(input?.url||'');
-  if(url===window.AI_ENDPOINT&&init?.method==='POST'&&init.body){
+  if((typeof AI_ENDPOINT!=='undefined'&&url===AI_ENDPOINT)&&init?.method==='POST'&&init.body){
     try{const b=JSON.parse(init.body);b.state={...(b.state||{}),journal:publicState()};init={...init,body:JSON.stringify(b)}}catch(e){console.warn('Diário: estado não injetado',e)}
   }
   const res=await previousFetch(input,init);
