@@ -39,6 +39,28 @@ host.innerHTML=`<div class="journal-cover"><h3>${esc(j.boundItemName||'Diário')
 function close(){document.getElementById('journalModal')?.classList.remove('active')}
 function bindActive(itemId){const c=activeCharacter();if(c)bind(c,itemId)}
 
+// Expõe ao Mestre apenas o estado necessário. O conteúdo completo do Diário permanece local/persistente.
+const previousFetch=window.fetch.bind(window);
+window.fetch=async function(input,init){
+  const url=typeof input==='string'?input:(input?.url||'');
+  if(url===window.AI_ENDPOINT&&init?.method==='POST'&&init.body){
+    try{const b=JSON.parse(init.body);b.state={...(b.state||{}),journal:publicState()};init={...init,body:JSON.stringify(b)}}catch(e){console.warn('Diário: estado não injetado',e)}
+  }
+  const res=await previousFetch(input,init);
+  try{
+    const data=await res.clone().json();
+    if(typeof data?.text==='string'&&data.text.includes('[[JOURNAL:')){
+      let changed=false;
+      data.text=data.text.replace(/\s*\[\[JOURNAL:([^\]]+)\]\]\s*/gi,(_,payload)=>{
+        try{const e=JSON.parse(decodeURIComponent(payload));const c=window.state?.characters?.[Number.isInteger(e.characterIndex)?e.characterIndex:(window.state?.active||0)];if(c&&addEntry(c,e))changed=true}catch(err){console.warn('Diário: registro inválido',err)}
+        return ' ';
+      });
+      if(changed){data.text=data.text.trim();const headers=new Headers(res.headers);headers.set('Content-Type','application/json; charset=utf-8');return new Response(JSON.stringify(data),{status:res.status,statusText:res.statusText,headers})}
+    }
+  }catch{}
+  return res;
+};
+
 window.ValeJournal={stateFor,bind,bindActive,unbind,addEntry,recordQuest,registerCatalog,compatibleItems,publicState,open,close,syncButton};
 window.openJournal=open;
 window.addEventListener('valedouro:quest-complete',e=>recordQuest(e.detail?.completed));
