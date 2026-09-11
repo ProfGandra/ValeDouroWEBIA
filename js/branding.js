@@ -135,4 +135,11 @@
     journal.dataset.vdJournal='1';
     document.head.appendChild(journal);
   }
+
+  if(!document.querySelector('script[data-vd-ranger-journal]')){
+    const rangerJournal=document.createElement('script');
+    rangerJournal.src='js/ranger-journal.js?v=20260911-1';
+    rangerJournal.dataset.vdRangerJournal='1';
+    document.head.appendChild(rangerJournal);
+  }
 })();
