@@ -128,4 +128,11 @@
     masterHardening.dataset.vdMasterHardening='1';
     document.head.appendChild(masterHardening);
   }
+
+  if(!document.querySelector('script[data-vd-journal]')){
+    const journal=document.createElement('script');
+    journal.src='js/journal.js?v=20260911-1';
+    journal.dataset.vdJournal='1';
+    document.head.appendChild(journal);
+  }
 })();
