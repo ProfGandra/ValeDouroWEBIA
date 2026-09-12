@@ -4,8 +4,8 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-24';
-const MENU_RATIO=1600/900;
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-25';
+const MENU_RATIO=1656/950;
 const CALIBRATION_MODE=true;
 
 function ensureStyles(){
@@ -14,21 +14,26 @@ function ensureStyles(){
   s.id='vd-howto-style';
   s.textContent=`
     #opening{align-items:center!important;justify-content:center!important;overflow:hidden!important}
-    #opening .intro-stage{position:relative!important;width:min(100vw,calc(100vh * ${MENU_RATIO}))!important;height:auto!important;aspect-ratio:1600/900!important;max-width:100vw!important;max-height:100vh!important;overflow:visible!important}
+    #opening .intro-stage{position:relative!important;width:min(100vw,calc(100vh * ${MENU_RATIO}))!important;height:auto!important;aspect-ratio:1656/950!important;max-width:100vw!important;max-height:100vh!important;overflow:visible!important}
     #opening .intro-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:fill!important;object-position:center!important;display:block!important;opacity:1!important;visibility:visible!important}
     #opening .vd-menu-overlay{display:none!important;pointer-events:none!important}
 
     #opening .hot{position:absolute!important;z-index:6!important;display:block!important;opacity:1!important;pointer-events:auto!important;background:transparent!important;border:0!important;border-radius:10px!important;cursor:pointer!important;box-sizing:border-box!important}
     #opening .hot:hover,#opening .hot:focus{box-shadow:0 0 0 2px rgba(226,197,143,.95),0 0 26px rgba(211,173,104,.45)!important;background:rgba(211,173,104,.08)!important;outline:none!important}
 
-    /* Calibração v24. O Como Jogar volta EXATAMENTE à geometria vertical
-       da v22, que foi validada pelo usuário: top 68.66%, height 11.98%.
-       Somente a largura permanece reduzida para corrigir a margem direita. */
-    #opening .h-history {left:4.25%!important;top:35.20%!important;width:26.55%!important;height:11.45%!important}
-    #opening .h-universe{left:4.25%!important;top:46.05%!important;width:26.55%!important;height:11.90%!important}
-    #opening .h-chars   {left:4.25%!important;top:57.20%!important;width:26.55%!important;height:12.00%!important}
-    #opening .h-howto   {left:4.25%!important;top:68.66%!important;width:26.55%!important;height:11.98%!important}
-    #opening .h-new     {left:4.25%!important;top:79.75%!important;width:26.55%!important;height:12.35%!important}
+    /* Hotspots medidos diretamente na arte oficial 1656x950, conforme marcação vermelha aprovada.
+       Pixels de referência:
+       História    x=69..515  y=339..437
+       Universo    x=69..515  y=446..542
+       Suas fichas x=69..515  y=552..647
+       Como jogar  x=69..515  y=658..754
+       Novo jogo   x=69..515  y=764..863
+    */
+    #opening .h-history {left:4.166667%!important;top:35.684211%!important;width:26.932367%!important;height:10.315789%!important}
+    #opening .h-universe{left:4.166667%!important;top:46.947368%!important;width:26.932367%!important;height:10.105263%!important}
+    #opening .h-chars   {left:4.166667%!important;top:58.105263%!important;width:26.932367%!important;height:10.000000%!important}
+    #opening .h-howto   {left:4.166667%!important;top:69.263158%!important;width:26.932367%!important;height:10.105263%!important}
+    #opening .h-new     {left:4.166667%!important;top:80.421053%!important;width:26.932367%!important;height:10.421053%!important}
 
     #opening.vd-calibration .hot{outline:3px dashed rgba(255,220,120,.95)!important;outline-offset:-3px!important;background:rgba(255,220,120,.10)!important}
     #opening.vd-calibration .hot::after{content:attr(aria-label);position:absolute;left:8px;top:6px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.72);color:#fff4cf;font:700 11px/1.2 Arial,sans-serif;letter-spacing:.02em;pointer-events:none;white-space:nowrap}
