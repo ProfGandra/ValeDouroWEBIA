@@ -164,6 +164,13 @@
     document.head.appendChild(sceneContinuity);
   }
 
+  if(!document.querySelector('script[data-vd-journal-episodic]')){
+    const episodicJournal=document.createElement('script');
+    episodicJournal.src='js/journal-episodic-bridge.js?v=20260912-1';
+    episodicJournal.dataset.vdJournalEpisodic='1';
+    document.head.appendChild(episodicJournal);
+  }
+
   if(!document.querySelector('script[data-vd-how-to-play]')){
     const howToPlay=document.createElement('script');
     howToPlay.src='js/how-to-play.js?v=20260912-10';
