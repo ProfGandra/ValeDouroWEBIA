@@ -4,9 +4,11 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-12';
-const VIEW_W=1656;
-const VIEW_H=950;
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-13';
+// A arte oficial do menu é 1600 x 900 (16:9). O overlay deve usar exatamente
+// o mesmo sistema de coordenadas da imagem; usar 1656 x 950 deslocava os hotspots.
+const VIEW_W=1600;
+const VIEW_H=900;
 
 function ensureStyles(){
   if(document.getElementById('vd-howto-style')) return;
@@ -28,87 +30,25 @@ function ensureStyles(){
   `;
   document.head.appendChild(s);
 }
-
-function openHowTo(){
-  ensureModal();
-  document.getElementById('vdHowToModal')?.classList.add('active');
-  document.body.style.overflow='hidden';
-}
-function closeHowTo(){
-  document.getElementById('vdHowToModal')?.classList.remove('active');
-  document.body.style.overflow='';
-}
-function ensureModal(){
-  if(document.getElementById('vdHowToModal')) return;
-  const modal=document.createElement('div');
-  modal.id='vdHowToModal';
-  modal.className='vd-howto-modal';
-  modal.innerHTML=`<div class="vd-howto-top"><strong>COMO JOGAR — VALEDOURO</strong><button class="btn" type="button" id="vdHowToClose">Voltar</button></div><iframe class="vd-howto-frame" src="how-to-play.html?v=20260912-1" title="Como Jogar — ValeDouro"></iframe>`;
-  document.body.appendChild(modal);
-  document.getElementById('vdHowToClose')?.addEventListener('click',closeHowTo);
-  modal.addEventListener('click',e=>{if(e.target===modal)closeHowTo()});
-}
-
-function ensureMenuArt(stage){
-  const art=stage?.querySelector('.intro-art');
-  if(!art) return;
-  if(!(art.getAttribute('src')||'').includes('valedouro-menu-oficial.webp')){
-    art.src=MENU_ART;
-    art.alt='ValeDouro — Mestre Virtual';
-  }
-}
-
+function openHowTo(){ensureModal();document.getElementById('vdHowToModal')?.classList.add('active');document.body.style.overflow='hidden'}
+function closeHowTo(){document.getElementById('vdHowToModal')?.classList.remove('active');document.body.style.overflow=''}
+function ensureModal(){if(document.getElementById('vdHowToModal'))return;const modal=document.createElement('div');modal.id='vdHowToModal';modal.className='vd-howto-modal';modal.innerHTML=`<div class="vd-howto-top"><strong>COMO JOGAR — VALEDOURO</strong><button class="btn" type="button" id="vdHowToClose">Voltar</button></div><iframe class="vd-howto-frame" src="how-to-play.html?v=20260912-1" title="Como Jogar — ValeDouro"></iframe>`;document.body.appendChild(modal);document.getElementById('vdHowToClose')?.addEventListener('click',closeHowTo);modal.addEventListener('click',e=>{if(e.target===modal)closeHowTo()})}
+function ensureMenuArt(stage){const art=stage?.querySelector('.intro-art');if(!art)return;if(!(art.getAttribute('src')||'').includes('valedouro-menu-oficial.webp')){art.src=MENU_ART;art.alt='ValeDouro — Mestre Virtual'}}
 function ensureOverlay(stage){
-  const old=stage.querySelector('.vd-menu-overlay');
-  if(old) old.remove();
-  const ns='http://www.w3.org/2000/svg';
-  const svg=document.createElementNS(ns,'svg');
-  svg.setAttribute('class','vd-menu-overlay');
-  svg.setAttribute('viewBox',`0 0 ${VIEW_W} ${VIEW_H}`);
-  svg.setAttribute('preserveAspectRatio','xMidYMid meet');
-  svg.setAttribute('aria-label','Menu principal de ValeDouro');
-
-  // Hotspots deliberadamente menores que as molduras douradas.
-  // A margem interna evita sobreposição visual entre botões e mantém ícone/texto clicáveis.
+  const old=stage.querySelector('.vd-menu-overlay');if(old)old.remove();
+  const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');svg.setAttribute('class','vd-menu-overlay');svg.setAttribute('viewBox',`0 0 ${VIEW_W} ${VIEW_H}`);svg.setAttribute('preserveAspectRatio','xMidYMid meet');svg.setAttribute('aria-label','Menu principal de ValeDouro');
+  // Coordenadas medidas diretamente na arte oficial 1600x900.
+  // Pequena margem interna preserva a moldura dourada fora do destaque.
   const items=[
-    {x:82,y:355,w:412,h:70,label:'História',action:()=>window.show?.('history')},
-    {x:82,y:459,w:412,h:69,label:'Universo',action:()=>window.show?.('universe')},
-    {x:82,y:563,w:412,h:68,label:'Suas fichas',action:()=>window.showLibrary?.()},
-    {x:82,y:666,w:412,h:70,label:'Como jogar',action:openHowTo},
-    {x:82,y:770,w:412,h:71,label:'Novo jogo',action:()=>window.show?.('newgame')}
+    {x:76,y:340,w:420,h:70,label:'História',action:()=>window.show?.('history')},
+    {x:76,y:443,w:420,h:70,label:'Universo',action:()=>window.show?.('universe')},
+    {x:76,y:546,w:420,h:70,label:'Suas fichas',action:()=>window.showLibrary?.()},
+    {x:76,y:649,w:420,h:70,label:'Como jogar',action:openHowTo},
+    {x:76,y:752,w:420,h:70,label:'Novo jogo',action:()=>window.show?.('newgame')}
   ];
-
-  items.forEach(item=>{
-    const r=document.createElementNS(ns,'rect');
-    r.setAttribute('class','vd-hot');
-    r.setAttribute('x',item.x);
-    r.setAttribute('y',item.y);
-    r.setAttribute('width',item.w);
-    r.setAttribute('height',item.h);
-    r.setAttribute('tabindex','0');
-    r.setAttribute('role','button');
-    r.setAttribute('aria-label',item.label);
-    r.addEventListener('click',item.action);
-    r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();item.action();}});
-    svg.appendChild(r);
-  });
-
+  items.forEach(item=>{const r=document.createElementNS(ns,'rect');r.setAttribute('class','vd-hot');r.setAttribute('x',item.x);r.setAttribute('y',item.y);r.setAttribute('width',item.w);r.setAttribute('height',item.h);r.setAttribute('tabindex','0');r.setAttribute('role','button');r.setAttribute('aria-label',item.label);r.addEventListener('click',item.action);r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();item.action()}});svg.appendChild(r)});
   stage.appendChild(svg);
 }
-
-function ensureMenu(){
-  const stage=document.querySelector('#opening .intro-stage');
-  if(!stage) return;
-  ensureMenuArt(stage);
-  if(stage.dataset.vdOverlayVersion!=='12'){
-    stage.dataset.vdOverlayVersion='12';
-    ensureOverlay(stage);
-  }
-}
-
-window.ValeHowToPlay={open:openHowTo,close:closeHowTo};
-ensureStyles();
-ensureModal();
-ensureMenu();
-new MutationObserver(ensureMenu).observe(document.body,{childList:true,subtree:true});
+function ensureMenu(){const stage=document.querySelector('#opening .intro-stage');if(!stage)return;ensureMenuArt(stage);if(stage.dataset.vdOverlayVersion!=='13'){stage.dataset.vdOverlayVersion='13';ensureOverlay(stage)}}
+window.ValeHowToPlay={open:openHowTo,close:closeHowTo};ensureStyles();ensureModal();ensureMenu();new MutationObserver(ensureMenu).observe(document.body,{childList:true,subtree:true});
 })();
