@@ -4,20 +4,22 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-approved.webp?v=20260912-5';
+// Arte oficial validada pelo projeto em 12/09/2026.
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-6';
+const MENU_RATIO=1656/950;
 
 function ensureStyles(){
   if(document.getElementById('vd-howto-style')) return;
   const s=document.createElement('style');
   s.id='vd-howto-style';
   s.textContent=`
-    #opening .intro-stage{width:min(100vw,calc(100vh * 1.6666667))!important;aspect-ratio:5/3!important;max-height:100vh!important;background:url('${MENU_ART}') center/contain no-repeat!important}
+    #opening .intro-stage{width:min(100vw,calc(100vh * ${MENU_RATIO}))!important;aspect-ratio:1656/950!important;max-height:100vh!important;background:url('${MENU_ART}') center/contain no-repeat!important}
     #opening .intro-art{opacity:0!important;pointer-events:none!important}
-    #opening .h-history{left:4.1%!important;top:34.8%!important;width:27.5%!important;height:9.2%!important}
-    #opening .h-universe{left:4.1%!important;top:45.5%!important;width:27.5%!important;height:9.2%!important}
-    #opening .h-chars{left:4.1%!important;top:56.2%!important;width:27.5%!important;height:9.2%!important}
-    #opening .h-howto{left:4.1%!important;top:66.9%!important;width:27.5%!important;height:9.2%!important}
-    #opening .h-new{left:4.1%!important;top:77.7%!important;width:27.5%!important;height:9.4%!important}
+    #opening .h-history{left:4.0%!important;top:35.0%!important;width:26.5%!important;height:9.7%!important}
+    #opening .h-universe{left:4.0%!important;top:46.0%!important;width:26.5%!important;height:9.7%!important}
+    #opening .h-chars{left:4.0%!important;top:57.0%!important;width:26.5%!important;height:9.7%!important}
+    #opening .h-howto{left:4.0%!important;top:68.0%!important;width:26.5%!important;height:9.7%!important}
+    #opening .h-new{left:4.0%!important;top:79.0%!important;width:26.5%!important;height:9.7%!important}
     .vale-access-gate{background:radial-gradient(circle at center,rgba(43,31,20,.55),rgba(7,6,5,.96)),url('${MENU_ART}') center/cover no-repeat!important}
     .vd-howto-modal{position:fixed;inset:0;z-index:16000;display:none;background:rgba(6,5,4,.9);backdrop-filter:blur(5px)}
     .vd-howto-modal.active{display:flex;flex-direction:column}
