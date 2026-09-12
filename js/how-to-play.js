@@ -4,38 +4,21 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-9';
-const MENU_RATIO=1656/950;
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-10';
+const VIEW_W=1656;
+const VIEW_H=950;
 
 function ensureStyles(){
   if(document.getElementById('vd-howto-style')) return;
   const s=document.createElement('style');
   s.id='vd-howto-style';
   s.textContent=`
-    #opening .intro-stage{
-      position:relative!important;
-      width:min(100vw,calc(100vh * ${MENU_RATIO}))!important;
-      aspect-ratio:1656/950!important;
-      max-height:100vh!important;
-    }
-    #opening .intro-art{
-      position:absolute!important;
-      inset:0!important;
-      display:block!important;
-      opacity:1!important;
-      visibility:visible!important;
-      width:100%!important;
-      height:100%!important;
-      object-fit:contain!important;
-    }
-
-    /* Hotspots calculados diretamente sobre a arte oficial 1656 x 950. */
-    #opening .h-history{left:4.11%!important;top:35.26%!important;width:26.39%!important;height:9.47%!important}
-    #opening .h-universe{left:4.11%!important;top:45.79%!important;width:26.39%!important;height:9.58%!important}
-    #opening .h-chars{left:4.11%!important;top:56.84%!important;width:26.39%!important;height:9.47%!important}
-    #opening .h-howto{left:4.11%!important;top:67.79%!important;width:26.39%!important;height:9.47%!important}
-    #opening .h-new{left:4.11%!important;top:78.74%!important;width:26.39%!important;height:9.79%!important}
-
+    #opening .intro-stage{position:relative!important;width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;overflow:hidden!important}
+    #opening .intro-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;display:block!important;opacity:1!important;visibility:visible!important}
+    #opening .hot{pointer-events:none!important;opacity:0!important}
+    #opening .vd-menu-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
+    #opening .vd-menu-overlay .vd-hot{fill:transparent;stroke:transparent;stroke-width:3;rx:10;ry:10;pointer-events:all;cursor:pointer;outline:none}
+    #opening .vd-menu-overlay .vd-hot:hover,#opening .vd-menu-overlay .vd-hot:focus{fill:rgba(211,173,104,.05);stroke:rgba(226,197,143,.78);filter:drop-shadow(0 0 10px rgba(211,173,104,.35))}
     .vd-howto-modal{position:fixed;inset:0;z-index:16000;display:none;background:rgba(6,5,4,.9);backdrop-filter:blur(5px)}
     .vd-howto-modal.active{display:flex;flex-direction:column}
     .vd-howto-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,164,92,.35);background:#17120d;color:#eadfce}
@@ -66,37 +49,60 @@ function ensureModal(){
   modal.addEventListener('click',e=>{if(e.target===modal)closeHowTo()});
 }
 
-function ensureMenuHotspot(stage){
-  const chars=stage.querySelector('.h-chars');
-  if(chars){chars.setAttribute('aria-label','Suas fichas');chars.title='Suas fichas';}
-  if(!stage.querySelector('.h-howto')){
-    const btn=document.createElement('button');
-    btn.className='hot h-howto';
-    btn.type='button';
-    btn.setAttribute('aria-label','Como jogar');
-    btn.title='Como jogar';
-    btn.addEventListener('click',openHowTo);
-    const newGame=stage.querySelector('.h-new');
-    if(newGame) stage.insertBefore(btn,newGame); else stage.appendChild(btn);
-  }
-}
-
-function ensureMenuArt(){
-  const stage=document.querySelector('#opening .intro-stage');
+function ensureMenuArt(stage){
   const art=stage?.querySelector('.intro-art');
-  if(!stage||!art) return;
-  ensureMenuHotspot(stage);
-
-  // A arte oficial passa a ser a fonte única do menu.
+  if(!art) return;
   if(!(art.getAttribute('src')||'').includes('valedouro-menu-oficial.webp')){
     art.src=MENU_ART;
     art.alt='ValeDouro — Mestre Virtual';
   }
 }
 
+function ensureOverlay(stage){
+  if(stage.querySelector('.vd-menu-overlay')) return;
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('class','vd-menu-overlay');
+  svg.setAttribute('viewBox',`0 0 ${VIEW_W} ${VIEW_H}`);
+  svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+  svg.setAttribute('aria-label','Menu principal de ValeDouro');
+
+  const items=[
+    {x:66,y:334,w:438,h:91,label:'História',action:()=>window.show?.('history')},
+    {x:67,y:438,w:436,h:90,label:'Universo',action:()=>window.show?.('universe')},
+    {x:67,y:542,w:436,h:89,label:'Suas fichas',action:()=>window.showLibrary?.()},
+    {x:67,y:645,w:436,h:91,label:'Como jogar',action:openHowTo},
+    {x:67,y:748,w:436,h:94,label:'Novo jogo',action:()=>window.show?.('newgame')}
+  ];
+
+  items.forEach(item=>{
+    const r=document.createElementNS(ns,'rect');
+    r.setAttribute('class','vd-hot');
+    r.setAttribute('x',item.x);
+    r.setAttribute('y',item.y);
+    r.setAttribute('width',item.w);
+    r.setAttribute('height',item.h);
+    r.setAttribute('tabindex','0');
+    r.setAttribute('role','button');
+    r.setAttribute('aria-label',item.label);
+    r.addEventListener('click',item.action);
+    r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();item.action();}});
+    svg.appendChild(r);
+  });
+
+  stage.appendChild(svg);
+}
+
+function ensureMenu(){
+  const stage=document.querySelector('#opening .intro-stage');
+  if(!stage) return;
+  ensureMenuArt(stage);
+  ensureOverlay(stage);
+}
+
 window.ValeHowToPlay={open:openHowTo,close:closeHowTo};
 ensureStyles();
 ensureModal();
-ensureMenuArt();
-new MutationObserver(ensureMenuArt).observe(document.body,{childList:true,subtree:true});
+ensureMenu();
+new MutationObserver(ensureMenu).observe(document.body,{childList:true,subtree:true});
 })();
