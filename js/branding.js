@@ -157,10 +157,10 @@
     document.head.appendChild(reputationBridge);
   }
 
-  if(!document.querySelector('script[data-vd-scene-continuity]')){
-    const sceneContinuity=document.createElement('script');
-    sceneContinuity.src='js/scene-continuity.js?v=20260912-1';
-    sceneContinuity.dataset.vdSceneContinuity='1';
-    document.head.appendChild(sceneContinuity);
+  if(!document.querySelector('script[data-vd-how-to-play]')){
+    const howToPlay=document.createElement('script');
+    howToPlay.src='js/how-to-play.js?v=20260912-1';
+    howToPlay.dataset.vdHowToPlay='1';
+    document.head.appendChild(howToPlay);
   }
 })();
