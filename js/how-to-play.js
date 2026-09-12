@@ -4,7 +4,7 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-7';
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-8';
 const FALLBACK_ART='assets/valedouro-intro.png';
 const MENU_RATIO=1656/950;
 
@@ -73,7 +73,6 @@ function ensureMenuArt(){
   if(stage.dataset.vdOfficialMenuChecked==='1') return;
   stage.dataset.vdOfficialMenuChecked='1';
 
-  // Nunca ocultar a imagem atual. A arte oficial só substitui o fallback após carregar de verdade.
   if(!art.getAttribute('src')) art.src=FALLBACK_ART;
   const probe=new Image();
   probe.onload=()=>{
