@@ -1,142 +1,142 @@
 [
   {
-    "questId":"QST-001",
-    "title":"A caravana que não chegou",
-    "body":"Seguimos o rastro de uma caravana atrasada e descobrimos que o que parecia simples desaparecimento escondia mais de um problema. A carroça já apresentava falha antes do ataque, e o aprendiz perdido não tinha sido levado pelos bandidos.",
-    "learnings":["Separar testemunho de evidência física.","Falhas mecânicas progressivas deixam sinais antes do colapso.","Rastreamento pode revelar trajetórias diferentes em uma mesma cena."],
-    "illustration":null
+    "questId": "QST-001",
+    "title": "A caravana que não chegou",
+    "body": "Seguimos o rastro de uma caravana atrasada e descobrimos que o que parecia simples desaparecimento escondia mais de um problema. A carroça já apresentava falha antes do ataque, e o aprendiz perdido não tinha sido levado pelos bandidos.",
+    "learnings": ["Separar testemunho de evidência física.", "Falhas mecânicas progressivas deixam sinais antes do colapso.", "Rastreamento pode revelar trajetórias diferentes em uma mesma cena."],
+    "illustration": "assets/journal/sketches/qst-001.png"
   },
   {
-    "questId":"QST-002",
-    "title":"A Ponte Velha",
-    "body":"A cheia havia retirado apoio da ponte e redistribuído esforços pela estrutura. Nem sempre atravessar é a melhor resposta: o desvio conhecido também era uma solução válida.",
-    "learnings":["A perda de apoio altera o caminho das cargas.","Uma solução segura pode ser contornar, não reparar."],
-    "illustration":null
+    "questId": "QST-002",
+    "title": "A Ponte Velha",
+    "body": "A cheia havia retirado apoio da ponte e redistribuído esforços pela estrutura. Nem sempre atravessar é a melhor resposta: o desvio conhecido também era uma solução válida.",
+    "learnings": ["A perda de apoio altera o caminho das cargas.", "Uma solução segura pode ser contornar, não reparar."],
+    "illustration": "assets/journal/sketches/qst-002.png"
   },
   {
-    "questId":"QST-003",
-    "title":"O Rebanho da Colina",
-    "body":"Os rastros e o padrão dos desaparecimentos disseram mais do que os rumores. Entender o comportamento da criatura abriu possibilidades além do confronto direto.",
-    "learnings":["Pegadas e padrões de alimentação ajudam a inferir comportamento.","Rumor e observação não são a mesma coisa."],
-    "illustration":null
+    "questId": "QST-003",
+    "title": "O Rebanho da Colina",
+    "body": "Os rastros e o padrão dos desaparecimentos disseram mais do que os rumores. Entender o comportamento da criatura abriu possibilidades além do confronto direto.",
+    "learnings": ["Pegadas e padrões de alimentação ajudam a inferir comportamento.", "Rumor e observação não são a mesma coisa."],
+    "illustration": "assets/journal/sketches/qst-003.png"
   },
   {
-    "questId":"QST-004",
-    "title":"Quatro Sentinelas, três relatos",
-    "body":"Três relatos incompletos apontaram para o quarto Sentinela. Tempo, direção e terreno permitiram reconstruir seu caminho até o local da queda.",
-    "learnings":["Informações incompletas podem se complementar.","Resgate exige pensar também no acesso e na retirada segura."],
-    "illustration":null
+    "questId": "QST-004",
+    "title": "Quatro Sentinelas, três relatos",
+    "body": "Três relatos incompletos apontaram para o quarto Sentinela. Tempo, direção e terreno permitiram reconstruir seu caminho até o local da queda.",
+    "learnings": ["Informações incompletas podem se complementar.", "Resgate exige pensar também no acesso e na retirada segura."],
+    "illustration": "assets/journal/sketches/qst-004.png"
   },
   {
-    "questId":"QST-005",
-    "title":"O Aprendiz Desaparecido",
-    "body":"O mecanismo antigo não estava quebrado. Funcionava exatamente como fora projetado, inclusive o travamento que impedia a reversão direta. Para sair, primeiro foi preciso compreender sua lógica.",
-    "learnings":["Um sistema pode estar funcionando corretamente e ainda assim prender alguém.","Às vezes avançar mais é o caminho para conseguir voltar."],
-    "illustration":null
+    "questId": "QST-005",
+    "title": "O Aprendiz Desaparecido",
+    "body": "O mecanismo antigo não estava quebrado. Funcionava exatamente como fora projetado, inclusive o travamento que impedia a reversão direta. Para sair, primeiro foi preciso compreender sua lógica.",
+    "learnings": ["Um sistema pode estar funcionando corretamente e ainda assim prender alguém.", "Às vezes avançar mais é o caminho para conseguir voltar."],
+    "illustration": "assets/journal/sketches/qst-005.png"
   },
   {
-    "questId":"QST-006",
-    "title":"Luzes nas Terras Devastadas",
-    "body":"As luzes vinham de saqueadores vasculhando um antigo campo de batalha. Mexer nos restos da guerra despertou riscos que estavam enterrados havia muito tempo.",
-    "learnings":["Triangulação reduz uma área de busca.","Vestígios da guerra não significam necessariamente uma nova invasão.","Desgarrados reagem a estímulos de ameaça de forma própria."],
-    "illustration":null
+    "questId": "QST-006",
+    "title": "Luzes nas Terras Devastadas",
+    "body": "As luzes vinham de saqueadores vasculhando um antigo campo de batalha. Mexer nos restos da guerra despertou riscos que estavam enterrados havia muito tempo.",
+    "learnings": ["Triangulação reduz uma área de busca.", "Vestígios da guerra não significam necessariamente uma nova invasão.", "Desgarrados reagem a estímulos de ameaça de forma própria."],
+    "illustration": "assets/journal/sketches/qst-006.png"
   },
   {
-    "questId":"QST-007",
-    "title":"A Mina Silenciosa",
-    "body":"O resgate na mina exigiu lidar com vários problemas ao mesmo tempo: estrutura, ventilação, acesso e movimentação de cargas. Não havia um único obstáculo, mas um sistema inteiro em condição crítica.",
-    "learnings":["Escoramento redistribui cargas.","Ventilação pode ser tão importante quanto abrir caminho.","Polias e alavancas reduzem o esforço necessário para mover grandes cargas."],
-    "illustration":null
+    "questId": "QST-007",
+    "title": "A Mina Silenciosa",
+    "body": "O resgate na mina exigiu lidar com vários problemas ao mesmo tempo: estrutura, ventilação, acesso e movimentação de cargas. Não havia um único obstáculo, mas um sistema inteiro em condição crítica.",
+    "learnings": ["Escoramento redistribui cargas.", "Ventilação pode ser tão importante quanto abrir caminho.", "Polias e alavancas reduzem o esforço necessário para mover grandes cargas."],
+    "illustration": "assets/journal/sketches/qst-007.png"
   },
   {
-    "questId":"QST-008",
-    "title":"Água para São Jerônimo",
-    "body":"A água não estava sendo roubada. Medir a vazão e testar a hipótese mostrou que uma junção deslocada estava deixando grande parte do fluxo se perder antes de chegar à comunidade.",
-    "learnings":["Vazão relaciona volume e tempo.","Uma boa hipótese deve produzir uma previsão que possa ser testada.","Resolver a causa técnica não apaga automaticamente um conflito social."],
-    "illustration":null
+    "questId": "QST-008",
+    "title": "Água para São Jerônimo",
+    "body": "A água não estava sendo roubada. Medir a vazão e testar a hipótese mostrou que uma junção deslocada estava deixando grande parte do fluxo se perder antes de chegar à comunidade.",
+    "learnings": ["Vazão relaciona volume e tempo.", "Uma boa hipótese deve produzir uma previsão que possa ser testada.", "Resolver a causa técnica não apaga automaticamente um conflito social."],
+    "illustration": "assets/journal/sketches/qst-008.png"
   },
   {
-    "questId":"QST-009",
-    "title":"O Monstro da Estrada Norte",
-    "body":"Havia uma criatura real, mas boa parte da história contada sobre ela não correspondia exatamente ao que havia acontecido. Os relatos mudaram à medida que passaram de pessoa para pessoa.",
-    "learnings":["Testemunho sincero ainda pode conter interpretação errada.","Repetir uma história não cria fontes independentes.","Medidas e marcas precisam de contexto antes de virarem conclusões."],
-    "illustration":null
+    "questId": "QST-009",
+    "title": "O Monstro da Estrada Norte",
+    "body": "Havia uma criatura real, mas boa parte da história contada sobre ela não correspondia exatamente ao que havia acontecido. Os relatos mudaram à medida que passaram de pessoa para pessoa.",
+    "learnings": ["Testemunho sincero ainda pode conter interpretação errada.", "Repetir uma história não cria fontes independentes.", "Medidas e marcas precisam de contexto antes de virarem conclusões."],
+    "illustration": "assets/journal/sketches/qst-009.png"
   },
   {
-    "questId":"QST-010",
-    "title":"O Sino que Não Tocou",
-    "body":"Depois da tempestade, o sino continuava intacto, embora seu mecanismo não funcionasse. A necessidade verdadeira era comunicar o alerta, e havia mais de uma maneira de cumprir essa função.",
-    "learnings":["Primeiro identificar a necessidade; depois escolher o recurso.","Remover uma peça estrutural sem substituir sua função pode piorar um colapso."],
-    "illustration":null
+    "questId": "QST-010",
+    "title": "O Sino que Não Tocou",
+    "body": "Depois da tempestade, o sino continuava intacto, embora seu mecanismo não funcionasse. A necessidade verdadeira era comunicar o alerta, e havia mais de uma maneira de cumprir essa função.",
+    "learnings": ["Primeiro identificar a necessidade; depois escolher o recurso.", "Remover uma peça estrutural sem substituir sua função pode piorar um colapso."],
+    "illustration": "assets/journal/sketches/qst-010.png"
   },
   {
-    "questId":"QST-011",
-    "title":"O Arco que Não Voltou",
-    "body":"Dante se desviou do exercício para salvar um filhote de cervo e acabou isolado pelo terreno. O sangue encontrado no caminho não era sinal de combate, mas do animal que ele tentava ajudar.",
-    "learnings":["Rastros precisam ser interpretados dentro do contexto.","Grand Aurus acompanha e orienta sem tomar o problema para si."],
-    "illustration":null
+    "questId": "QST-011",
+    "title": "O Arco que Não Voltou",
+    "body": "Dante se desviou do exercício para salvar um filhote de cervo e acabou isolado pelo terreno. O sangue encontrado no caminho não era sinal de combate, mas do animal que ele tentava ajudar.",
+    "learnings": ["Rastros precisam ser interpretados dentro do contexto.", "Grand Aurus acompanha e orienta sem tomar o problema para si."],
+    "illustration": "assets/journal/sketches/qst-011.png"
   },
   {
-    "questId":"QST-012",
-    "title":"A Voz na Biblioteca",
-    "body":"A voz ouvida na Biblioteca não era fantasma algum. Um sistema antigo de tubos acústicos transportava sons entre espaços diferentes, enquanto um jovem funcionário permanecia preso numa área técnica.",
-    "learnings":["Som também pode ser conduzido por estruturas e tubos.","Professor Eustáquio mistura pistas úteis e provocações sem deixar de ser ele mesmo."],
-    "illustration":null
+    "questId": "QST-012",
+    "title": "A Voz na Biblioteca",
+    "body": "A voz ouvida na Biblioteca não era fantasma algum. Um sistema antigo de tubos acústicos transportava sons entre espaços diferentes, enquanto um jovem funcionário permanecia preso numa área técnica.",
+    "learnings": ["Som também pode ser conduzido por estruturas e tubos.", "Professor Eustáquio mistura pistas úteis e provocações sem deixar de ser ele mesmo."],
+    "illustration": "assets/journal/sketches/qst-012.png"
   },
   {
-    "questId":"QST-013",
-    "title":"O Jardim Silencioso",
-    "body":"Os animais evitavam uma área dos Jardins por causa de uma vibração de alta frequência produzida por um mecanismo antigo. O problema parecia natural, mas sua origem era mecânica.",
-    "learnings":["Animais podem perceber estímulos que passam despercebidos para nós.","Uma causa técnica pode produzir efeitos que parecem biológicos."],
-    "illustration":null
+    "questId": "QST-013",
+    "title": "O Jardim Silencioso",
+    "body": "Os animais evitavam uma área dos Jardins por causa de uma vibração de alta frequência produzida por um mecanismo antigo. O problema parecia natural, mas sua origem era mecânica.",
+    "learnings": ["Animais podem perceber estímulos que passam despercebidos para nós.", "Uma causa técnica pode produzir efeitos que parecem biológicos."],
+    "illustration": "assets/journal/sketches/qst-013.png"
   },
   {
-    "questId":"QST-014",
-    "title":"A Máquina que Anda Sozinha",
-    "body":"A máquina não se movia por vontade própria. Um antigo eixo de transmissão sob a oficina ainda transferia movimento ao sistema, inclusive ao mecanismo de direção.",
-    "learnings":["Movimento pode ser transmitido por mecanismos ocultos.","Perigo dinâmico não precisa ser uma criatura para exigir reação rápida."],
-    "illustration":null
+    "questId": "QST-014",
+    "title": "A Máquina que Anda Sozinha",
+    "body": "A máquina não se movia por vontade própria. Um antigo eixo de transmissão sob a oficina ainda transferia movimento ao sistema, inclusive ao mecanismo de direção.",
+    "learnings": ["Movimento pode ser transmitido por mecanismos ocultos.", "Perigo dinâmico não precisa ser uma criatura para exigir reação rápida."],
+    "illustration": "assets/journal/sketches/qst-014.png"
   },
   {
-    "questId":"QST-015",
-    "title":"Cinzas no Laboratório",
-    "body":"A suposta cinza trazia partículas metálicas e sinais de temperatura elevada. Um forno antigo havia sido parcialmente reativado e trabalhava além do que se esperava dele.",
-    "learnings":["Materiais guardam sinais das condições a que foram submetidos.","Temperatura, resíduos e composição ajudam a reconstruir um processo."],
-    "illustration":null
+    "questId": "QST-015",
+    "title": "Cinzas no Laboratório",
+    "body": "A suposta cinza trazia partículas metálicas e sinais de temperatura elevada. Um forno antigo havia sido parcialmente reativado e trabalhava além do que se esperava dele.",
+    "learnings": ["Materiais guardam sinais das condições a que foram submetidos.", "Temperatura, resíduos e composição ajudam a reconstruir um processo."],
+    "illustration": "assets/journal/sketches/qst-015.png"
   },
   {
-    "questId":"QST-016",
-    "title":"A Linha que Não Fecha",
-    "body":"Uma discrepância nas plantas revelou um volume oculto e uma rede de passagens técnicas ligando diferentes áreas do Liceu. No centro de tudo surgiu a referência ao NÚCLEO — SETOR II.",
-    "learnings":["Uma planta que não fecha pode indicar espaço oculto ou referência incorreta.","Mapas também revelam o que está ausente."],
-    "illustration":null
+    "questId": "QST-016",
+    "title": "A Linha que Não Fecha",
+    "body": "Uma discrepância nas plantas revelou um volume oculto e uma rede de passagens técnicas ligando diferentes áreas do Liceu. No centro de tudo surgiu a referência ao NÚCLEO — SETOR II.",
+    "learnings": ["Uma planta que não fecha pode indicar espaço oculto ou referência incorreta.", "Mapas também revelam o que está ausente."],
+    "illustration": "assets/journal/sketches/qst-016.png"
   },
   {
-    "questId":"QST-017",
-    "title":"Uma Estrela Fora do Lugar",
-    "body":"A orientação do Núcleo não dependia apenas do espaço, mas também do momento da observação. Uma estrela muito fraca servira de referência para os antigos artífices.",
-    "learnings":["Referências astronômicas podem orientar mecanismos e medições.","Algumas respostas só aparecem quando o mundo muda com o tempo."],
-    "illustration":null
+    "questId": "QST-017",
+    "title": "Uma Estrela Fora do Lugar",
+    "body": "A orientação do Núcleo não dependia apenas do espaço, mas também do momento da observação. Uma estrela muito fraca servira de referência para os antigos artífices.",
+    "learnings": ["Referências astronômicas podem orientar mecanismos e medições.", "Algumas respostas só aparecem quando o mundo muda com o tempo."],
+    "illustration": "assets/journal/sketches/qst-017.png"
   },
   {
-    "questId":"QST-018",
-    "title":"A Pedra que Respira",
-    "body":"A parede parecia respirar porque uma antiga câmara de compensação de pressão havia voltado a funcionar fora da posição correta. Bloquear o movimento sem compreender sua função poderia apenas transferir o problema.",
-    "learnings":["Pressão pode ser administrada por câmaras, dutos e diafragmas.","Eliminar um movimento não significa eliminar a função que o produzia."],
-    "illustration":null
+    "questId": "QST-018",
+    "title": "A Pedra que Respira",
+    "body": "A parede parecia respirar porque uma antiga câmara de compensação de pressão havia voltado a funcionar fora da posição correta. Bloquear o movimento sem compreender sua função poderia apenas transferir o problema.",
+    "learnings": ["Pressão pode ser administrada por câmaras, dutos e diafragmas.", "Eliminar um movimento não significa eliminar a função que o produzia."],
+    "illustration": "assets/journal/sketches/qst-018.png"
   },
   {
-    "questId":"QST-019",
-    "title":"Quando o Liceu Acordou",
-    "body":"Os sistemas antigos reagiram em conjunto e um Autômato despertou, levando-nos até uma Grande Biblioteca que não constava das plantas atuais. No fim, sua intenção mais persistente revelou-se surpreendentemente simples: conservar e limpar.",
-    "learnings":["A Grande Biblioteca é anterior ao Liceu atual.","Um antigo Curador élfico está ligado ao lugar.","Nem todo comportamento estranho de uma máquina representa hostilidade."],
-    "illustration":null
+    "questId": "QST-019",
+    "title": "Quando o Liceu Acordou",
+    "body": "Os sistemas antigos reagiram em conjunto e um Autômato despertou, levando-nos até uma Grande Biblioteca que não constava das plantas atuais. No fim, sua intenção mais persistente revelou-se surpreendentemente simples: conservar e limpar.",
+    "learnings": ["A Grande Biblioteca é anterior ao Liceu atual.", "Um antigo Curador élfico está ligado ao lugar.", "Nem todo comportamento estranho de uma máquina representa hostilidade."],
+    "illustration": "assets/journal/sketches/qst-019.png"
   },
   {
-    "questId":"QST-020",
-    "title":"A noite em que o Liceu não estuda",
-    "body":"Depois de tudo, houve uma noite em que ninguém deveria falar de trabalho. Pela primeira vez o Liceu pareceu menos um lugar que visitávamos e mais um lugar ao qual pertencíamos. Na manhã seguinte, os portões estavam abertos.",
-    "learnings":["O Liceu tornou-se um refúgio seguro e um ponto de retorno.","Nem toda experiência importante precisa nascer de perigo ou mistério."],
-    "illustration":null
+    "questId": "QST-020",
+    "title": "A noite em que o Liceu não estuda",
+    "body": "Depois de tudo, houve uma noite em que ninguém deveria falar de trabalho. Pela primeira vez o Liceu pareceu menos um lugar que visitávamos e mais um lugar ao qual pertencíamos. Na manhã seguinte, os portões estavam abertos.",
+    "learnings": ["O Liceu tornou-se um refúgio seguro e um ponto de retorno.", "Nem toda experiência importante precisa nascer de perigo ou mistério."],
+    "illustration": "assets/journal/sketches/qst-020.png"
   }
 ]
