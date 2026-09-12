@@ -4,8 +4,8 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-// Arte oficial validada pelo projeto em 12/09/2026.
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-6';
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-7';
+const FALLBACK_ART='assets/valedouro-intro.png';
 const MENU_RATIO=1656/950;
 
 function ensureStyles(){
@@ -13,14 +13,13 @@ function ensureStyles(){
   const s=document.createElement('style');
   s.id='vd-howto-style';
   s.textContent=`
-    #opening .intro-stage{width:min(100vw,calc(100vh * ${MENU_RATIO}))!important;aspect-ratio:1656/950!important;max-height:100vh!important;background:url('${MENU_ART}') center/contain no-repeat!important}
-    #opening .intro-art{opacity:0!important;pointer-events:none!important}
+    #opening .intro-stage{width:min(100vw,calc(100vh * ${MENU_RATIO}))!important;aspect-ratio:1656/950!important;max-height:100vh!important}
+    #opening .intro-art{display:block!important;opacity:1!important;visibility:visible!important;width:100%!important;height:100%!important;object-fit:contain!important}
     #opening .h-history{left:4.0%!important;top:35.0%!important;width:26.5%!important;height:9.7%!important}
     #opening .h-universe{left:4.0%!important;top:46.0%!important;width:26.5%!important;height:9.7%!important}
     #opening .h-chars{left:4.0%!important;top:57.0%!important;width:26.5%!important;height:9.7%!important}
     #opening .h-howto{left:4.0%!important;top:68.0%!important;width:26.5%!important;height:9.7%!important}
     #opening .h-new{left:4.0%!important;top:79.0%!important;width:26.5%!important;height:9.7%!important}
-    .vale-access-gate{background:radial-gradient(circle at center,rgba(43,31,20,.55),rgba(7,6,5,.96)),url('${MENU_ART}') center/cover no-repeat!important}
     .vd-howto-modal{position:fixed;inset:0;z-index:16000;display:none;background:rgba(6,5,4,.9);backdrop-filter:blur(5px)}
     .vd-howto-modal.active{display:flex;flex-direction:column}
     .vd-howto-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,164,92,.35);background:#17120d;color:#eadfce}
@@ -51,9 +50,7 @@ function ensureModal(){
   modal.addEventListener('click',e=>{if(e.target===modal)closeHowTo()});
 }
 
-function ensureMenuHotspot(){
-  const stage=document.querySelector('#opening .intro-stage');
-  if(!stage) return;
+function ensureMenuHotspot(stage){
   const chars=stage.querySelector('.h-chars');
   if(chars){chars.setAttribute('aria-label','Suas fichas');chars.title='Suas fichas';}
   if(!stage.querySelector('.h-howto')){
@@ -68,9 +65,33 @@ function ensureMenuHotspot(){
   }
 }
 
+function ensureMenuArt(){
+  const stage=document.querySelector('#opening .intro-stage');
+  const art=stage?.querySelector('.intro-art');
+  if(!stage||!art) return;
+  ensureMenuHotspot(stage);
+  if(stage.dataset.vdOfficialMenuChecked==='1') return;
+  stage.dataset.vdOfficialMenuChecked='1';
+
+  // Nunca ocultar a imagem atual. A arte oficial só substitui o fallback após carregar de verdade.
+  if(!art.getAttribute('src')) art.src=FALLBACK_ART;
+  const probe=new Image();
+  probe.onload=()=>{
+    art.src=MENU_ART;
+    art.alt='ValeDouro — Mestre Virtual';
+    stage.dataset.vdOfficialMenu='ready';
+  };
+  probe.onerror=()=>{
+    art.src=FALLBACK_ART;
+    stage.dataset.vdOfficialMenu='fallback';
+    console.error('ValeDouro: falha ao carregar a arte oficial do menu; fallback preservado.');
+  };
+  probe.src=MENU_ART;
+}
+
 window.ValeHowToPlay={open:openHowTo,close:closeHowTo};
 ensureStyles();
 ensureModal();
-ensureMenuHotspot();
-new MutationObserver(ensureMenuHotspot).observe(document.body,{childList:true,subtree:true});
+ensureMenuArt();
+new MutationObserver(ensureMenuArt).observe(document.body,{childList:true,subtree:true});
 })();
