@@ -159,7 +159,7 @@
 
   if(!document.querySelector('script[data-vd-how-to-play]')){
     const howToPlay=document.createElement('script');
-    howToPlay.src='js/how-to-play.js?v=20260912-4';
+    howToPlay.src='js/how-to-play.js?v=20260912-5';
     howToPlay.dataset.vdHowToPlay='1';
     document.head.appendChild(howToPlay);
   }
