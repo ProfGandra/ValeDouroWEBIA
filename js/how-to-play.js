@@ -4,7 +4,7 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-23';
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-24';
 const MENU_RATIO=1600/900;
 const CALIBRATION_MODE=true;
 
@@ -21,9 +21,9 @@ function ensureStyles(){
     #opening .hot{position:absolute!important;z-index:6!important;display:block!important;opacity:1!important;pointer-events:auto!important;background:transparent!important;border:0!important;border-radius:10px!important;cursor:pointer!important;box-sizing:border-box!important}
     #opening .hot:hover,#opening .hot:focus{box-shadow:0 0 0 2px rgba(226,197,143,.95),0 0 26px rgba(211,173,104,.45)!important;background:rgba(211,173,104,.08)!important;outline:none!important}
 
-    /* Calibração v23. Como Jogar passa a ser a referência vertical validada.
-       Reduzimos somente sua margem direita. Os demais hotspots foram refinados
-       individualmente para acompanhar as molduras da arte oficial. */
+    /* Calibração v24. O Como Jogar volta EXATAMENTE à geometria vertical
+       da v22, que foi validada pelo usuário: top 68.66%, height 11.98%.
+       Somente a largura permanece reduzida para corrigir a margem direita. */
     #opening .h-history {left:4.25%!important;top:35.20%!important;width:26.55%!important;height:11.45%!important}
     #opening .h-universe{left:4.25%!important;top:46.05%!important;width:26.55%!important;height:11.90%!important}
     #opening .h-chars   {left:4.25%!important;top:57.20%!important;width:26.55%!important;height:12.00%!important}
