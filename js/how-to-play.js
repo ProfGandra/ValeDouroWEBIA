@@ -4,7 +4,7 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-15';
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-16';
 const MENU_RATIO=1600/900;
 
 function ensureStyles(){
@@ -19,13 +19,13 @@ function ensureStyles(){
     #opening .hot{position:absolute!important;z-index:6!important;display:block!important;opacity:1!important;pointer-events:auto!important;background:transparent!important;border:0!important;border-radius:10px!important;cursor:pointer!important}
     #opening .hot:hover,#opening .hot:focus{box-shadow:0 0 0 2px rgba(226,197,143,.70),0 0 26px rgba(211,173,104,.35)!important;background:rgba(211,173,104,.05)!important;outline:none!important}
 
-    /* Ajuste fino: todos os hotspots foram elevados 10 px na arte 1600x900.
-       10/900 = 1,1111 ponto percentual. Largura e altura permanecem inalteradas. */
-    #opening .h-history {left:4.25%!important;top:35.78%!important;width:27.50%!important;height:10.22%!important}
-    #opening .h-universe{left:4.25%!important;top:47.33%!important;width:27.50%!important;height:10.22%!important}
-    #opening .h-chars   {left:4.25%!important;top:58.89%!important;width:27.50%!important;height:10.22%!important}
-    #opening .h-howto   {left:4.25%!important;top:70.33%!important;width:27.50%!important;height:10.22%!important}
-    #opening .h-new     {left:4.25%!important;top:81.78%!important;width:27.50%!important;height:10.22%!important}
+    /* Ajuste solicitado: todos os hotspots foram elevados mais 50 px.
+       50/900 = 5,5556 pontos percentuais. */
+    #opening .h-history {left:4.25%!important;top:30.22%!important;width:27.50%!important;height:10.22%!important}
+    #opening .h-universe{left:4.25%!important;top:41.77%!important;width:27.50%!important;height:10.22%!important}
+    #opening .h-chars   {left:4.25%!important;top:53.33%!important;width:27.50%!important;height:10.22%!important}
+    #opening .h-howto   {left:4.25%!important;top:64.77%!important;width:27.50%!important;height:10.22%!important}
+    #opening .h-new     {left:4.25%!important;top:76.22%!important;width:27.50%!important;height:10.22%!important}
 
     .vd-howto-modal{position:fixed;inset:0;z-index:16000;display:none;background:rgba(6,5,4,.9);backdrop-filter:blur(5px)}
     .vd-howto-modal.active{display:flex;flex-direction:column}
