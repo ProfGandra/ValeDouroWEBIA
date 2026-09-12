@@ -45,11 +45,14 @@ function init(){
   const check=document.getElementById('valeTermsCheck');
   const btn=document.getElementById('valeEnterBtn');
   if(check&&btn){
+    check.checked=false;
     const refresh=()=>{btn.disabled=!check.checked};
     check.addEventListener('change',refresh);refresh();
     btn.addEventListener('click',acceptAndEnter);
   }
-  setOpen(!isAccepted());
+  // Regra oficial: o aviso deve ser exibido em toda nova entrada/recarregamento.
+  // O aceite continua registrado para auditoria/controle de versão, mas não pula o gate.
+  setOpen(true);
 }
 
 window.ValeAccess={version:VERSION,isAccepted,acceptAndEnter,reset(){localStorage.removeItem(KEY);setOpen(true)}};
