@@ -4,7 +4,7 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-10';
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-11';
 const VIEW_W=1656;
 const VIEW_H=950;
 
@@ -59,7 +59,8 @@ function ensureMenuArt(stage){
 }
 
 function ensureOverlay(stage){
-  if(stage.querySelector('.vd-menu-overlay')) return;
+  const old=stage.querySelector('.vd-menu-overlay');
+  if(old) old.remove();
   const ns='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(ns,'svg');
   svg.setAttribute('class','vd-menu-overlay');
@@ -67,12 +68,14 @@ function ensureOverlay(stage){
   svg.setAttribute('preserveAspectRatio','xMidYMid meet');
   svg.setAttribute('aria-label','Menu principal de ValeDouro');
 
+  // Ajuste fino validado visualmente sobre a arte oficial.
+  // Os retângulos acompanham a moldura dourada de cada botão.
   const items=[
-    {x:66,y:334,w:438,h:91,label:'História',action:()=>window.show?.('history')},
-    {x:67,y:438,w:436,h:90,label:'Universo',action:()=>window.show?.('universe')},
-    {x:67,y:542,w:436,h:89,label:'Suas fichas',action:()=>window.showLibrary?.()},
-    {x:67,y:645,w:436,h:91,label:'Como jogar',action:openHowTo},
-    {x:67,y:748,w:436,h:94,label:'Novo jogo',action:()=>window.show?.('newgame')}
+    {x:68,y:346,w:440,h:91,label:'História',action:()=>window.show?.('history')},
+    {x:69,y:450,w:439,h:90,label:'Universo',action:()=>window.show?.('universe')},
+    {x:69,y:554,w:439,h:89,label:'Suas fichas',action:()=>window.showLibrary?.()},
+    {x:69,y:657,w:439,h:91,label:'Como jogar',action:openHowTo},
+    {x:69,y:760,w:439,h:94,label:'Novo jogo',action:()=>window.show?.('newgame')}
   ];
 
   items.forEach(item=>{
@@ -97,7 +100,10 @@ function ensureMenu(){
   const stage=document.querySelector('#opening .intro-stage');
   if(!stage) return;
   ensureMenuArt(stage);
-  ensureOverlay(stage);
+  if(stage.dataset.vdOverlayVersion!=='11'){
+    stage.dataset.vdOverlayVersion='11';
+    ensureOverlay(stage);
+  }
 }
 
 window.ValeHowToPlay={open:openHowTo,close:closeHowTo};
