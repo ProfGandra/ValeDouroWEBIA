@@ -149,4 +149,11 @@
     reputation.dataset.vdReputation='1';
     document.head.appendChild(reputation);
   }
+
+  if(!document.querySelector('script[data-vd-reputation-bridge]')){
+    const reputationBridge=document.createElement('script');
+    reputationBridge.src='js/reputation-bridge.js?v=20260912-1';
+    reputationBridge.dataset.vdReputationBridge='1';
+    document.head.appendChild(reputationBridge);
+  }
 })();
