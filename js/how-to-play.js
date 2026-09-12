@@ -4,27 +4,21 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
+const MENU_ART='assets/valedouro-menu-approved.webp?v=20260912-5';
+
 function ensureStyles(){
   if(document.getElementById('vd-howto-style')) return;
   const s=document.createElement('style');
   s.id='vd-howto-style';
   s.textContent=`
-    #opening .intro-stage{
-      width:min(100vw,calc(100vh * 1.6666667))!important;
-      aspect-ratio:5/3!important;
-      max-height:100vh!important;
-      background-image:url('assets/valedouro-intro-v2.webp?v=20260912-5'),url('assets/valedouro-intro.png')!important;
-      background-position:center,center!important;
-      background-size:contain,contain!important;
-      background-repeat:no-repeat,no-repeat!important;
-      background-color:#080706!important;
-    }
+    #opening .intro-stage{width:min(100vw,calc(100vh * 1.6666667))!important;aspect-ratio:5/3!important;max-height:100vh!important;background:url('${MENU_ART}') center/contain no-repeat!important}
     #opening .intro-art{opacity:0!important;pointer-events:none!important}
     #opening .h-history{left:4.1%!important;top:34.8%!important;width:27.5%!important;height:9.2%!important}
     #opening .h-universe{left:4.1%!important;top:45.5%!important;width:27.5%!important;height:9.2%!important}
     #opening .h-chars{left:4.1%!important;top:56.2%!important;width:27.5%!important;height:9.2%!important}
     #opening .h-howto{left:4.1%!important;top:66.9%!important;width:27.5%!important;height:9.2%!important}
     #opening .h-new{left:4.1%!important;top:77.7%!important;width:27.5%!important;height:9.4%!important}
+    .vale-access-gate{background:radial-gradient(circle at center,rgba(43,31,20,.55),rgba(7,6,5,.96)),url('${MENU_ART}') center/cover no-repeat!important}
     .vd-howto-modal{position:fixed;inset:0;z-index:16000;display:none;background:rgba(6,5,4,.9);backdrop-filter:blur(5px)}
     .vd-howto-modal.active{display:flex;flex-direction:column}
     .vd-howto-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,164,92,.35);background:#17120d;color:#eadfce}
@@ -55,7 +49,26 @@ function ensureModal(){
   modal.addEventListener('click',e=>{if(e.target===modal)closeHowTo()});
 }
 
+function ensureMenuHotspot(){
+  const stage=document.querySelector('#opening .intro-stage');
+  if(!stage) return;
+  const chars=stage.querySelector('.h-chars');
+  if(chars){chars.setAttribute('aria-label','Suas fichas');chars.title='Suas fichas';}
+  if(!stage.querySelector('.h-howto')){
+    const btn=document.createElement('button');
+    btn.className='hot h-howto';
+    btn.type='button';
+    btn.setAttribute('aria-label','Como jogar');
+    btn.title='Como jogar';
+    btn.addEventListener('click',openHowTo);
+    const newGame=stage.querySelector('.h-new');
+    if(newGame) stage.insertBefore(btn,newGame); else stage.appendChild(btn);
+  }
+}
+
 window.ValeHowToPlay={open:openHowTo,close:closeHowTo};
 ensureStyles();
 ensureModal();
+ensureMenuHotspot();
+new MutationObserver(ensureMenuHotspot).observe(document.body,{childList:true,subtree:true});
 })();
