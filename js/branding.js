@@ -156,4 +156,11 @@
     reputationBridge.dataset.vdReputationBridge='1';
     document.head.appendChild(reputationBridge);
   }
+
+  if(!document.querySelector('script[data-vd-scene-continuity]')){
+    const sceneContinuity=document.createElement('script');
+    sceneContinuity.src='js/scene-continuity.js?v=20260912-1';
+    sceneContinuity.dataset.vdSceneContinuity='1';
+    document.head.appendChild(sceneContinuity);
+  }
 })();
