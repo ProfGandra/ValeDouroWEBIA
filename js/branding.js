@@ -173,7 +173,7 @@
 
   if(!document.querySelector('script[data-vd-journal-runtime-fix]')){
     const journalRuntimeFix=document.createElement('script');
-    journalRuntimeFix.src='js/journal-runtime-fix.js?v=20260912-1';
+    journalRuntimeFix.src='js/journal-runtime-fix.js?v=20260912-2';
     journalRuntimeFix.dataset.vdJournalRuntimeFix='1';
     document.head.appendChild(journalRuntimeFix);
   }
