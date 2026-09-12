@@ -4,9 +4,9 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-25';
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-26';
 const MENU_RATIO=1656/950;
-const CALIBRATION_MODE=true;
+const CALIBRATION_MODE=false;
 
 function ensureStyles(){
   if(document.getElementById('vd-howto-style')) return;
@@ -21,7 +21,8 @@ function ensureStyles(){
     #opening .hot{position:absolute!important;z-index:6!important;display:block!important;opacity:1!important;pointer-events:auto!important;background:transparent!important;border:0!important;border-radius:10px!important;cursor:pointer!important;box-sizing:border-box!important}
     #opening .hot:hover,#opening .hot:focus{box-shadow:0 0 0 2px rgba(226,197,143,.95),0 0 26px rgba(211,173,104,.45)!important;background:rgba(211,173,104,.08)!important;outline:none!important}
 
-    /* Hotspots medidos diretamente na arte oficial 1656x950, conforme marcação vermelha aprovada.
+    /* Hotspots finais medidos diretamente na arte oficial 1656x950,
+       conforme marcação vermelha aprovada pelo usuário.
        Pixels de referência:
        História    x=69..515  y=339..437
        Universo    x=69..515  y=446..542
@@ -34,9 +35,6 @@ function ensureStyles(){
     #opening .h-chars   {left:4.166667%!important;top:58.105263%!important;width:26.932367%!important;height:10.000000%!important}
     #opening .h-howto   {left:4.166667%!important;top:69.263158%!important;width:26.932367%!important;height:10.105263%!important}
     #opening .h-new     {left:4.166667%!important;top:80.421053%!important;width:26.932367%!important;height:10.421053%!important}
-
-    #opening.vd-calibration .hot{outline:3px dashed rgba(255,220,120,.95)!important;outline-offset:-3px!important;background:rgba(255,220,120,.10)!important}
-    #opening.vd-calibration .hot::after{content:attr(aria-label);position:absolute;left:8px;top:6px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.72);color:#fff4cf;font:700 11px/1.2 Arial,sans-serif;letter-spacing:.02em;pointer-events:none;white-space:nowrap}
 
     .vd-howto-modal{position:fixed;inset:0;z-index:16000;display:none;background:rgba(6,5,4,.9);backdrop-filter:blur(5px)}
     .vd-howto-modal.active{display:flex;flex-direction:column}
