@@ -131,7 +131,7 @@
 
   if(!document.querySelector('script[data-vd-journal]')){
     const journal=document.createElement('script');
-    journal.src='js/journal.js?v=20260911-1';
+    journal.src='js/journal.js?v=20260911-2';
     journal.dataset.vdJournal='1';
     document.head.appendChild(journal);
   }
@@ -141,5 +141,12 @@
     rangerJournal.src='js/ranger-journal.js?v=20260911-1';
     rangerJournal.dataset.vdRangerJournal='1';
     document.head.appendChild(rangerJournal);
+  }
+
+  if(!document.querySelector('script[data-vd-reputation]')){
+    const reputation=document.createElement('script');
+    reputation.src='js/reputation.js?v=20260911-1';
+    reputation.dataset.vdReputation='1';
+    document.head.appendChild(reputation);
   }
 })();
