@@ -4,7 +4,7 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-11';
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-12';
 const VIEW_W=1656;
 const VIEW_H=950;
 
@@ -17,7 +17,7 @@ function ensureStyles(){
     #opening .intro-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;display:block!important;opacity:1!important;visibility:visible!important}
     #opening .hot{pointer-events:none!important;opacity:0!important}
     #opening .vd-menu-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
-    #opening .vd-menu-overlay .vd-hot{fill:transparent;stroke:transparent;stroke-width:3;rx:10;ry:10;pointer-events:all;cursor:pointer;outline:none}
+    #opening .vd-menu-overlay .vd-hot{fill:transparent;stroke:transparent;stroke-width:3;rx:8;ry:8;pointer-events:all;cursor:pointer;outline:none}
     #opening .vd-menu-overlay .vd-hot:hover,#opening .vd-menu-overlay .vd-hot:focus{fill:rgba(211,173,104,.05);stroke:rgba(226,197,143,.78);filter:drop-shadow(0 0 10px rgba(211,173,104,.35))}
     .vd-howto-modal{position:fixed;inset:0;z-index:16000;display:none;background:rgba(6,5,4,.9);backdrop-filter:blur(5px)}
     .vd-howto-modal.active{display:flex;flex-direction:column}
@@ -68,14 +68,14 @@ function ensureOverlay(stage){
   svg.setAttribute('preserveAspectRatio','xMidYMid meet');
   svg.setAttribute('aria-label','Menu principal de ValeDouro');
 
-  // Ajuste fino validado visualmente sobre a arte oficial.
-  // Os retângulos acompanham a moldura dourada de cada botão.
+  // Hotspots deliberadamente menores que as molduras douradas.
+  // A margem interna evita sobreposição visual entre botões e mantém ícone/texto clicáveis.
   const items=[
-    {x:68,y:346,w:440,h:91,label:'História',action:()=>window.show?.('history')},
-    {x:69,y:450,w:439,h:90,label:'Universo',action:()=>window.show?.('universe')},
-    {x:69,y:554,w:439,h:89,label:'Suas fichas',action:()=>window.showLibrary?.()},
-    {x:69,y:657,w:439,h:91,label:'Como jogar',action:openHowTo},
-    {x:69,y:760,w:439,h:94,label:'Novo jogo',action:()=>window.show?.('newgame')}
+    {x:82,y:355,w:412,h:70,label:'História',action:()=>window.show?.('history')},
+    {x:82,y:459,w:412,h:69,label:'Universo',action:()=>window.show?.('universe')},
+    {x:82,y:563,w:412,h:68,label:'Suas fichas',action:()=>window.showLibrary?.()},
+    {x:82,y:666,w:412,h:70,label:'Como jogar',action:openHowTo},
+    {x:82,y:770,w:412,h:71,label:'Novo jogo',action:()=>window.show?.('newgame')}
   ];
 
   items.forEach(item=>{
@@ -100,8 +100,8 @@ function ensureMenu(){
   const stage=document.querySelector('#opening .intro-stage');
   if(!stage) return;
   ensureMenuArt(stage);
-  if(stage.dataset.vdOverlayVersion!=='11'){
-    stage.dataset.vdOverlayVersion='11';
+  if(stage.dataset.vdOverlayVersion!=='12'){
+    stage.dataset.vdOverlayVersion='12';
     ensureOverlay(stage);
   }
 }
