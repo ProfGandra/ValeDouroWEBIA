@@ -4,7 +4,7 @@
 if(window.__VALE_HOW_TO_PLAY__) return;
 window.__VALE_HOW_TO_PLAY__=true;
 
-const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-21';
+const MENU_ART='assets/valedouro-menu-oficial.webp?v=20260912-22';
 const MENU_RATIO=1600/900;
 const CALIBRATION_MODE=true;
 
@@ -21,12 +21,14 @@ function ensureStyles(){
     #opening .hot{position:absolute!important;z-index:6!important;display:block!important;opacity:1!important;pointer-events:auto!important;background:transparent!important;border:0!important;border-radius:10px!important;cursor:pointer!important;box-sizing:border-box!important}
     #opening .hot:hover,#opening .hot:focus{box-shadow:0 0 0 2px rgba(226,197,143,.95),0 0 26px rgba(211,173,104,.45)!important;background:rgba(211,173,104,.08)!important;outline:none!important}
 
-    /* Calibração fina sobre as bordas externas das cinco molduras da arte oficial. */
-    #opening .h-history {left:4.25%!important;top:35.67%!important;width:27.50%!important;height:9.83%!important}
-    #opening .h-universe{left:4.25%!important;top:46.48%!important;width:27.50%!important;height:10.36%!important}
-    #opening .h-chars   {left:4.25%!important;top:57.62%!important;width:27.50%!important;height:10.46%!important}
-    #opening .h-howto   {left:4.25%!important;top:68.96%!important;width:27.50%!important;height:10.68%!important}
-    #opening .h-new     {left:4.25%!important;top:80.19%!important;width:27.50%!important;height:10.79%!important}
+    /* Calibração fina v22: a captura mostrou a lateral direita cerca de 10 px além
+       da moldura e as caixas cerca de 2–3 px abaixo no topo e 8–10 px acima na base.
+       Corrigimos largura, topo e altura individualmente, preservando a lateral esquerda. */
+    #opening .h-history {left:4.25%!important;top:35.37%!important;width:26.90%!important;height:11.13%!important}
+    #opening .h-universe{left:4.25%!important;top:46.18%!important;width:26.90%!important;height:11.66%!important}
+    #opening .h-chars   {left:4.25%!important;top:57.32%!important;width:26.90%!important;height:11.76%!important}
+    #opening .h-howto   {left:4.25%!important;top:68.66%!important;width:26.90%!important;height:11.98%!important}
+    #opening .h-new     {left:4.25%!important;top:79.89%!important;width:26.90%!important;height:12.09%!important}
 
     #opening.vd-calibration .hot{outline:3px dashed rgba(255,220,120,.95)!important;outline-offset:-3px!important;background:rgba(255,220,120,.10)!important}
     #opening.vd-calibration .hot::after{content:attr(aria-label);position:absolute;left:8px;top:6px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.72);color:#fff4cf;font:700 11px/1.2 Arial,sans-serif;letter-spacing:.02em;pointer-events:none;white-space:nowrap}
