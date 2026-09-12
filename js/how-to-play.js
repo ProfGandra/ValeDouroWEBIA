@@ -1,4 +1,4 @@
-// ValeDouro WEBIA — Como Jogar no menu principal
+// ValeDouro WEBIA — Como Jogar integrado ao menu principal
 (function(){
 'use strict';
 if(window.__VALE_HOW_TO_PLAY__) return;
@@ -9,14 +9,19 @@ function ensureStyles(){
   const s=document.createElement('style');
   s.id='vd-howto-style';
   s.textContent=`
-    .vd-howto-btn{position:absolute;left:50%;bottom:7.5%;transform:translateX(-50%);z-index:12;min-width:150px;padding:10px 18px;border:1px solid rgba(201,164,92,.72);border-radius:10px;background:rgba(19,15,11,.82);color:#efd38d;font-weight:800;letter-spacing:.03em;cursor:pointer;backdrop-filter:blur(5px);box-shadow:0 7px 20px rgba(0,0,0,.35)}
-    .vd-howto-btn:hover{background:rgba(37,28,18,.96)}
+    /* A nova arte do menu usa proporção 5:3 e cinco áreas clicáveis na coluna esquerda. */
+    #opening .intro-stage{width:min(100vw,calc(100vh * 1.6666667))!important;aspect-ratio:5/3!important;max-height:100vh!important}
+    #opening .h-history{left:4.1%!important;top:34.8%!important;width:27.5%!important;height:9.2%!important}
+    #opening .h-universe{left:4.1%!important;top:45.5%!important;width:27.5%!important;height:9.2%!important}
+    #opening .h-chars{left:4.1%!important;top:56.2%!important;width:27.5%!important;height:9.2%!important}
+    #opening .h-howto{left:4.1%!important;top:66.9%!important;width:27.5%!important;height:9.2%!important}
+    #opening .h-new{left:4.1%!important;top:77.7%!important;width:27.5%!important;height:9.4%!important}
     .vd-howto-modal{position:fixed;inset:0;z-index:16000;display:none;background:rgba(6,5,4,.9);backdrop-filter:blur(5px)}
     .vd-howto-modal.active{display:flex;flex-direction:column}
     .vd-howto-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,164,92,.35);background:#17120d;color:#eadfce}
     .vd-howto-top strong{color:#edc878}
     .vd-howto-frame{flex:1;width:100%;border:0;background:#120f0b}
-    @media(max-width:700px){.vd-howto-btn{bottom:5.5%;min-width:132px;padding:9px 14px}.vd-howto-top{padding:8px 10px}}
+    @media(max-width:700px){.vd-howto-top{padding:8px 10px}}
   `;
   document.head.appendChild(s);
 }
@@ -40,26 +45,45 @@ function ensureModal(){
   document.getElementById('vdHowToClose')?.addEventListener('click',closeHowTo);
   modal.addEventListener('click',e=>{if(e.target===modal)closeHowTo()});
 }
-function ensureButton(){
+
+function ensureMenu(){
   const opening=document.getElementById('opening');
   const stage=opening?.querySelector('.intro-stage');
-  if(!stage||document.getElementById('vdHowToBtn')) return;
-  if(getComputedStyle(stage).position==='static') stage.style.position='relative';
-  const btn=document.createElement('button');
-  btn.id='vdHowToBtn';
-  btn.className='vd-howto-btn';
-  btn.type='button';
-  btn.textContent='COMO JOGAR';
-  btn.title='Aprenda como jogar ValeDouro';
-  btn.addEventListener('click',openHowTo);
-  stage.appendChild(btn);
+  if(!stage) return;
+
+  const art=stage.querySelector('.intro-art');
+  if(art && !String(art.src).includes('valedouro-intro-v2.webp')){
+    art.src='assets/valedouro-intro-v2.webp?v=20260912-2';
+    art.alt='ValeDouro — Mestre Virtual';
+  }
+
+  const chars=stage.querySelector('.h-chars');
+  if(chars){
+    chars.setAttribute('aria-label','Suas fichas');
+    chars.title='Suas fichas';
+  }
+
+  // Remove a versão antiga, que aparecia isolada na parte inferior da arte.
+  document.getElementById('vdHowToBtn')?.remove();
+
+  if(!stage.querySelector('.h-howto')){
+    const btn=document.createElement('button');
+    btn.className='hot h-howto';
+    btn.type='button';
+    btn.setAttribute('aria-label','Como jogar');
+    btn.title='Como jogar';
+    btn.addEventListener('click',openHowTo);
+    const newGame=stage.querySelector('.h-new');
+    if(newGame) stage.insertBefore(btn,newGame);
+    else stage.appendChild(btn);
+  }
 }
 
 window.ValeHowToPlay={open:openHowTo,close:closeHowTo};
 ensureStyles();
 ensureModal();
-ensureButton();
+ensureMenu();
 
-const obs=new MutationObserver(()=>ensureButton());
+const obs=new MutationObserver(()=>ensureMenu());
 obs.observe(document.body,{childList:true,subtree:true});
 })();
