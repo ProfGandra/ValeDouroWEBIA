@@ -17,11 +17,16 @@ function rollOutcome(a){const t=norm(a);if(/\bfalha\b/.test(t))return 'failure';
 function classify(action){
   const t=norm(action);if(!t||isRollResult(t))return null;
   const accidental=/\b(sem intencao|sem querer|acidentalmente|por acidente|descuidado|descuidada|involuntariamente)\b/.test(t);
+  const deliberate=/\b(deliberadamente|de proposito|intencionalmente|com intencao|quero ferir|quero machucar)\b/.test(t);
   const aid=/\b(presto|prestar|aplico|aplicar|faco|fazer)\b.*\b(primeiros socorros|curativo|curativos|socorro)\b|\b(ajudo|socorro|trato|cuido|estanco)\b.*\b(ferid|sangramento|machucad)/.test(t);
+  const injuryAct=/\b(golpeio|esfaqueio|corto|estoco|agredo|desfiro|acerto|firo|ferindo|feri|machuco|apunhalo|cravo|perfuro)\b/.test(t)
+    ||/\b(faco|causo|provoco|abro|deixo)\b[^.!?]{0,50}\b(um\s+)?(ferimento|corte|machucado|lesao)\b/.test(t)
+    ||/\b(faco|causo|provoco)\b[^.!?]{0,50}\b(sangrar|sangramento)\b/.test(t)
+    ||/sac\w*\s+(minha\s+)?(espada|faca|adaga|machado).*\b(golpe|atac|cort|estoc|fer|crav|perfur)/.test(t);
   if(aid)return {type:'aid',action:String(action)};
-  if(accidental&&/\b(golpeio|esfaqueio|corto|estoco|agredo|desfiro|acerto|firo|ferindo|feri|machuco)\b/.test(t))return {type:'accident',action:String(action)};
+  if(accidental&&injuryAct)return {type:'accident',action:String(action)};
   if(/\b(mato|executo|degolo|assassino|tiro a vida|ceifo a vida|acabo com ele|acabo com ela)\b/.test(t))return {type:'killing',action:String(action)};
-  if(/\b(ataco|golpeio|esfaqueio|corto|estoco|agredo|desfiro|acerto|firo|ferindo|feri)\b/.test(t)||/sac\w*\s+(minha\s+)?espada.*(golpe|atac|cort|estoc|fer)/.test(t))return {type:'assault',action:String(action)};
+  if(injuryAct||deliberate&&/\b(ferimento|corte|lesao|machucado)\b/.test(t))return {type:'assault',action:String(action)};
   if(/\b(furto|roubo|roubar|assalto|assaltar|subtraio|tomo para mim)\b/.test(t))return {type:'theft',action:String(action)};
   if(/\b(ameaco|intimido|vou te matar|juro que mato)\b/.test(t))return {type:'threat',action:String(action)};
   if(/\b(minto|mentira|engano|finjo que|invento que)\b/.test(t))return {type:'deception',action:String(action)};
