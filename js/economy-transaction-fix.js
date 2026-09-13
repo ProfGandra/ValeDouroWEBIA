@@ -1,4 +1,4 @@
-// ValeDouro WEBIA — correções de transações: valores acordados, marcadores INV e continuidade comercial
+// ValeDouro WEBIA — correções de transações: valores acordados, troco, marcadores e continuidade comercial
 (function(){
 'use strict';
 if(window.__VALE_ECONOMY_TRANSACTION_FIX__)return;
@@ -8,64 +8,14 @@ const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u03
 function aiEndpoint(){try{return typeof AI_ENDPOINT!=='undefined'?String(AI_ENDPOINT):''}catch{return ''}}
 function isAi(url){return String(url||'').replace(/\/$/,'')===aiEndpoint().replace(/\/$/,'')}
 function moneyToCopper(n,unit){n=Math.max(0,Number(n)||0);const u=norm(unit);if(/ouro/.test(u))return n*100;if(/prata/.test(u))return n*10;return n}
-function recentAgreement(body){
-  const h=Array.isArray(body?.history)?body.history:[],texts=[];
-  for(let i=Math.max(0,h.length-12);i<h.length;i++)texts.push(String(h[i]?.content||''));
-  texts.push(String(body?.action||''));
-  for(let i=texts.length-1;i>=0;i--){
-    const s=texts[i];
-    const m=s.match(/\b(?:pago|pagarei|te pago|ofereco|ofereço|aceito pagar|cobro|custa|por)\s*(\d+)\s*(?:moeda(?:s)?\s+de\s+)?(ouro|prata|cobre)\b/i)||s.match(/\b(\d+)\s*(?:moeda(?:s)?\s+de\s+)?(ouro|prata|cobre)\b/i);
-    if(m){
-      const reason=(s.match(/\bpor\s+([^.!?\n]+)/i)?.[1]||'serviço acordado em cena').trim();
-      return {copper:moneyToCopper(m[1],m[2]),reason,source:s};
-    }
-  }
-  return null;
-}
-function transactionPolicy(body,agreement){
-  const recent=(Array.isArray(body?.history)?body.history:[]).slice(-8).map(x=>x.content||'').join(' | ');
-  return [
-    'CONTINUIDADE DE TRANSAÇÃO — OBRIGATÓRIO.',
-    'Se uma negociação ou serviço local estiver em andamento, preserve NPC, função, local, período do dia, objeto e termos até a conclusão explícita.',
-    'Nunca transforme um aprendiz, comerciante, artesão ou prestador de serviço em companheiro de viagem, guia ou membro do grupo sem convite e aceitação explícitos.',
-    'Não avance para estrada, missão, tarde/noite ou outro local enquanto o jogador ainda estiver resolvendo a negociação atual.',
-    'O valor pago deve ser EXATAMENTE o valor acordado. 1 cobre = 1 cobre; jamais converta 1 cobre em 10 cobres.',
-    agreement?`ACORDO MONETÁRIO RECENTE: ${agreement.copper} cobre(s), motivo: ${agreement.reason}.`:'Não há valor monetário explícito recente detectado.',
-    `CONTEXTO RECENTE: ${recent}`
-  ].join(' ');
-}
+function historyTexts(body){const h=Array.isArray(body?.history)?body.history:[];return h.slice(-14).map(x=>String(x?.content||x?.text||x?.message||''))}
+function recentAgreement(body){const texts=[...historyTexts(body),String(body?.action||'')];for(let i=texts.length-1;i>=0;i--){const s=texts[i];const m=s.match(/\b(?:pago|pagarei|te pago|ofereco|ofereço|aceito pagar|cobro|custa|por)\s*(\d+)\s*(?:moeda(?:s)?\s+de\s+)?(ouro|prata|cobre)\b/i)||s.match(/\b(\d+)\s*(?:moeda(?:s)?\s+de\s+)?(ouro|prata|cobre)\b/i);if(m){const reason=(s.match(/\bpor\s+([^.!?\n]+)/i)?.[1]||'serviço ou bem acordado em cena').trim();return {copper:moneyToCopper(m[1],m[2]),reason,source:s}}}return null}
+function detectChange(body,agreement){const action=String(body?.action||''),t=norm(action);if(!/\b(troco|trocar|quebrar|quebra|cambio|cambiar)\b/.test(t)&&!/entrego\s+\d+\s*(?:moeda(?:s)?\s+de\s+)?(?:ouro|prata).*aguardo.*troco/.test(t))return null;const m=action.match(/(?:troco\s+(?:para|de)|trocar|quebrar|entrego|dou)\s*(?:de\s*)?(\d+)\s*(?:moeda(?:s)?\s+de\s+)?(ouro|prata|cobre)/i)||action.match(/(\d+)\s*(?:moeda(?:s)?\s+de\s+)?(ouro|prata|cobre)/i);if(!m)return null;const tender=moneyToCopper(m[1],m[2]);if(tender<=0)return null;const price=agreement?.copper>0&&agreement.copper<tender?agreement.copper:0;return {tenderCopper:tender,priceCopper:price,changeCopper:tender-price,unit:norm(m[2]),source:action}}
+function transactionPolicy(body,agreement,change){const recent=historyTexts(body).slice(-8).join(' | ');return ['CONTINUIDADE DE TRANSAÇÃO — OBRIGATÓRIO.','Preserve exatamente o NPC interlocutor, sua função, o bem/serviço, local e termos combinados até a conclusão. Não troque mercador por guarda ou outro NPC.','Uma pergunta sobre troco NÃO é ganho gratuito. Trocar 1 prata significa entregar 10 cobres de valor e receber valor equivalente em moedas menores.','Se houver compra de preço P paga com moeda de valor T, o resultado líquido é pagar P e receber T-P de troco; nunca debite T inteiro sem devolver o troco.','Nunca diga que o personagem pode arcar com um preço sem consultar o saldo autoritativo.','Não invente quantidade de moedas, bolsa, mapa, mercadoria ou pagamento diferente do acordo.',agreement?`PREÇO/ACORDO RECENTE DETECTADO: ${agreement.copper} cobre(s), contexto: ${agreement.reason}.`:'Nenhum preço recente confirmado pelo detector.',change?`PEDIDO DE TROCO DETECTADO: moeda entregue vale ${change.tenderCopper} cobre(s); preço associado ${change.priceCopper}; troco correto ${change.changeCopper} cobre(s).`:'Nenhum pedido explícito de troco detectado nesta ação.','Para uma compra com troco, prefira um único [[BARTER:...]] autoritativo contendo giveCopper igual ao PREÇO efetivo, não o valor nominal da moeda entregue; o sistema normaliza a bolsa automaticamente. Itens recebidos precisam de id, name e qty.','Nunca exponha marcadores técnicos na narrativa.',`CONTEXTO RECENTE: ${recent}`].join(' ')}
 function activeCharacter(idx){return window.state?.characters?.[Number.isInteger(idx)?idx:(window.state?.active||0)]||null}
-function applyInvEvent(e,agreement){
-  if(!e||!window.ValeInventory?.applyEvent)return false;
-  const c=activeCharacter(e.characterIndex);if(!c)return false;
-  const out={...e};
-  if(out.action==='pay'&&agreement?.copper>0){out.copper=agreement.copper;if(!out.reason||/trilha|mapa|viagem|missao|missão/i.test(out.reason))out.reason=agreement.reason||'serviço acordado em cena'}
-  return !!window.ValeInventory.applyEvent(c,out)?.ok;
-}
-window.fetch=async function(input,init){
-  const url=typeof input==='string'?input:(input?.url||'');
-  if(!isAi(url)||String(init?.method||'GET').toUpperCase()!=='POST'||!init?.body)return previousFetch(input,init);
-  let body=null,agreement=null,nextInit=init;
-  try{
-    body=JSON.parse(init.body);agreement=recentAgreement(body);
-    body.world={...(body.world||{}),transaction_continuity_policy:transactionPolicy(body,agreement)};
-    body.state={...(body.state||{}),pending_transaction:agreement?{priceCopper:agreement.copper,reason:agreement.reason}:null};
-    nextInit={...init,body:JSON.stringify(body)};
-  }catch{}
-  const res=await previousFetch(input,nextInit);
-  try{
-    const data=await res.clone().json();let text=String(data?.text??data?.reply??''),changed=false;
-    const invRe=/\s*\[\[INV:([^\]]+)\]\]\s*/gi;
-    text=text.replace(invRe,(_,payload)=>{try{const e=JSON.parse(decodeURIComponent(payload));applyInvEvent(e,agreement)}catch(err){console.warn('Evento INV inválido',err)}changed=true;return ' '});
-    // Nunca deixe marcadores técnicos escaparem para a narrativa, mesmo se vierem malformados.
-    text=text.replace(/\s*\[\[(?:INV|BARTER):[^\]]*\]\]\s*/gi,' ');
-    if(changed||text!==String(data?.text??data?.reply??'')){
-      text=text.replace(/\s{2,}/g,' ').replace(/\s+\n/g,'\n').trim();
-      const out={...data};if(typeof out.text==='string')out.text=text;if(typeof out.reply==='string')out.reply=text;
-      const headers=new Headers(res.headers);headers.set('Content-Type','application/json; charset=utf-8');
-      return new Response(JSON.stringify(out),{status:res.status,statusText:res.statusText,headers});
-    }
-  }catch(e){console.warn('Correção econômica: resposta não inspecionada',e)}
-  return res;
-};
+function applyInvEvent(e,agreement){if(!e||!window.ValeInventory?.applyEvent)return false;const c=activeCharacter(e.characterIndex);if(!c)return false;const out={...e};if(out.action==='pay'&&agreement?.copper>0){out.copper=agreement.copper;if(!out.reason||/trilha|mapa|viagem|missao|missão/i.test(out.reason))out.reason=agreement.reason||'transação acordada em cena'}return !!window.ValeInventory.applyEvent(c,out)?.ok}
+function normalizeBarter(e,agreement,change){const out={...(e||{})};if(agreement?.copper>0&&change&&Number(out.giveCopper)===change.tenderCopper)out.giveCopper=agreement.copper;if(Array.isArray(out.receiveItems))out.receiveItems=out.receiveItems.map((x,i)=>{const it=x?.item||x||{};const name=it.name||`Item recebido ${i+1}`;return {item:{...it,id:it.id||`trade-${norm(name).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||Date.now()}`,name,qty:Number(it.qty||it.quantity||x.qty||x.quantity||1)}}});return out}
+function applyBarter(e,agreement,change){const c=activeCharacter(e?.characterIndex);if(!c||!window.ValeEconomy?.barter)return false;return !!window.ValeEconomy.barter(c,normalizeBarter(e,agreement,change))?.ok}
+function cleanMarkers(text,handler){let out=String(text||'');out=out.replace(/\s*\[\[INV:([^\]]+)\]\]\s*/gi,(_,p)=>{try{handler('INV',JSON.parse(decodeURIComponent(p)))}catch(e){console.warn('Evento INV inválido',e)}return ' '});out=out.replace(/\s*\[\[BARTER:([^\]]+)\]\]\s*/gi,(_,p)=>{try{let raw=p;try{raw=decodeURIComponent(p)}catch{}handler('BARTER',JSON.parse(raw))}catch(e){console.warn('Evento BARTER inválido',e)}return ' '});out=out.replace(/\s*\[\[(?:INV|BARTER):[\s\S]*?\]\]\s*/gi,' ');return out}
+window.fetch=async function(input,init){const url=typeof input==='string'?input:(input?.url||'');if(!isAi(url)||String(init?.method||'GET').toUpperCase()!=='POST'||!init?.body)return previousFetch(input,init);let body=null,agreement=null,change=null,nextInit=init;try{body=JSON.parse(init.body);agreement=recentAgreement(body);change=detectChange(body,agreement);body.world={...(body.world||{}),transaction_continuity_policy:transactionPolicy(body,agreement,change)};body.state={...(body.state||{}),pending_transaction:agreement?{priceCopper:agreement.copper,reason:agreement.reason}:null,pending_change:change};nextInit={...init,body:JSON.stringify(body)}}catch{}const res=await previousFetch(input,nextInit);try{const data=await res.clone().json();const original=String(data?.text??data?.reply??'');let handled=false;let text=cleanMarkers(original,(kind,e)=>{handled=true;if(kind==='INV')applyInvEvent(e,agreement);else applyBarter(e,agreement,change)});if(handled||text!==original){text=text.replace(/[ \t]{2,}/g,' ').replace(/\s+\n/g,'\n').trim();const out={...data};if(typeof out.text==='string')out.text=text;if(typeof out.reply==='string')out.reply=text;const headers=new Headers(res.headers);headers.set('Content-Type','application/json; charset=utf-8');return new Response(JSON.stringify(out),{status:res.status,statusText:res.statusText,headers})}}catch(e){console.warn('Correção econômica: resposta não inspecionada',e)}return res};
 })();
