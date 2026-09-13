@@ -44,6 +44,7 @@
   load('data-vd-scene-fallback','js/scene-visuals-fallback.js?v=20260904-1');
   load('data-vd-quest-tracker','js/quest-tracker.js?v=20260907-1');
   load('data-vd-master-hardening','js/master-context-hardening.js?v=20260907-1');
+  load('data-vd-narrative-drift-guard','js/narrative-drift-guard.js?v=20260913-1');
   load('data-vd-new-game-qst001','js/new-game-quest-start.js?v=20260912-1');
   load('data-vd-journal','js/journal.js?v=20260911-2');
   load('data-vd-ranger-journal','js/ranger-journal.js?v=20260911-1');
