@@ -49,7 +49,7 @@
   load('data-vd-reputation','js/reputation.js?v=20260911-1');
   load('data-vd-reputation-bridge','js/reputation-bridge.js?v=20260912-1');
   load('data-vd-scene-continuity','js/scene-continuity.js?v=20260912-2');
-  load('data-vd-journal-episodic','js/journal-episodic-bridge.js?v=20260912-2');
+  load('data-vd-journal-episodic','js/journal-episodic-bridge.js?v=20260912-3');
   load('data-vd-journal-runtime-fix','js/journal-runtime-fix.js?v=20260912-2');
   load('data-vd-how-to-play','js/how-to-play.js?v=20260912-10');
 })();
