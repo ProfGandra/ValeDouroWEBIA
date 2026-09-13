@@ -56,5 +56,6 @@
   load('data-vd-economy','js/economy.js?v=20260912-2');
   load('data-vd-economy-transaction-fix','js/economy-transaction-fix.js?v=20260913-2');
   load('data-vd-inventory-actions','js/inventory-actions.js?v=20260912-1');
+  load('data-vd-game-save','js/game-save.js?v=20260913-1');
   load('data-vd-how-to-play','js/how-to-play.js?v=20260912-10');
 })();
